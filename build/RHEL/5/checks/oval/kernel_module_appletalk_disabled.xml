@@ -1,0 +1,1 @@
+echo "install appletalk /bin/true" > /etc/modprobe.d/appletalk.conf

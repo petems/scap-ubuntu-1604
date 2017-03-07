@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Guide to the Secure Configuration of Red Hat Enterprise Linux 7</title>
+		<script>
+			function change_profile(option_element)
+			{
+				var benchmark_id=option_element.getAttribute('data-benchmark-id');
+				var profile_id=option_element.getAttribute('data-profile-id');
+				var eval_snippet=document.getElementById('eval_snippet');
+				var input_path='/usr/share/scap/ssg/ssg-centos7-ds.xml';
+				if (profile_id == '')
+				{
+					if (benchmark_id == '')
+						eval_snippet.innerHTML='# oscap xccdf eval ' + input_path;
+					else
+						eval_snippet.innerHTML='# oscap xccdf eval --benchmark-id ' + benchmark_id + ' ' + input_path;
+				}
+				else
+				{
+					if (benchmark_id == '')
+						eval_snippet.innerHTML='# oscap xccdf eval --profile ' + profile_id + ' ' + input_path;
+					else
+						eval_snippet.innerHTML='# oscap xccdf eval --benchmark-id ' + benchmark_id + ' --profile ' + profile_id + ' ' + input_path;
+				}
+				window.open(option_element.value, 'guide');
+			}
+		</script>
+		<style>
+			html, body { margin: 0; height: 100% }
+			#js_switcher { position: fixed; right: 30px; top: 10px; padding: 2px; background: #ddd; border: 1px solid #999 }
+			#guide_div { margin: auto; width: 99%; height: 99% }
+		</style>
+	</head>
+	<body onload="document.getElementById('js_switcher').style.display = 'block'">
+		<noscript>
+Profiles: <a target="guide" href="ssg-centos7-guide-C2S.html">C2S for Red Hat Enterprise Linux 7 in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-nist-cl-il-al.html">CNSSI 1253 Low/Low/Low Control Baseline for Red Hat Enterprise Linux 7 in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-common.html">Common Profile for General-Purpose Systems in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-cjis-rhel7-server.html">Criminal Justice Information Services (CJIS) Security Policy in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-pci-dss.html">PCI-DSS v3 Control Baseline for Red Hat Enterprise Linux 7 in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-rht-ccp.html">Red Hat Corporate Profile for Certified Cloud Providers (RH CCP) in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-stig-rhel7-server-upstream.html">STIG for Red Hat Enterprise Linux 7 Server in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-stig-rhel7-server-gui-upstream.html">STIG for Red Hat Enterprise Linux 7 Server Running GUIs in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-stig-rhel7-workstation-upstream.html">STIG for Red Hat Enterprise Linux 7 Workstation in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-stig-rhevh-upstream.html">STIG for Red Hat Virtualization Hypervisor in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-docker-host.html">Standard Docker Host Security Profile in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-standard.html">Standard System Security Profile in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-nist-800-171-cui.html">Unclassified Information in Non-federal Information Systems and Organizations (NIST 800-171) in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-ospp-rhel7-server.html">United States Government Configuration Baseline (USGCB / STIG) in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-guide-default.html">(default) in xccdf_org.ssgproject.content_benchmark_RHEL-7</a>, <a target="guide" href="ssg-centos7-PCIDSS-RHEL-7-guide-pci-dss_centric.html">PCI-DSS v3 Control Baseline for Red Hat Enterprise Linux 7 in xccdf_org.ssgproject.content_benchmark_PCIDSS-RHEL-7</a>, <a target="guide" href="ssg-centos7-PCIDSS-RHEL-7-guide-default.html">(default) in xccdf_org.ssgproject.content_benchmark_PCIDSS-RHEL-7</a>
+		</noscript>
+		<div id="js_switcher" style="display: none">
+			Profile: 
+			<select style="margin-bottom: 5px" onchange="change_profile(this.options[this.selectedIndex]);">
+<option value="ssg-centos7-guide-C2S.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_C2S">C2S for Red Hat Enterprise Linux 7 in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-nist-cl-il-al.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_nist-cl-il-al">CNSSI 1253 Low/Low/Low Control Baseline for Red Hat Enterprise Linux 7 in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-common.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_common">Common Profile for General-Purpose Systems in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-cjis-rhel7-server.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_cjis-rhel7-server">Criminal Justice Information Services (CJIS) Security Policy in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-pci-dss.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_pci-dss">PCI-DSS v3 Control Baseline for Red Hat Enterprise Linux 7 in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-rht-ccp.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_rht-ccp">Red Hat Corporate Profile for Certified Cloud Providers (RH CCP) in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-stig-rhel7-server-upstream.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_stig-rhel7-server-upstream">STIG for Red Hat Enterprise Linux 7 Server in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-stig-rhel7-server-gui-upstream.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_stig-rhel7-server-gui-upstream">STIG for Red Hat Enterprise Linux 7 Server Running GUIs in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-stig-rhel7-workstation-upstream.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_stig-rhel7-workstation-upstream">STIG for Red Hat Enterprise Linux 7 Workstation in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-stig-rhevh-upstream.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_stig-rhevh-upstream">STIG for Red Hat Virtualization Hypervisor in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-docker-host.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_docker-host">Standard Docker Host Security Profile in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-standard.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_standard">Standard System Security Profile in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-nist-800-171-cui.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_nist-800-171-cui">Unclassified Information in Non-federal Information Systems and Organizations (NIST 800-171) in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-ospp-rhel7-server.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_ospp-rhel7-server">United States Government Configuration Baseline (USGCB / STIG) in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-guide-default.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_RHEL-7" data-profile-id="">(default) in xccdf_org.ssgproject.content_benchmark_RHEL-7</option>
+<option value="ssg-centos7-PCIDSS-RHEL-7-guide-pci-dss_centric.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_PCIDSS-RHEL-7" data-profile-id="xccdf_org.ssgproject.content_profile_pci-dss_centric">PCI-DSS v3 Control Baseline for Red Hat Enterprise Linux 7 in xccdf_org.ssgproject.content_benchmark_PCIDSS-RHEL-7</option>
+<option value="ssg-centos7-PCIDSS-RHEL-7-guide-default.html" data-benchmark-id="xccdf_org.ssgproject.content_benchmark_PCIDSS-RHEL-7" data-profile-id="">(default) in xccdf_org.ssgproject.content_benchmark_PCIDSS-RHEL-7</option>
+			</select>
+			<div id='eval_snippet' style='background: #eee; padding: 3px; border: 1px solid #000'>select a profile to display its guide and a command line snippet needed to use it</div>
+		</div>
+		<div id="guide_div">
+			<iframe src="ssg-centos7-guide-C2S.html" name="guide" width="100%" height="100%">
+			</iframe>
+		</div>
+	</body>
+</html>

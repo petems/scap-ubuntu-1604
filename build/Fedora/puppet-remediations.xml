@@ -1,0 +1,158 @@
+<fix-content system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <fix-group id="puppet" system="urn:xccdf:fix:script:puppet" xmlns="http://checklists.nist.gov/xccdf/1.1">
+    <fix rule="package_net-snmp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_net-snmp
+
+class remove_net-snmp {
+  package { 'net-snmp':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_ypbind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_ypbind
+
+class remove_ypbind {
+  package { 'ypbind':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_dovecot_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_dovecot
+
+class remove_dovecot {
+  package { 'dovecot':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_telnet_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_telnet
+
+class remove_telnet {
+  package { 'telnet':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_talk-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_talk-server
+
+class remove_talk-server {
+  package { 'talk-server':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_rsh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_rsh-server
+
+class remove_rsh-server {
+  package { 'rsh-server':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_rsh_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_rsh
+
+class remove_rsh {
+  package { 'rsh':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_audit_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_audit
+
+class install_audit {
+  package { 'audit':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_samba-common_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_samba-common
+
+class install_samba-common {
+  package { 'samba-common':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_aide_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_aide
+
+class install_aide {
+  package { 'aide':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_httpd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_httpd
+
+class remove_httpd {
+  package { 'httpd':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_vsftpd_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_vsftpd
+
+class install_vsftpd {
+  package { 'vsftpd':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_talk_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_talk
+
+class remove_talk {
+  package { 'talk':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="file_permissions_sshd_private_key" complexity="low" disruption="low" reboot="false" strategy="disable">include ssh_private_key_perms
+
+class ssh_private_key_perms {
+  exec { 'sshd_priv_key':
+    command =&gt; "chmod 0640 /etc/ssh/*_key",
+    path    =&gt; '/bin:/usr/bin'
+  }
+}
+</fix>
+    <fix rule="file_permissions_sshd_pub_key" complexity="low" disruption="low" reboot="false" strategy="disable">include ssh_public_key_perms
+
+class ssh_public_key_perms {
+  exec { 'sshd_pub_key':
+    command =&gt; "chmod 0644 /etc/ssh/*.pub",
+    path    =&gt; '/bin:/usr/bin'
+  }
+}
+</fix>
+    <fix rule="package_cronie_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_cronie
+
+class install_cronie {
+  package { 'cronie':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_firewalld_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_firewalld
+
+class install_firewalld {
+  package { 'firewalld':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_libreswan_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_libreswan
+
+class install_libreswan {
+  package { 'libreswan':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_chrony_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_chrony
+
+class install_chrony {
+  package { 'chrony':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+  </fix-group>
+</fix-content>

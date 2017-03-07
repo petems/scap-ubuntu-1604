@@ -1,0 +1,49 @@
+<fix-content system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <fix-group id="anaconda" system="urn:redhat:anaconda:pre" xmlns="http://checklists.nist.gov/xccdf/1.1">
+    <fix rule="package_net-snmp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=net-snmp
+</fix>
+    <fix rule="package_ypbind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=ypbind
+</fix>
+    <fix rule="package_samba-common_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=samba-common
+</fix>
+    <fix rule="package_telnet_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=telnet
+</fix>
+    <fix rule="package_rsh_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=rsh
+</fix>
+    <fix rule="package_dovecot_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=dovecot
+</fix>
+    <fix rule="package_vsftpd_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=vsftpd
+</fix>
+    <fix rule="package_rsh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=rsh-server
+</fix>
+    <fix rule="package_aide_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=aide
+</fix>
+    <fix rule="package_audit_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=audit
+</fix>
+    <fix rule="package_httpd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=httpd
+</fix>
+    <fix rule="package_talk-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=talk-server
+</fix>
+    <fix rule="package_talk_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=talk
+</fix>
+    <fix rule="mount_option_tmp_nodev" complexity="low" disruption="high" reboot="false" strategy="enable">
+part /tmp -mountoptions="nodev"
+</fix>
+    <fix rule="package_xinetd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=xinetd
+</fix>
+  </fix-group>
+</fix-content>

@@ -1,0 +1,585 @@
+<fix-content system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <fix-group id="bash" system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+    <fix rule="package_talk_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove talk
+</fix>
+    <fix rule="package_httpd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove httpd
+</fix>
+    <fix rule="package_rsh_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove rsh
+</fix>
+    <fix rule="package_rsh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove rsh-server
+</fix>
+    <fix rule="package_ypbind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove ypbind
+</fix>
+    <fix rule="package_dovecot_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove dovecot
+</fix>
+    <fix rule="kernel_module_usb-storage_disabled" complexity="low" disruption="medium" reboot="true" strategy="disable">if grep --silent "^install usb-storage" /etc/modprobe.d/usb-storage.conf ; then
+        sed -i 's/^install usb-storage.*/install usb-storage /bin/true/g' /etc/modprobe.d/usb-storage.conf
+else
+        echo -e "\n# Disable per security requirements" &gt;&gt; /etc/modprobe.d/usb-storage.conf
+        echo "install usb-storage /bin/true" &gt;&gt; /etc/modprobe.d/usb-storage.conf
+fi
+</fix>
+    <fix rule="package_samba-common_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install samba-common
+</fix>
+    <fix rule="kernel_module_bluetooth_disabled" complexity="low" disruption="medium" reboot="true" strategy="disable">if grep --silent "^install bluetooth" /etc/modprobe.d/bluetooth.conf ; then
+        sed -i 's/^install bluetooth.*/install bluetooth /bin/true/g' /etc/modprobe.d/bluetooth.conf
+else
+        echo -e "\n# Disable per security requirements" &gt;&gt; /etc/modprobe.d/bluetooth.conf
+        echo "install bluetooth /bin/true" &gt;&gt; /etc/modprobe.d/bluetooth.conf
+fi
+</fix>
+    <fix rule="package_talk-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove talk-server
+</fix>
+    <fix rule="package_aide_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install aide
+</fix>
+    <fix rule="package_vsftpd_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install vsftpd
+</fix>
+    <fix rule="package_telnet_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove telnet
+</fix>
+    <fix rule="package_audit_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install audit
+</fix>
+    <fix rule="package_net-snmp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove net-snmp
+</fix>
+    <fix rule="restrict_serial_port_logins" complexity="low" disruption="low" reboot="false" strategy="disable">sed -i '/ttyS/d' /etc/securetty
+</fix>
+    <fix rule="audit_rules_login_events" complexity="low" disruption="low" reboot="false" strategy="disable">
+
+# Perform the remediation for both possible tools: 'auditctl' and 'augenrules'
+<sub idref="function_fix_audit_watch_rule"/>
+fix_audit_watch_rule "auditctl" "/var/log/tallylog" "wa" "logins"
+fix_audit_watch_rule "augenrules" "/var/log/tallylog" "wa" "logins"
+<sub idref="function_fix_audit_watch_rule"/>
+fix_audit_watch_rule "auditctl" "/var/run/faillock/" "wa" "logins"
+fix_audit_watch_rule "augenrules" "/var/run/faillock/" "wa" "logins"
+<sub idref="function_fix_audit_watch_rule"/>
+fix_audit_watch_rule "auditctl" "/var/log/lastlog" "wa" "logins"
+fix_audit_watch_rule "augenrules" "/var/log/lastlog" "wa" "logins"
+</fix>
+    <fix rule="audit_rules_login_events_lastlog" complexity="low" disruption="low" reboot="false" strategy="disable">
+
+# Perform the remediation for both possible tools: 'auditctl' and 'augenrules'
+<sub idref="function_fix_audit_watch_rule"/>
+fix_audit_watch_rule "auditctl" "/var/log/lastlog" "wa" "logins"
+fix_audit_watch_rule "augenrules" "/var/log/lastlog" "wa" "logins"
+</fix>
+    <fix rule="audit_rules_kernel_module_loading_insmod" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+
+# Perform the remediation for both possible tools: 'auditctl' and 'augenrules'
+<sub idref="function_fix_audit_watch_rule"/>
+fix_audit_watch_rule "auditctl" "/usr/sbin/insmod" "x" "modules"
+fix_audit_watch_rule "augenrules" "/usr/sbin/insmod" "x" "modules"
+</fix>
+    <fix rule="audit_rules_kernel_module_loading_modprobe" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+
+# Perform the remediation for both possible tools: 'auditctl' and 'augenrules'
+<sub idref="function_fix_audit_watch_rule"/>
+fix_audit_watch_rule "auditctl" "/usr/sbin/modprobe" "x" "modules"
+fix_audit_watch_rule "augenrules" "/usr/sbin/modprobe" "x" "modules"
+</fix>
+    <fix rule="sshd_disable_empty_passwords" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+SSHD_CONFIG='/etc/ssh/sshd_config'
+
+# Obtain line number of first uncommented case-insensitive occurrence of Match
+# block directive (possibly prefixed with whitespace) present in $SSHD_CONFIG
+FIRST_MATCH_BLOCK=$(sed -n '/^[[:space:]]*Match[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Obtain line number of first uncommented case-insensitive occurence of
+# PermitEmptyPasswords directive (possibly prefixed with whitespace) present in
+# $SSHD_CONFIG
+FIRST_PERMIT_EMPTY_PASSWORDS=$(sed -n '/^[[:space:]]*PermitEmptyPasswords[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Case: Match block directive not present in $SSHD_CONFIG
+if [ -z "$FIRST_MATCH_BLOCK" ]
+then
+
+    # Case: PermitEmptyPasswords directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_PERMIT_EMPTY_PASSWORDS" ]
+    then
+        # Append 'PermitEmptyPasswords no' at the end of $SSHD_CONFIG
+        echo -e "\nPermitEmptyPasswords no" &gt;&gt; $SSHD_CONFIG
+
+    # Case: PermitEmptyPasswords directive present in $SSHD_CONFIG already
+    else
+        # Replace first uncommented case-insensitive occurrence
+        # of PermitEmptyPasswords directive
+        sed -i "$FIRST_PERMIT_EMPTY_PASSWORDS s/^[[:space:]]*PermitEmptyPasswords.*$/PermitEmptyPasswords no/I" $SSHD_CONFIG
+    fi
+
+# Case: Match block directive present in $SSHD_CONFIG
+else
+
+    # Case: PermitEmptyPasswords directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_PERMIT_EMPTY_PASSWORDS" ]
+    then
+        # Prepend 'PermitEmptyPasswords no' before first uncommented
+        # case-insensitive occurrence of Match block directive
+        sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/PermitEmptyPasswords no\n\1/I" $SSHD_CONFIG
+
+    # Case: PermitEmptyPasswords directive present in $SSHD_CONFIG and placed
+    #       before first Match block directive
+    elif [ "$FIRST_PERMIT_EMPTY_PASSWORDS" -lt "$FIRST_MATCH_BLOCK" ]
+    then
+        # Replace first uncommented case-insensitive occurrence
+        # of PermitEmptyPasswords directive
+        sed -i "$FIRST_PERMIT_EMPTY_PASSWORDS s/^[[:space:]]*PermitEmptyPasswords.*$/PermitEmptyPasswords no/I" $SSHD_CONFIG
+
+    # Case: PermitEmptyPasswords directive present in $SSHD_CONFIG and placed
+    # after first Match block directive
+    else
+         # Prepend 'PermitEmptyPasswords no' before first uncommented
+         # case-insensitive occurrence of Match block directive
+         sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/PermitEmptyPasswords no\n\1/I" $SSHD_CONFIG
+    fi
+fi
+</fix>
+    <fix rule="disable_host_auth" complexity="high" disruption="medium" reboot="false" strategy="restrict">grep -q ^HostbasedAuthentication /etc/ssh/sshd_config &amp;&amp; \
+  sed -i "s/HostbasedAuthentication.*/HostbasedAuthentication no/g" /etc/ssh/sshd_config
+if ! [ $? -eq 0 ]; then
+    echo "HostbasedAuthentication no" &gt;&gt; /etc/ssh/sshd_config
+fi
+</fix>
+    <fix rule="audit_rules_time_clock_settime" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+
+# First perform the remediation of the syscall rule
+# Retrieve hardware architecture of the underlying system
+[ "$(getconf LONG_BIT)" = "32" ] &amp;&amp; RULE_ARCHS=("b32") || RULE_ARCHS=("b32" "b64")
+
+for ARCH in "${RULE_ARCHS[@]}"
+do
+	PATTERN="-a always,exit -F arch=$ARCH -S clock_settime -F a0=.* \(-F key=\|-k \).*"
+	GROUP="clock_settime"
+	FULL_RULE="-a always,exit -F arch=$ARCH -S clock_settime -F a0=0x0 -k time-change"
+	# Perform the remediation for both possible tools: 'auditctl' and 'augenrules'
+<sub idref="function_fix_audit_syscall_rule"/>
+	fix_audit_syscall_rule "auditctl" "$PATTERN" "$GROUP" "$ARCH" "$FULL_RULE"
+	fix_audit_syscall_rule "augenrules" "$PATTERN" "$GROUP" "$ARCH" "$FULL_RULE"
+done
+</fix>
+    <fix rule="audit_rules_login_events_tallylog" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+
+# Perform the remediation for both possible tools: 'auditctl' and 'augenrules'
+<sub idref="function_fix_audit_watch_rule"/>
+fix_audit_watch_rule "auditctl" "/var/log/tallylog" "wa" "logins"
+fix_audit_watch_rule "augenrules" "/var/log/tallylog" "wa" "logins"
+</fix>
+    <fix rule="audit_rules_kernel_module_loading_rmmod" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+
+# Perform the remediation for both possible tools: 'auditctl' and 'augenrules'
+<sub idref="function_fix_audit_watch_rule"/>
+fix_audit_watch_rule "auditctl" "/usr/sbin/rmmod" "x" "modules"
+fix_audit_watch_rule "augenrules" "/usr/sbin/rmmod" "x" "modules"
+</fix>
+    <fix rule="no_empty_passwords" complexity="high" disruption="medium" reboot="false" strategy="restrict">sed --follow-symlinks -i 's/\&lt;nullok\&gt;//g' /etc/pam.d/system-auth
+</fix>
+    <fix rule="disable_ctrlaltdel_reboot" complexity="high" disruption="medium" reboot="false" strategy="restrict">ln -sf /dev/null /etc/systemd/system/ctrl-alt-del.target
+</fix>
+    <fix rule="sshd_disable_rhosts_rsa" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^RhostsRSAAuthentication' 'no' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="firewalld_sshd_port_enabled" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+sshd_listening_port="<sub idref="sshd_listening_port"/>"
+
+if [ $sshd_listening_port -ne 22] ; then
+  firewall-cmd --permanent --add-port=$sshd_listening_port/tcp
+else
+  firewall-cmd --permanent --add-service=ssh
+fi
+</fix>
+    <fix rule="file_ownership_library_dirs" complexity="high" disruption="medium" reboot="false" strategy="restrict">for LIBDIR in /usr/lib /usr/lib64 /lib /lib64
+do
+  if [ -d $LIBDIR ]
+  then
+    find -L $LIBDIR \! -user root -exec chown root {} \; 
+  fi
+done
+</fix>
+    <fix rule="securetty_root_login_console_only" complexity="high" disruption="medium" reboot="false" strategy="restrict">sed -i '/^vc\//d' /etc/securetty
+</fix>
+    <fix rule="audit_rules_system_shutdown" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+# Traverse all of:
+#
+# /etc/audit/audit.rules,			(for auditctl case)
+# /etc/audit/rules.d/*.rules			(for augenrules case)
+#
+# files to check if '-f .*' setting is present in that '*.rules' file already.
+# If found, delete such occurrence since auditctl(8) manual page instructs the
+# '-f 2' rule should be placed as the last rule in the configuration
+find /etc/audit /etc/audit/rules.d -maxdepth 1 -type f -name *.rules -exec sed -i '/-e[[:space:]]\+.*/d' {} ';'
+
+# Append '-f 2' requirement at the end of both:
+# * /etc/audit/audit.rules file 		(for auditctl case)
+# * /etc/audit/rules.d/immutable.rules		(for augenrules case)
+
+for AUDIT_FILE in "/etc/audit/audit.rules" "/etc/audit/rules.d/immutable.rules"
+do
+	echo '' &gt;&gt; $AUDIT_FILE
+	echo '# Set the audit.rules configuration to halt system upon audit failure per security requirements' &gt;&gt; $AUDIT_FILE
+	echo '-f 2' &gt;&gt; $AUDIT_FILE
+done
+</fix>
+    <fix rule="audit_rules_immutable" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+# Traverse all of:
+#
+# /etc/audit/audit.rules,			(for auditctl case)
+# /etc/audit/rules.d/*.rules			(for augenrules case)
+#
+# files to check if '-e .*' setting is present in that '*.rules' file already.
+# If found, delete such occurrence since auditctl(8) manual page instructs the
+# '-e 2' rule should be placed as the last rule in the configuration
+find /etc/audit /etc/audit/rules.d -maxdepth 1 -type f -name *.rules -exec sed -i '/-e[[:space:]]\+.*/d' {} ';'
+
+# Append '-e 2' requirement at the end of both:
+# * /etc/audit/audit.rules file 		(for auditctl case)
+# * /etc/audit/rules.d/immutable.rules		(for augenrules case)
+
+for AUDIT_FILE in "/etc/audit/audit.rules" "/etc/audit/rules.d/immutable.rules"
+do
+	echo '' &gt;&gt; $AUDIT_FILE
+	echo '# Set the audit.rules configuration immutable per security requirements' &gt;&gt; $AUDIT_FILE
+	echo '# Reboot is required to change audit rules once this setting is applied' &gt;&gt; $AUDIT_FILE
+	echo '-e 2' &gt;&gt; $AUDIT_FILE
+done
+</fix>
+    <fix rule="sshd_disable_rhosts" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^IgnoreRhosts' 'yes' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="sshd_disable_user_known_hosts" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^IgnoreUserKnownHosts' 'yes' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="audit_rules_login_events_faillock" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+
+# Perform the remediation for both possible tools: 'auditctl' and 'augenrules'
+<sub idref="function_fix_audit_watch_rule"/>
+fix_audit_watch_rule "auditctl" "/var/run/faillock/" "wa" "logins"
+fix_audit_watch_rule "augenrules" "/var/run/faillock/" "wa" "logins"
+</fix>
+    <fix rule="sshd_set_idle_timeout" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+declare sshd_idle_timeout_value
+sshd_idle_timeout_value="<sub idref="sshd_idle_timeout_value"/>"
+
+SSHD_CONFIG='/etc/ssh/sshd_config'
+
+# Obtain line number of first uncommented case-insensitive occurrence of Match
+# block directive (possibly prefixed with whitespace) present in $SSHD_CONFIG
+FIRST_MATCH_BLOCK=$(sed -n '/^[[:space:]]*Match[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Obtain line number of first uncommented case-insensitive occurence of
+# ClientAliveInterval directive (possibly prefixed with whitespace) present in
+# $SSHD_CONFIG
+FIRST_CLIENT_ALIVE_INTERVAL=$(sed -n '/^[[:space:]]*ClientAliveInterval[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Case: Match block directive not present in $SSHD_CONFIG
+if [ -z "$FIRST_MATCH_BLOCK" ]
+then
+
+    # Case: ClientAliveInterval directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_CLIENT_ALIVE_INTERVAL" ]
+    then
+        # Append 'ClientAliveInterval $sshd_idle_timeout_value' at the end of $SSHD_CONFIG
+        echo -e "\nClientAliveInterval $sshd_idle_timeout_value" &gt;&gt; $SSHD_CONFIG
+
+    # Case: ClientAliveInterval directive present in $SSHD_CONFIG already
+    else
+        # Replace first uncommented case-insensitive occurrence
+        # of ClientAliveInterval directive
+        sed -i "$FIRST_CLIENT_ALIVE_INTERVAL s/^[[:space:]]*ClientAliveInterval.*$/ClientAliveInterval $sshd_idle_timeout_value/I" $SSHD_CONFIG
+    fi
+
+# Case: Match block directive present in $SSHD_CONFIG
+else
+
+    # Case: ClientAliveInterval directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_CLIENT_ALIVE_INTERVAL" ]
+    then
+        # Prepend 'ClientAliveInterval $sshd_idle_timeout_value' before first uncommented
+        # case-insensitive occurrence of Match block directive
+        sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/ClientAliveInterval $sshd_idle_timeout_value\n\1/I" $SSHD_CONFIG
+
+    # Case: ClientAliveInterval directive present in $SSHD_CONFIG and placed
+    #       before first Match block directive
+    elif [ "$FIRST_CLIENT_ALIVE_INTERVAL" -lt "$FIRST_MATCH_BLOCK" ]
+    then
+        # Replace first uncommented case-insensitive occurrence
+        # of ClientAliveInterval directive
+        sed -i "$FIRST_CLIENT_ALIVE_INTERVAL s/^[[:space:]]*ClientAliveInterval.*$/ClientAliveInterval $sshd_idle_timeout_value/I" $SSHD_CONFIG
+
+    # Case: ClientAliveInterval directive present in $SSHD_CONFIG and placed
+    # after first Match block directive
+    else
+         # Prepend 'ClientAliveInterval $sshd_idle_timeout_value' before first uncommented
+         # case-insensitive occurrence of Match block directive
+         sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/ClientAliveInterval $sshd_idle_timeout_value\n\1/I" $SSHD_CONFIG
+    fi
+fi
+</fix>
+    <fix rule="no_direct_root_logins" complexity="high" disruption="medium" reboot="false" strategy="restrict">echo &gt; /etc/securetty
+</fix>
+    <fix rule="sshd_set_keepalive" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+SSHD_CONFIG='/etc/ssh/sshd_config'
+
+# Obtain line number of first uncommented case-insensitive occurrence of Match
+# block directive (possibly prefixed with whitespace) present in $SSHD_CONFIG
+FIRST_MATCH_BLOCK=$(sed -n '/^[[:space:]]*Match[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Obtain line number of first uncommented case-insensitive occurence of
+# ClientAliveCountMax directive (possibly prefixed with whitespace) present in
+# $SSHD_CONFIG
+FIRST_CLIENT_ALIVE_COUNT_MAX=$(sed -n '/^[[:space:]]*ClientAliveCountMax[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Case: Match block directive not present in $SSHD_CONFIG
+if [ -z "$FIRST_MATCH_BLOCK" ]
+then
+
+    # Case: ClientAliveCountMax directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_CLIENT_ALIVE_COUNT_MAX" ]
+    then
+        # Append 'ClientAliveCountMax 0' at the end of $SSHD_CONFIG
+        echo -e "\nClientAliveCountMax 0" &gt;&gt; $SSHD_CONFIG
+
+    # Case: ClientAliveCountMax directive present in $SSHD_CONFIG already
+    else
+        # Replace first uncommented case-insensitive occurrence
+        # of ClientAliveCountMax directive
+        sed -i "$FIRST_CLIENT_ALIVE_COUNT_MAX s/^[[:space:]]*ClientAliveCountMax.*$/ClientAliveCountMax 0/I" $SSHD_CONFIG
+    fi
+
+# Case: Match block directive present in $SSHD_CONFIG
+else
+
+    # Case: ClientAliveCountMax directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_CLIENT_ALIVE_COUNT_MAX" ]
+    then
+        # Prepend 'ClientAliveCountMax 0' before first uncommented
+        # case-insensitive occurrence of Match block directive
+        sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/ClientAliveCountMax 0\n\1/I" $SSHD_CONFIG
+
+    # Case: ClientAliveCountMax directive present in $SSHD_CONFIG and placed
+    #       before first Match block directive
+    elif [ "$FIRST_CLIENT_ALIVE_COUNT_MAX" -lt "$FIRST_MATCH_BLOCK" ]
+    then
+        # Replace first uncommented case-insensitive occurrence
+        # of ClientAliveCountMax directive
+        sed -i "$FIRST_CLIENT_ALIVE_COUNT_MAX s/^[[:space:]]*ClientAliveCountMax.*$/ClientAliveCountMax 0/I" $SSHD_CONFIG
+
+    # Case: ClientAliveCountMax directive present in $SSHD_CONFIG and placed
+    # after first Match block directive
+    else
+         # Prepend 'ClientAliveCountMax 0' before first uncommented
+         # case-insensitive occurrence of Match block directive
+         sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/ClientAliveCountMax 0\n\1/I" $SSHD_CONFIG
+    fi
+fi
+</fix>
+    <fix rule="sshd_disable_root_login" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+SSHD_CONFIG='/etc/ssh/sshd_config'
+
+# Obtain line number of first uncommented case-insensitive occurrence of Match
+# block directive (possibly prefixed with whitespace) present in $SSHD_CONFIG
+FIRST_MATCH_BLOCK=$(sed -n '/^[[:space:]]*Match[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Obtain line number of first uncommented case-insensitive occurence of
+# PermitRootLogin directive (possibly prefixed with whitespace) present in
+# $SSHD_CONFIG
+FIRST_PERMIT_ROOT_LOGIN=$(sed -n '/^[[:space:]]*PermitRootLogin[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Case: Match block directive not present in $SSHD_CONFIG
+if [ -z "$FIRST_MATCH_BLOCK" ]
+then
+
+    # Case: PermitRootLogin directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_PERMIT_ROOT_LOGIN" ]
+    then
+        # Append 'PermitRootLogin no' at the end of $SSHD_CONFIG
+        echo -e "\nPermitRootLogin no" &gt;&gt; $SSHD_CONFIG
+
+    # Case: PermitRootLogin directive present in $SSHD_CONFIG already
+    else
+        # Replace first uncommented case-insensitive occurrence
+        # of PermitRootLogin directive
+        sed -i "$FIRST_PERMIT_ROOT_LOGIN s/^[[:space:]]*PermitRootLogin.*$/PermitRootLogin no/I" $SSHD_CONFIG
+    fi
+
+# Case: Match block directive present in $SSHD_CONFIG
+else
+
+    # Case: PermitRootLogin directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_PERMIT_ROOT_LOGIN" ]
+    then
+        # Prepend 'PermitRootLogin no' before first uncommented
+        # case-insensitive occurrence of Match block directive
+        sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/PermitRootLogin no\n\1/I" $SSHD_CONFIG
+
+    # Case: PermitRootLogin directive present in $SSHD_CONFIG and placed
+    #       before first Match block directive
+    elif [ "$FIRST_PERMIT_ROOT_LOGIN" -lt "$FIRST_MATCH_BLOCK" ]
+    then
+        # Replace first uncommented case-insensitive occurrence
+        # of PermitRootLogin directive
+        sed -i "$FIRST_PERMIT_ROOT_LOGIN s/^[[:space:]]*PermitRootLogin.*$/PermitRootLogin no/I" $SSHD_CONFIG
+
+    # Case: PermitRootLogin directive present in $SSHD_CONFIG and placed
+    # after first Match block directive
+    else
+         # Prepend 'PermitRootLogin no' before first uncommented
+         # case-insensitive occurrence of Match block directive
+         sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/PermitRootLogin no\n\1/I" $SSHD_CONFIG
+    fi
+fi
+</fix>
+    <fix rule="disable_interactive_boot" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+# Systemd confirm_spawn regex to search for and delete if found
+CONFIRM_SPAWN_REGEX="systemd.confirm_spawn=\(1\|yes\|true\|on\)"
+
+# Modify both the GRUB_CMDLINE_LINUX and GRUB_CMDLINE_LINUX_DEFAULT directives
+for grubcmdline in "GRUB_CMDLINE_LINUX" "GRUB_CMDLINE_LINUX_DEFAULT"
+do
+  # Remove 'systemd.confirm_spawn' argument from /etc/default/grub if found
+  if grep -q "^${grubcmdline}=\".*${CONFIRM_SPAWN_REGEX}.*\"" /etc/default/grub
+  then
+    # Remove all three possible occurrences of CONFIRM_SPAWN_REGEX:
+    # At the start
+    sed -i "s/\"${CONFIRM_SPAWN_REGEX} /\"/" /etc/default/grub
+    # At the end
+    sed -i "s/ ${CONFIRM_SPAWN_REGEX}\"$/\"/" /etc/default/grub
+    # In the middle
+    sed -i "s/ ${CONFIRM_SPAWN_REGEX}//" /etc/default/grub
+  fi
+done
+# Remove 'systemd.confirm_spawn' kernel argument also from runtime settings
+/sbin/grubby --update-kernel=ALL --remove-args="systemd.confirm_spawn"
+</fix>
+    <fix rule="bootloader_nousb_argument" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+# Correct the form of default kernel command line in /etc/default/grub
+if ! grep -q ^GRUB_CMDLINE_LINUX=\".*nousb.*\" /etc/default/grub;
+then
+  # Edit configuration setting
+  # Append 'nousb' argument to /etc/default/grub (if not present yet)
+  sed -i "s/\(GRUB_CMDLINE_LINUX=\)\"\(.*\)\"/\1\"\2 nousb\"/" /etc/default/grub
+  # Edit runtime setting
+  # Correct the form of kernel command line for each installed kernel in the bootloader
+  /sbin/grubby --update-kernel=ALL --args="nousb"
+fi
+</fix>
+    <fix rule="service_chronyd_enabled" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_service_command"/>
+service_command enable chronyd
+</fix>
+    <fix rule="package_chrony_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install chrony
+</fix>
+    <fix rule="package_cronie_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install cronie
+</fix>
+    <fix rule="service_crond_enabled" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_service_command"/>
+service_command enable crond
+</fix>
+    <fix rule="package_libreswan_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install libreswan
+</fix>
+    <fix rule="service_firewalld_enabled" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_service_command"/>
+service_command enable firewalld
+</fix>
+    <fix rule="package_firewalld_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install firewalld
+</fix>
+    <fix rule="service_auditd_enabled" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_service_command"/>
+service_command enable auditd
+</fix>
+    <fix rule="disable_prelink" complexity="low" disruption="low" reboot="false" strategy="enable">#
+# Disable prelinking altogether
+#
+if grep -q ^PRELINKING /etc/sysconfig/prelink
+then
+  sed -i 's/PRELINKING.*/PRELINKING=no/g' /etc/sysconfig/prelink
+else
+  echo -e "\n# Set PRELINKING=no per security requirements" &gt;&gt; /etc/sysconfig/prelink
+  echo "PRELINKING=no" &gt;&gt; /etc/sysconfig/prelink
+fi
+
+#
+# Undo previous prelink changes to binaries
+#
+/usr/sbin/prelink -ua
+</fix>
+    <fix rule="accounts_password_warn_age_login_defs" complexity="low" disruption="low" reboot="false" strategy="enable">
+declare var_accounts_password_warn_age_login_defs
+var_accounts_password_warn_age_login_defs="<sub idref="var_accounts_password_warn_age_login_defs"/>"
+
+grep -q ^PASS_WARN_AGE /etc/login.defs &amp;&amp; \
+sed -i "s/PASS_WARN_AGE.*/PASS_WARN_AGE\t$var_accounts_password_warn_age_login_defs/g" /etc/login.defs
+if ! [ $? -eq 0 ]
+then
+  echo -e "PASS_WARN_AGE\t$var_accounts_password_warn_age_login_defs" &gt;&gt; /etc/login.defs
+fi
+</fix>
+    <fix rule="accounts_maximum_age_login_defs" complexity="low" disruption="low" reboot="false" strategy="enable">
+declare var_accounts_maximum_age_login_defs
+var_accounts_maximum_age_login_defs="<sub idref="var_accounts_maximum_age_login_defs"/>"
+
+grep -q ^PASS_MAX_DAYS /etc/login.defs &amp;&amp; \
+sed -i "s/PASS_MAX_DAYS.*/PASS_MAX_DAYS\t$var_accounts_maximum_age_login_defs/g" /etc/login.defs
+if ! [ $? -eq 0 ]
+then
+  echo -e "PASS_MAX_DAYS\t$var_accounts_maximum_age_login_defs" &gt;&gt; /etc/login.defs
+fi
+</fix>
+    <fix rule="accounts_minimum_age_login_defs" complexity="low" disruption="low" reboot="false" strategy="enable">
+declare var_accounts_minimum_age_login_defs
+var_accounts_minimum_age_login_defs="<sub idref="var_accounts_minimum_age_login_defs"/>"
+
+grep -q ^PASS_MIN_DAYS /etc/login.defs &amp;&amp; \
+sed -i "s/PASS_MIN_DAYS.*/PASS_MIN_DAYS\t$var_accounts_minimum_age_login_defs/g" /etc/login.defs
+if ! [ $? -eq 0 ]
+then
+  echo -e "PASS_MIN_DAYS\t$var_accounts_minimum_age_login_defs" &gt;&gt; /etc/login.defs
+fi
+</fix>
+    <fix rule="accounts_password_minlen_login_defs" complexity="low" disruption="low" reboot="false" strategy="enable">
+declare var_accounts_password_minlen_login_defs
+var_accounts_password_minlen_login_defs="<sub idref="var_accounts_password_minlen_login_defs"/>"
+
+grep -q ^PASS_MIN_LEN /etc/login.defs &amp;&amp; \
+sed -i "s/PASS_MIN_LEN.*/PASS_MIN_LEN\t$var_accounts_password_minlen_login_defs/g" /etc/login.defs
+if ! [ $? -eq 0 ]
+then
+  echo -e "PASS_MIN_LEN\t$var_accounts_password_minlen_login_defs" &gt;&gt; /etc/login.defs
+fi
+</fix>
+  </fix-group>
+</fix-content>

@@ -1,0 +1,82 @@
+<fix-content system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <fix-group id="bash" system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+    <fix rule="restrict_serial_port_logins" complexity="low" disruption="low" reboot="false" strategy="disable">sed -i '/ttyS/d' /etc/securetty
+</fix>
+    <fix rule="securetty_root_login_console_only" complexity="high" disruption="medium" reboot="false" strategy="restrict">sed -i '/^vc\//d' /etc/securetty
+</fix>
+    <fix rule="no_direct_root_logins" complexity="high" disruption="medium" reboot="false" strategy="restrict">echo &gt; /etc/securetty
+</fix>
+    <fix rule="package_telnetd-ssl_removed" complexity="low" disruption="low" reboot="false" strategy="disable"># CAUTION: This remediation script will remove telnetd-ssl
+#	   from the system, and may remove any packages
+#	   that depend on telnetd-ssl. Execute this
+#	   remediation AFTER testing on a non-production
+#	   system!
+
+apt-get remove --purge telnetd-ssl
+</fix>
+    <fix rule="package_rsyslog_installed" complexity="low" disruption="low" reboot="false" strategy="enable"># Include source function library.
+
+apt-get install rsyslog
+</fix>
+    <fix rule="package_ntp_installed" complexity="low" disruption="low" reboot="false" strategy="enable"># Include source function library.
+
+apt-get install ntp
+</fix>
+    <fix rule="file_permissions_etc_group" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/group
+</fix>
+    <fix rule="package_openssh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable"># CAUTION: This remediation script will remove openssh-server
+#	   from the system, and may remove any packages
+#	   that depend on openssh-server. Execute this
+#	   remediation AFTER testing on a non-production
+#	   system!
+
+apt-get remove --purge openssh-server
+</fix>
+    <fix rule="file_permissions_etc_passwd" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/passwd
+</fix>
+    <fix rule="package_inetutils-telnetd_removed" complexity="low" disruption="low" reboot="false" strategy="disable"># CAUTION: This remediation script will remove inetutils-telnetd
+#	   from the system, and may remove any packages
+#	   that depend on inetutils-telnetd. Execute this
+#	   remediation AFTER testing on a non-production
+#	   system!
+
+apt-get remove --purge inetutils-telnetd
+</fix>
+    <fix rule="package_telnetd_removed" complexity="low" disruption="low" reboot="false" strategy="disable"># CAUTION: This remediation script will remove telnetd
+#	   from the system, and may remove any packages
+#	   that depend on telnetd. Execute this
+#	   remediation AFTER testing on a non-production
+#	   system!
+
+apt-get remove --purge telnetd
+</fix>
+    <fix rule="package_nis_removed" complexity="low" disruption="low" reboot="false" strategy="disable"># CAUTION: This remediation script will remove nis
+#	   from the system, and may remove any packages
+#	   that depend on nis. Execute this
+#	   remediation AFTER testing on a non-production
+#	   system!
+
+apt-get remove --purge nis
+</fix>
+    <fix rule="file_permissions_etc_gshadow" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0640 /etc/gshadow
+</fix>
+    <fix rule="file_permissions_etc_shadow" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0640 /etc/shadow
+</fix>
+    <fix rule="package_auditd_installed" complexity="low" disruption="low" reboot="false" strategy="enable"># Include source function library.
+
+apt-get install auditd
+</fix>
+    <fix rule="package_ntpdate_removed" complexity="low" disruption="low" reboot="false" strategy="disable"># CAUTION: This remediation script will remove ntpdate
+#	   from the system, and may remove any packages
+#	   that depend on ntpdate. Execute this
+#	   remediation AFTER testing on a non-production
+#	   system!
+
+apt-get remove --purge ntpdate
+</fix>
+    <fix rule="package_cron_installed" complexity="low" disruption="low" reboot="false" strategy="enable"># Include source function library.
+
+apt-get install cron
+</fix>
+  </fix-group>
+</fix-content>

@@ -1,0 +1,987 @@
+<ocil xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://scap.nist.gov/schema/ocil/2.0" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <generator>
+    <schema_version>2.0</schema_version>
+    <timestamp>2017-03-07T15:01:14Z</timestamp>
+  </generator>
+  <questionnaires>
+    <questionnaire id="ocil:ssg-mount_option_noexec_removable_partitions_ocil:questionnaire:1">
+      <title>Add noexec Option to Removable Media Partitions</title>
+      <actions>
+        <test_action_ref>ocil:ssg-mount_option_noexec_removable_partitions_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-service_autofs_disabled_ocil:questionnaire:1">
+      <title>Disable the Automounter</title>
+      <actions>
+        <test_action_ref>ocil:ssg-service_autofs_disabled_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-userowner_shadow_file_ocil:questionnaire:1">
+      <title>Verify User Who Owns shadow File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-userowner_shadow_file_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-groupowner_shadow_file_ocil:questionnaire:1">
+      <title>Verify Group Who Owns shadow File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-groupowner_shadow_file_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_etc_shadow_ocil:questionnaire:1">
+      <title>Verify Permissions on shadow File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_etc_shadow_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_owner_etc_group_ocil:questionnaire:1">
+      <title>Verify User Who Owns group File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_owner_etc_group_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_groupowner_etc_group_ocil:questionnaire:1">
+      <title>Verify Group Who Owns group File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_groupowner_etc_group_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_etc_group_ocil:questionnaire:1">
+      <title>Verify Permissions on group File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_etc_group_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_owner_etc_gshadow_ocil:questionnaire:1">
+      <title>Verify User Who Owns gshadow File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_owner_etc_gshadow_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_groupowner_etc_gshadow_ocil:questionnaire:1">
+      <title>Verify Group Who Owns gshadow File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_groupowner_etc_gshadow_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_etc_gshadow_ocil:questionnaire:1">
+      <title>Verify Permissions on gshadow File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_etc_gshadow_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_owner_etc_passwd_ocil:questionnaire:1">
+      <title>Verify User Who Owns passwd File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_owner_etc_passwd_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_groupowner_etc_passwd_ocil:questionnaire:1">
+      <title>Verify Group Who Owns passwd File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_groupowner_etc_passwd_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_etc_passwd_ocil:questionnaire:1">
+      <title>Verify Permissions on passwd File</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_etc_passwd_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_library_dirs_ocil:questionnaire:1">
+      <title>Verify that Shared Library Files Have Restrictive Permissions</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_library_dirs_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_ownership_library_dirs_ocil:questionnaire:1">
+      <title>Verify that Shared Library Files Have Root Ownership</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_ownership_library_dirs_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_binary_dirs_ocil:questionnaire:1">
+      <title>Verify that System Executables Have Restrictive Permissions</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_binary_dirs_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_ownership_binary_dirs_ocil:questionnaire:1">
+      <title>Verify that System Executables Have Root Ownership</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_ownership_binary_dirs_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-dir_perms_world_writable_sticky_bits_ocil:questionnaire:1">
+      <title>Verify that All World-Writable Directories Have Sticky Bits Set</title>
+      <actions>
+        <test_action_ref>ocil:ssg-dir_perms_world_writable_sticky_bits_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_unauthorized_world_writable_ocil:questionnaire:1">
+      <title>Ensure No World-Writable Files Exist</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_unauthorized_world_writable_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_unauthorized_sgid_ocil:questionnaire:1">
+      <title>Ensure All SGID Executables Are Authorized</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_unauthorized_sgid_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_unauthorized_suid_ocil:questionnaire:1">
+      <title>Ensure All SUID Executables Are Authorized</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_unauthorized_suid_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-no_files_unowned_by_user_ocil:questionnaire:1">
+      <title>Ensure All Files Are Owned by a User</title>
+      <actions>
+        <test_action_ref>ocil:ssg-no_files_unowned_by_user_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_ungroupowned_ocil:questionnaire:1">
+      <title>Ensure All Files Are Owned by a Group</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_ungroupowned_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-dir_perms_world_writable_system_owned_ocil:questionnaire:1">
+      <title>Ensure All World-Writable Directories Are Owned by a System Account</title>
+      <actions>
+        <test_action_ref>ocil:ssg-dir_perms_world_writable_system_owned_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-no_direct_root_logins_ocil:questionnaire:1">
+      <title>Direct root Logins Not Allowed</title>
+      <actions>
+        <test_action_ref>ocil:ssg-no_direct_root_logins_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-accounts_no_uid_except_zero_ocil:questionnaire:1">
+      <title>Only Root Has UID 0</title>
+      <actions>
+        <test_action_ref>ocil:ssg-accounts_no_uid_except_zero_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-no_empty_passwords_ocil:questionnaire:1">
+      <title>Log In to Accounts With Empty Password Impossible</title>
+      <actions>
+        <test_action_ref>ocil:ssg-no_empty_passwords_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-accounts_password_all_shadowed_ocil:questionnaire:1">
+      <title>Password Hashes For Each Account Shadowed</title>
+      <actions>
+        <test_action_ref>ocil:ssg-accounts_password_all_shadowed_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-no_netrc_files_ocil:questionnaire:1">
+      <title>netrc Files Do Not Exist</title>
+      <actions>
+        <test_action_ref>ocil:ssg-no_netrc_files_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-accounts_password_warn_age_login_defs_ocil:questionnaire:1">
+      <title>Password Warning Age</title>
+      <actions>
+        <test_action_ref>ocil:ssg-accounts_password_warn_age_login_defs_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-accounts_max_concurrent_login_sessions_ocil:questionnaire:1">
+      <title>Limit the Number of Concurrent Login Sessions Allowed Per User</title>
+      <actions>
+        <test_action_ref>ocil:ssg-accounts_max_concurrent_login_sessions_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-accounts_logon_fail_delay_ocil:questionnaire:1">
+      <title>Ensure the Logon Failure Delay is Set Correctly in login.defs</title>
+      <actions>
+        <test_action_ref>ocil:ssg-accounts_logon_fail_delay_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-accounts_root_path_dirs_no_write_ocil:questionnaire:1">
+      <title>Ensure that Root's Path Does Not Include World or Group-Writable Directories</title>
+      <actions>
+        <test_action_ref>ocil:ssg-accounts_root_path_dirs_no_write_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-file_permissions_home_dirs_ocil:questionnaire:1">
+      <title>Ensure that User Home Directories are not Group-Writable or World-Readable</title>
+      <actions>
+        <test_action_ref>ocil:ssg-file_permissions_home_dirs_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-accounts_umask_etc_bashrc_ocil:questionnaire:1">
+      <title>Ensure the Default Bash Umask is Set Correctly</title>
+      <actions>
+        <test_action_ref>ocil:ssg-accounts_umask_etc_bashrc_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-accounts_umask_etc_csh_cshrc_ocil:questionnaire:1">
+      <title>Ensure the Default C Shell Umask is Set Correctly</title>
+      <actions>
+        <test_action_ref>ocil:ssg-accounts_umask_etc_csh_cshrc_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-accounts_umask_etc_profile_ocil:questionnaire:1">
+      <title>Ensure the Default Umask is Set Correctly in /etc/profile</title>
+      <actions>
+        <test_action_ref>ocil:ssg-accounts_umask_etc_profile_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-accounts_umask_etc_login_defs_ocil:questionnaire:1">
+      <title>Ensure the Default Umask is Set Correctly in login.defs</title>
+      <actions>
+        <test_action_ref>ocil:ssg-accounts_umask_etc_login_defs_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+  </questionnaires>
+  <test_actions>
+    <boolean_question_test_action id="ocil:ssg-mount_option_noexec_removable_partitions_action:testaction:1" question_ref="ocil:ssg-mount_option_noexec_removable_partitions_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-service_autofs_disabled_action:testaction:1" question_ref="ocil:ssg-service_autofs_disabled_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-userowner_shadow_file_action:testaction:1" question_ref="ocil:ssg-userowner_shadow_file_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-groupowner_shadow_file_action:testaction:1" question_ref="ocil:ssg-groupowner_shadow_file_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_etc_shadow_action:testaction:1" question_ref="ocil:ssg-file_permissions_etc_shadow_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_owner_etc_group_action:testaction:1" question_ref="ocil:ssg-file_owner_etc_group_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_groupowner_etc_group_action:testaction:1" question_ref="ocil:ssg-file_groupowner_etc_group_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_etc_group_action:testaction:1" question_ref="ocil:ssg-file_permissions_etc_group_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_owner_etc_gshadow_action:testaction:1" question_ref="ocil:ssg-file_owner_etc_gshadow_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_groupowner_etc_gshadow_action:testaction:1" question_ref="ocil:ssg-file_groupowner_etc_gshadow_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_etc_gshadow_action:testaction:1" question_ref="ocil:ssg-file_permissions_etc_gshadow_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_owner_etc_passwd_action:testaction:1" question_ref="ocil:ssg-file_owner_etc_passwd_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_groupowner_etc_passwd_action:testaction:1" question_ref="ocil:ssg-file_groupowner_etc_passwd_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_etc_passwd_action:testaction:1" question_ref="ocil:ssg-file_permissions_etc_passwd_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_library_dirs_action:testaction:1" question_ref="ocil:ssg-file_permissions_library_dirs_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_ownership_library_dirs_action:testaction:1" question_ref="ocil:ssg-file_ownership_library_dirs_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_binary_dirs_action:testaction:1" question_ref="ocil:ssg-file_permissions_binary_dirs_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_ownership_binary_dirs_action:testaction:1" question_ref="ocil:ssg-file_ownership_binary_dirs_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-dir_perms_world_writable_sticky_bits_action:testaction:1" question_ref="ocil:ssg-dir_perms_world_writable_sticky_bits_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_unauthorized_world_writable_action:testaction:1" question_ref="ocil:ssg-file_permissions_unauthorized_world_writable_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_unauthorized_sgid_action:testaction:1" question_ref="ocil:ssg-file_permissions_unauthorized_sgid_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_unauthorized_suid_action:testaction:1" question_ref="ocil:ssg-file_permissions_unauthorized_suid_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-no_files_unowned_by_user_action:testaction:1" question_ref="ocil:ssg-no_files_unowned_by_user_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_ungroupowned_action:testaction:1" question_ref="ocil:ssg-file_permissions_ungroupowned_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-dir_perms_world_writable_system_owned_action:testaction:1" question_ref="ocil:ssg-dir_perms_world_writable_system_owned_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-no_direct_root_logins_action:testaction:1" question_ref="ocil:ssg-no_direct_root_logins_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-accounts_no_uid_except_zero_action:testaction:1" question_ref="ocil:ssg-accounts_no_uid_except_zero_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-no_empty_passwords_action:testaction:1" question_ref="ocil:ssg-no_empty_passwords_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-accounts_password_all_shadowed_action:testaction:1" question_ref="ocil:ssg-accounts_password_all_shadowed_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-no_netrc_files_action:testaction:1" question_ref="ocil:ssg-no_netrc_files_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-accounts_password_warn_age_login_defs_action:testaction:1" question_ref="ocil:ssg-accounts_password_warn_age_login_defs_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-accounts_max_concurrent_login_sessions_action:testaction:1" question_ref="ocil:ssg-accounts_max_concurrent_login_sessions_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-accounts_logon_fail_delay_action:testaction:1" question_ref="ocil:ssg-accounts_logon_fail_delay_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-accounts_root_path_dirs_no_write_action:testaction:1" question_ref="ocil:ssg-accounts_root_path_dirs_no_write_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-file_permissions_home_dirs_action:testaction:1" question_ref="ocil:ssg-file_permissions_home_dirs_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-accounts_umask_etc_bashrc_action:testaction:1" question_ref="ocil:ssg-accounts_umask_etc_bashrc_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-accounts_umask_etc_csh_cshrc_action:testaction:1" question_ref="ocil:ssg-accounts_umask_etc_csh_cshrc_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-accounts_umask_etc_profile_action:testaction:1" question_ref="ocil:ssg-accounts_umask_etc_profile_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-accounts_umask_etc_login_defs_action:testaction:1" question_ref="ocil:ssg-accounts_umask_etc_login_defs_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+  </test_actions>
+  <questions>
+    <boolean_question id="ocil:ssg-mount_option_noexec_removable_partitions_question:question:1">
+      <question_text>
+To verify that binaries cannot be directly executed from removable media, run the following command:
+$ grep -v noexec /etc/fstab
+The resulting output will show partitions which do not have the noexec flag.
+Verify all partitions in the output are not removable media.
+
+			Is it the case that removable media partitions are present?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-service_autofs_disabled_question:question:1">
+      <question_text>
+            
+        To check that the autofs service is disabled in system boot configuration, run the following command:
+        $ systemctl is-enabled autofs
+        Output should indicate the autofs service has either not been installed,
+        or has been disabled at all runlevels, as shown in the example below:
+        $ systemctl is-enabled autofsdisabled
+
+        Run the following command to verify autofs is not active (i.e. not running) through current runtime configuration:
+        $ systemctl is-active autofs
+
+        If the service is not running the command will return the following output:
+        inactive
+          
+			Is it the case that ?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-userowner_shadow_file_question:question:1">
+      <question_text>
+              
+    To check the ownership of /etc/shadow, run the command:
+    $ ls -lL /etc/shadow
+    If properly configured, the output should indicate the following owner:
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-groupowner_shadow_file_question:question:1">
+      <question_text>
+              
+    To check the group ownership of /etc/shadow, run the command:
+    $ ls -lL /etc/shadow
+    If properly configured, the output should indicate the following group-owner.
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_etc_shadow_question:question:1">
+      <question_text>
+              
+    To check the permissions of /etc/shadow, run the command:
+    $ ls -l /etc/shadow
+    If properly configured, the output should indicate the following permissions:
+    ----------
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_owner_etc_group_question:question:1">
+      <question_text>
+              
+    To check the ownership of /etc/group, run the command:
+    $ ls -lL /etc/group
+    If properly configured, the output should indicate the following owner:
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_groupowner_etc_group_question:question:1">
+      <question_text>
+              
+    To check the group ownership of /etc/group, run the command:
+    $ ls -lL /etc/group
+    If properly configured, the output should indicate the following group-owner.
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_etc_group_question:question:1">
+      <question_text>
+              
+    To check the permissions of /etc/group, run the command:
+    $ ls -l /etc/group
+    If properly configured, the output should indicate the following permissions:
+    -rw-r--r--
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_owner_etc_gshadow_question:question:1">
+      <question_text>
+              
+    To check the ownership of /etc/gshadow, run the command:
+    $ ls -lL /etc/gshadow
+    If properly configured, the output should indicate the following owner:
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_groupowner_etc_gshadow_question:question:1">
+      <question_text>
+              
+    To check the group ownership of /etc/gshadow, run the command:
+    $ ls -lL /etc/gshadow
+    If properly configured, the output should indicate the following group-owner.
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_etc_gshadow_question:question:1">
+      <question_text>
+              
+    To check the permissions of /etc/gshadow, run the command:
+    $ ls -l /etc/gshadow
+    If properly configured, the output should indicate the following permissions:
+    ----------
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_owner_etc_passwd_question:question:1">
+      <question_text>
+              
+    To check the ownership of /etc/passwd, run the command:
+    $ ls -lL /etc/passwd
+    If properly configured, the output should indicate the following owner:
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_groupowner_etc_passwd_question:question:1">
+      <question_text>
+              
+    To check the group ownership of /etc/passwd, run the command:
+    $ ls -lL /etc/passwd
+    If properly configured, the output should indicate the following group-owner.
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_etc_passwd_question:question:1">
+      <question_text>
+              
+    To check the permissions of /etc/passwd, run the command:
+    $ ls -l /etc/passwd
+    If properly configured, the output should indicate the following permissions:
+    -rw-r--r--
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_library_dirs_question:question:1">
+      <question_text>
+Shared libraries are stored in the following directories:
+/lib
+/lib64
+/usr/lib
+/usr/lib64
+
+To find shared libraries that are group-writable or world-writable,
+run the following command for each directory DIR which contains shared libraries:
+$ sudo find -L DIR -perm /022 -type f
+
+			Is it the case that any of these files are group-writable or world-writable?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_ownership_library_dirs_question:question:1">
+      <question_text>
+Shared libraries are stored in the following directories:
+/lib
+/lib64
+/usr/lib
+/usr/lib64
+
+For each of these directories, run the following command to find files not
+owned by root:
+$ sudo find -L $DIR \! -user root -exec chown root {} \;
+
+			Is it the case that any of these files are not owned by root?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_binary_dirs_question:question:1">
+      <question_text>
+System executables are stored in the following directories by default:
+/bin
+/sbin
+/usr/bin
+/usr/libexec
+/usr/local/bin
+/usr/local/sbin
+/usr/sbin
+To find system executables that are group-writable or world-writable,
+run the following command for each directory DIR which contains system executables:
+$ sudo find -L DIR -perm /022 -type f
+
+			Is it the case that any system executables are found to be group or world writable?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_ownership_binary_dirs_question:question:1">
+      <question_text>
+System executables are stored in the following directories by default:
+/bin
+/sbin
+/usr/bin
+/usr/libexec
+/usr/local/bin
+/usr/local/sbin
+/usr/sbin
+To find system executables that are not owned by root,
+run the following command for each directory DIR which contains system executables:
+$ sudo find DIR/ \! -user root
+
+			Is it the case that any system executables are found to not be owned by root?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-dir_perms_world_writable_sticky_bits_question:question:1">
+      <question_text>
+To find world-writable directories that lack the sticky bit, run the following command:
+$ sudo find / -xdev -type d -perm 002 ! -perm 1000
+
+			Is it the case that any world-writable directories are missing the sticky bit?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_unauthorized_world_writable_question:question:1">
+      <question_text>
+To find world-writable files, run the following command:
+$ sudo find / -xdev -type f -perm -002
+
+			Is it the case that there is output?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_unauthorized_sgid_question:question:1">
+      <question_text>
+To find world-writable files, run the following command:
+$ sudo find / -xdev -type f -perm -002
+
+			Is it the case that there is output?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_unauthorized_suid_question:question:1">
+      <question_text>
+To find world-writable files, run the following command:
+$ sudo find / -xdev -type f -perm -002
+
+			Is it the case that ?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-no_files_unowned_by_user_question:question:1">
+      <question_text>
+The following command will discover and print any
+files on local partitions which do not belong to a valid user.
+$ sudo find / -xdev -fstype local -nouser
+
+Either remove all files and directories from the system that do not have a
+valid user, or assign a valid user to all unowned files and directories on
+the system with the chown command:
+$ sudo chown user file
+
+			Is it the case that files exist that are not owned by a valid user?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_ungroupowned_question:question:1">
+      <question_text>
+The following command will discover and print any
+files on local partitions which do not belong to a valid group.
+$ sudo find / -xdev -fstype local -nogroup
+
+Either remove all files and directories from the system that do not have a valid group,
+or assign a valid group with the chgrp command:
+$ sudo chgrp group file
+
+			Is it the case that there is output?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-dir_perms_world_writable_system_owned_question:question:1">
+      <question_text>
+The following command will discover and print world-writable directories that are not owned by a system account, given the assumption that only system accounts have a uid lower than 500.
+Run it once for each local partition PART: $ sudo find PART -xdev -type d -perm -0002 -uid +499 -print
+
+			Is it the case that there is output?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-no_direct_root_logins_question:question:1">
+      <question_text>
+To ensure root may not directly login to the system over physical consoles, run the following command:
+cat /etc/securetty
+If any output is returned, this is a finding.
+
+			Is it the case that the /etc/securetty file is not empty?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-accounts_no_uid_except_zero_question:question:1">
+      <question_text>
+To list all password file entries for accounts with UID 0, run the following command:
+# awk -F: '($3 == "0") {print}' /etc/passwd
+This should print only one line, for the user root.
+
+			Is it the case that any account other than root has a UID of 0?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-no_empty_passwords_question:question:1">
+      <question_text>
+To verify that null passwords cannot be used, run the following command:
+# grep nullok /etc/pam.d/common-auth
+If this produces any output, it may be possible to log into accounts with empty passwords.
+
+			Is it the case that NULL passwords can be used?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-accounts_password_all_shadowed_question:question:1">
+      <question_text>
+To check that no password hashes are stored in /etc/passwd, run the following command:
+# awk -F: '($2 != "x") {print}' /etc/passwd
+If it produces any output, then a password hash is stored in /etc/passwd.
+
+			Is it the case that any stored hashes are found in /etc/passwd?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-no_netrc_files_question:question:1">
+      <question_text>
+To check the system for the existence of any .netrc files, run the following command:
+
+# find `cut -d : -f 6 /etc/passwd` -xdev -name .netrc 2&gt;/dev/null
+
+			Is it the case that any .netrc files exist?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-accounts_password_warn_age_login_defs_question:question:1">
+      <question_text>
+To check the password warning age, run the command:
+$ grep PASS_WARN_AGE /etc/login.defs
+A value of 7 days would be nowadays considered to be a standard.
+
+			Is it the case that it is not set to the required value?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-accounts_max_concurrent_login_sessions_question:question:1">
+      <question_text>
+Run the following command to ensure the maxlogins value is configured for all users on the system:
+# grep "maxlogins" /etc/security/limits.conf
+You should receive output similar to the following:
+*          hard    maxlogins       
+
+			Is it the case that maxlogins is not equal to or less than the expected value?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-accounts_logon_fail_delay_question:question:1">
+      <question_text>
+Verify the FAIL_DELAY setting is configured correctly in the /etc/login.defs file by running the following command:
+$ sudo grep -i "FAIL_DELAY" /etc/login.defs
+All output must show the value of FAIL_DELAY set as shown in the below:
+$ sudo grep -i "FAIL_DELAY" /etc/login.defs
+fail_delay 
+
+			Is it the case that the above command returns no output, or FAIL_DELAY is configured less than the expected value?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-accounts_root_path_dirs_no_write_question:question:1">
+      <question_text>
+To ensure write permissions are disabled for group and other for each element in root's path, run the following command:
+$ sudo ls -ld DIR
+
+			Is it the case that group or other write permissions exist?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-file_permissions_home_dirs_question:question:1">
+      <question_text>
+To ensure the user home directory is not group-writable or world-readable, run the following:
+$ sudo ls -ld /home/USER
+
+			Is it the case that the user home directory is group-writable or world-readable?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-accounts_umask_etc_bashrc_question:question:1">
+      <question_text>
+Verify the umask setting is configured correctly in the /etc/bashrc file by running the following command:
+# grep "umask" /etc/bashrc
+All output must show the value of umask set as shown below:
+# grep "umask" /etc/bashrc
+umask 
+umask 
+
+			Is it the case that the above command returns no output, or if the umask is configured incorrectly?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-accounts_umask_etc_csh_cshrc_question:question:1">
+      <question_text>
+Verify the umask setting is configured correctly in the /etc/csh.cshrc file by
+running the following command:
+# grep "umask" /etc/csh.cshrc
+All output must show the value of umask set as shown in the below:
+# grep "umask" /etc/csh.cshrc
+umask 
+
+			Is it the case that the above command returns no output, or if the umask is configured incorrectly?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-accounts_umask_etc_profile_question:question:1">
+      <question_text>
+Verify the umask setting is configured correctly in the /etc/profile file by
+running the following command:
+# grep "umask" /etc/profile
+All output must show the value of umask set as shown in the below:
+# grep "umask" /etc/profile
+umask 
+
+			Is it the case that the above command returns no output, or if the umask is configured incorrectly?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-accounts_umask_etc_login_defs_question:question:1">
+      <question_text>
+Verify the UMASK setting is configured correctly in the /etc/login.defs file by running the following command:
+# grep -i "UMASK" /etc/login.defs
+All output must show the value of umask set as shown in the below:
+# grep -i "UMASK" /etc/login.defs
+umask 
+
+			Is it the case that the above command returns no output, or if the umask is configured incorrectly?
+			</question_text>
+    </boolean_question>
+  </questions>
+</ocil>

@@ -1,0 +1,1 @@
+echo "install ieee1394 /bin/true" > /etc/modprobe.d/ieee1394.conf

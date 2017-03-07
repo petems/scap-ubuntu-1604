@@ -1,0 +1,511 @@
+<fix-content system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <fix-group id="ansible" system="urn:xccdf:fix:script:ansible" xmlns="http://checklists.nist.gov/xccdf/1.1">
+    <fix rule="package_telnet_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure telnet is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - telnet
+</fix>
+    <fix rule="package_aide_installed" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Ensure aide is installed
+  package:
+    name="{{item}}"
+    state=present
+  with_items:
+    - aide
+</fix>
+    <fix rule="package_ypbind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure ypbind is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - ypbind
+</fix>
+    <fix rule="package_audit_installed" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Ensure audit is installed
+  package:
+    name="{{item}}"
+    state=present
+  with_items:
+    - audit
+</fix>
+    <fix rule="package_rsh_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure rsh is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - rsh
+</fix>
+    <fix rule="package_rsh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure rsh-server is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - rsh-server
+</fix>
+    <fix rule="package_talk_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure talk is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - talk
+</fix>
+    <fix rule="package_httpd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure httpd is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - httpd
+</fix>
+    <fix rule="package_vsftpd_installed" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Ensure vsftpd is installed
+  package:
+    name="{{item}}"
+    state=present
+  with_items:
+    - vsftpd
+</fix>
+    <fix rule="package_dovecot_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure dovecot is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - dovecot
+</fix>
+    <fix rule="package_samba-common_installed" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Ensure samba-common is installed
+  package:
+    name="{{item}}"
+    state=present
+  with_items:
+    - samba-common
+</fix>
+    <fix rule="package_net-snmp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure net-snmp is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - net-snmp
+</fix>
+    <fix rule="package_talk-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure talk-server is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - talk-server
+</fix>
+    <fix rule="package_openssh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure openssh-server is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - openssh-server
+</fix>
+    <fix rule="file_permissions_etc_shadow" complexity="low" disruption="low" reboot="false" strategy="configure">- name: Ensure permission 0640 on /etc/shadow
+  file:
+    path="{{item}}"
+    mode=0640
+  with_items:
+    - /etc/shadow
+</fix>
+    <fix rule="package_telnetd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure telnetd is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - telnetd
+</fix>
+    <fix rule="service_rsyslog_enabled" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Enable service rsyslog
+  service:
+    name="{{item}}"
+    enabled="yes"
+    state="started"
+  with_items:
+    - rsyslog
+
+</fix>
+    <fix rule="mount_options_tmp_nodev" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /tmp ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /tmp ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /tmp ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nodevS are set on /tmp
+  mount:
+    path: "/tmp"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nodev"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="package_cron_installed" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Ensure cron is installed
+  package:
+    name="{{item}}"
+    state=present
+  with_items:
+    - cron
+</fix>
+    <fix rule="service_ntpd_enabled" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Enable service ntpd
+  service:
+    name="{{item}}"
+    enabled="yes"
+    state="started"
+  with_items:
+    - ntpd
+
+</fix>
+    <fix rule="service_auditd_enabled" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Enable service auditd
+  service:
+    name="{{item}}"
+    enabled="yes"
+    state="started"
+  with_items:
+    - auditd
+
+</fix>
+    <fix rule="package_telnetd-ssl_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure telnetd-ssl is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - telnetd-ssl
+</fix>
+    <fix rule="mount_options_home_nosuid" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /home ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /home ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /home ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nosuidS are set on /home
+  mount:
+    path: "/home"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nosuid"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="mount_options_home_nodev" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /home ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /home ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /home ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nodevS are set on /home
+  mount:
+    path: "/home"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nodev"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="mount_options_var_log_nodev" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /var/log ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /var/log ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /var/log ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nodevS are set on /var/log
+  mount:
+    path: "/var/log"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nodev"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="mount_options_var_log_noexec" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /var/log ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /var/log ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /var/log ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission noexecS are set on /var/log
+  mount:
+    path: "/var/log"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},noexec"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="package_nis_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure nis is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - nis
+</fix>
+    <fix rule="mount_options_var_lib_nodev" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /var/lib ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /var/lib ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /var/lib ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nodevS are set on /var/lib
+  mount:
+    path: "/var/lib"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nodev"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="file_permissions_etc_passwd" complexity="low" disruption="low" reboot="false" strategy="configure">- name: Ensure permission 0644 on /etc/passwd
+  file:
+    path="{{item}}"
+    mode=0644
+  with_items:
+    - /etc/passwd
+</fix>
+    <fix rule="package_inetutils-telnetd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure inetutils-telnetd is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - inetutils-telnetd
+</fix>
+    <fix rule="mount_options_usr_nodev" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /usr ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /usr ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /usr ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nodevS are set on /usr
+  mount:
+    path: "/usr"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nodev"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="mount_options_var_nodev" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /var ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /var ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /var ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nodevS are set on /var
+  mount:
+    path: "/var"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nodev"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="mount_options_var_lib_nosuid" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /var/lib ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /var/lib ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /var/lib ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nosuidS are set on /var/lib
+  mount:
+    path: "/var/lib"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nosuid"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="service_sshd_disabled" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Disable service sshd
+  service:
+    name="{{item}}"
+    enabled="no"
+    state="stopped"
+  with_items:
+    - sshd
+
+</fix>
+    <fix rule="mount_options_var_log_nosuid" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /var/log ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /var/log ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /var/log ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nosuidS are set on /var/log
+  mount:
+    path: "/var/log"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nosuid"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="service_cron_enabled" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Enable service cron
+  service:
+    name="{{item}}"
+    enabled="yes"
+    state="started"
+  with_items:
+    - cron
+
+</fix>
+    <fix rule="mount_options_var_nosuid" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /var ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /var ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /var ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nosuidS are set on /var
+  mount:
+    path: "/var"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nosuid"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="package_auditd_installed" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Ensure auditd is installed
+  package:
+    name="{{item}}"
+    state=present
+  with_items:
+    - auditd
+</fix>
+    <fix rule="package_ntpdate_removed" complexity="low" disruption="low" reboot="false" strategy="disable">- name: Ensure ntpdate is removed
+  package:
+    name="{{item}}"
+    state=absent
+  with_items:
+    - ntpdate
+</fix>
+    <fix rule="package_ntp_installed" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Ensure ntp is installed
+  package:
+    name="{{item}}"
+    state=present
+  with_items:
+    - ntp
+</fix>
+    <fix rule="file_permissions_etc_group" complexity="low" disruption="low" reboot="false" strategy="configure">- name: Ensure permission 0644 on /etc/group
+  file:
+    path="{{item}}"
+    mode=0644
+  with_items:
+    - /etc/group
+</fix>
+    <fix rule="mount_options_var_noexec" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /var ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /var ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /var ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission noexecS are set on /var
+  mount:
+    path: "/var"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},noexec"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="mount_options_tmp_nosuid" complexity="low" disruption="high" reboot="false" strategy="configure">- name: get back device associated to mountpoint
+  shell: mount |grep ' /tmp ' |cut -d ' ' -f 1
+  register: device_name
+
+- name: get back device previous mount option
+  shell: mount |grep ' /tmp ' | sed -re 's:.*\((.*)\):\1:'
+  register: device_cur_mountoption
+
+- name: get back device fstype
+  shell: mount |grep ' /tmp ' | cut -d ' ' -f 5
+  register: device_fstype
+
+- name: Ensure permission nosuidS are set on /tmp
+  mount:
+    path: "/tmp"
+    src: "{{device_name.stdout}}"
+    opts: "{{device_cur_mountoption.stdout}},nosuid"
+    state: "mounted"
+    fstype: "{{device_fstype.stdout}}"
+
+</fix>
+    <fix rule="package_rsyslog_installed" complexity="low" disruption="low" reboot="false" strategy="enable">- name: Ensure rsyslog is installed
+  package:
+    name="{{item}}"
+    state=present
+  with_items:
+    - rsyslog
+</fix>
+    <fix rule="file_permissions_etc_gshadow" complexity="low" disruption="low" reboot="false" strategy="configure">- name: Ensure permission 0640 on /etc/gshadow
+  file:
+    path="{{item}}"
+    mode=0640
+  with_items:
+    - /etc/gshadow
+</fix>
+  </fix-group>
+</fix-content>

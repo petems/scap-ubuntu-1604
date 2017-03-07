@@ -1,0 +1,177 @@
+<fix-content system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <fix-group id="ansible" system="urn:xccdf:fix:script:ansible" xmlns="http://checklists.nist.gov/xccdf/1.1">
+    <fix rule="file_permissions_library_dirs" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+- name: "Read list of world and group writable files in libraries directories"
+  shell: "find /lib /lib64 /usr/lib /usr/lib64 -perm /022 -type f"
+  register: world_writable_library_files
+  changed_when: False
+  failed_when: False
+
+- name: "Disable world/group writability to library files"
+  file:
+    path: "{{item}}"
+    mode: "go-w"
+  with_items: "{{ world_writable_library_files.stdout_lines }}"
+  when: world_writable_library_files.stdout_lines | length &gt; 0
+</fix>
+    <fix rule="file_permissions_binary_dirs" complexity="medium" disruption="medium" reboot="false" strategy="restrict">
+- name: "Read list of world and group writable system executables"
+  shell: "find /bin /usr/bin /usr/local/bin /sbin /usr/sbin /usr/local/sbin /usr/libexec -perm /022 -type f"
+  register: world_writable_library_files
+  changed_when: False
+  failed_when: False
+
+- name: "Remove world/group writability of system executables"
+  file:
+    path: "{{item}}"
+    mode: "go-w"
+  with_items: "{{ world_writable_library_files.stdout_lines }}"
+  when: world_writable_library_files.stdout_lines | length &gt; 0
+</fix>
+    <fix rule="accounts_root_path_dirs_no_write" complexity="low" disruption="medium" reboot="false" strategy="restrict">
+- name: "Fail if user is not root"
+  fail:
+    msg: 'Root account required to read root $PATH'
+  when: ansible_user != "root"
+  
+- name: "Get root paths which are not symbolic links"
+  shell: 'tr ":" "\n" &lt;&lt;&lt; "$PATH" | xargs -I% find % -maxdepth 0 -type d'
+  changed_when: False
+  failed_when: False
+  register: root_paths
+  when: ansible_user == "root"
+    
+- name: "Disable writability to root directories"
+  file:
+    path: "{{item}}"
+    mode: "g-w,o-w"
+  with_items: "{{ root_paths.stdout_lines }}"
+  when: root_paths.stdout_lines is defined
+
+</fix>
+    <fix rule="rpm_verify_permissions" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+- name: "Read list of files with incorrect permissions"
+  shell: "rpm -Va | grep '^.M' | sed -r 's;^.*\\s+(.+);\\1;g'"
+  register: files_with_incorrect_permissions
+  failed_when: False
+  changed_when: False
+
+- name: "Correct file permissions with RPM"
+  shell: "rpm --setperms $(rpm -qf '{{item}}')"
+  with_items: "{{ files_with_incorrect_permissions.stdout_lines }}"
+  when: files_with_incorrect_permissions.stdout_lines | length &gt; 0
+
+</fix>
+    <fix rule="ensure_gpgcheck_globally_activated" complexity="low" disruption="medium" reboot="false" strategy="unknown">
+- name: "Check existence of yum on Fedora"
+  stat:
+    path: /etc/yum.conf
+  register: yum_config_file
+  when: ansible_distribution == "Fedora"
+
+# We can have yum also in Fedora, but probably not forever
+- name: Ensure GPG check is globally activated (yum)
+  ini_file:
+    dest: "{{item}}"
+    section: main
+    option: gpgcheck
+    value: 1
+    create: False
+  with_items: "/etc/yum.conf"
+  when: ansible_distribution == "RedHat" or yum_config_file.stat.exists
+
+- name: Ensure GPG check is globally activated (dnf)
+  ini_file:
+    dest: "{{item}}"
+    section: main
+    option: gpgcheck
+    value: 1
+    create: False
+  with_items: "/etc/dnf/dnf.conf"
+  when: ansible_distribution == "Fedora"
+</fix>
+    <fix rule="file_ownership_binary_dirs" complexity="medium" disruption="medium" reboot="false" strategy="restrict">
+- name: "Read list of system executables without root ownership"
+  shell: "find /bin/ /usr/bin/ /usr/local/bin/ /sbin/ /usr/sbin/ /usr/local/sbin/ /usr/libexec \\! -user root"
+  register: no_root_system_executables
+  changed_when: False
+  failed_when: False
+
+- name: "Set ownership to root of system executables"
+  file:
+    path: "{{item}}"
+    owner: "root"
+  with_items: "{{ no_root_system_executables.stdout_lines }}"
+  when: no_root_system_executables.stdout_lines | length &gt; 0
+</fix>
+    <fix rule="rpm_verify_hashes" complexity="high" disruption="medium" reboot="false" strategy="unknown">
+- name: "Set fact: Package manager reinstall command (dnf)"
+  set_fact:
+    package_manager_reinstall_cmd: dnf reinstall -y
+  when: ansible_distribution == "Fedora"
+
+- name: "Set fact: Package manager reinstall command (yum)"
+  set_fact:
+    package_manager_reinstall_cmd: yum reinstall -y
+  when: ansible_distribution == "RedHat"
+
+- name: "Read files with incorrect hash"
+  shell: "rpm -Va | grep -E '^..5.* /(bin|sbin|lib|lib64|usr)/' | sed -r 's;^.*\\s+(.+);\\1;g'"
+  register: files_with_incorrect_hash
+  changed_when: False
+  when: package_manager_reinstall_cmd is defined
+
+- name: "Reinstall packages of files with incorrect hash"
+  shell: "{{package_manager_reinstall_cmd}} $(rpm -qf '{{item}}')"
+  with_items: "{{ files_with_incorrect_hash.stdout_lines }}"
+  when: package_manager_reinstall_cmd is defined and (files_with_incorrect_hash.stdout_lines | length &gt; 0)
+</fix>
+    <fix rule="ensure_redhat_gpgkey_installed" complexity="medium" disruption="medium" reboot="false" strategy="restrict">
+- name: "Read permission of GPG key directory"
+  stat:
+    path: /etc/pki/rpm-gpg/
+  register: gpg_key_directory_permission
+
+  # It should fail, if it doesn't find any fingerprints in file - maybe file was not parsed well.
+- name: "Read signatures in GPG key"
+  shell: "gpg --with-fingerprint '/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release' | grep 'Key fingerprint =' | tr -s ' ' | sed 's;.*= ;;g'"
+  changed_when: False
+  register: gpg_fingerprints
+
+- name: "Set Fact: Valid fingerprints"
+  set_fact:
+     gpg_valid_fingerprints: ("567E 347A D004 4ADE 55BA 8A5F 199E 2F91 FD43 1D51" "43A6 E49C 4A38 F4BE 9ABF 2A53 4568 9C88 2FA6 58E0")
+  
+- name: "Import RedHat GPG key"
+  rpm_key:
+    state: present
+    key: /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+  when:
+    (gpg_key_directory_permission.stat.mode &lt;= '0755')
+    and ({{ gpg_fingerprints.stdout_lines | difference(gpg_valid_fingerprints) }} | length == 0)
+    and (gpg_fingerprints.stdout_lines | length &gt; 0)
+    and (ansible_distribution == "RedHat")
+</fix>
+    <fix rule="no_empty_passwords" complexity="low" disruption="medium" reboot="false" strategy="configure">
+- name: "Prevent Log In to Accounts With Empty Password"
+  replace:
+    dest: /etc/pam.d/system-auth
+    regexp: 'nullok\s*'
+    replace: ''
+</fix>
+    <fix rule="file_ownership_library_dirs" complexity="medium" disruption="medium" reboot="false" strategy="restrict">
+- name: "Read list libraries without root ownership"
+  shell: "find -L /usr/lib /usr/lib64 /lib /lib64 \\! -user root"
+  register: libraries_not_owned_by_root
+  changed_when: False
+  failed_when: False
+
+- name: "Set ownership of system libraries to root"
+  file:
+    path: "{{item}}"
+    owner: "root"
+  with_items: "{{ libraries_not_owned_by_root.stdout_lines }}"
+  when: libraries_not_owned_by_root | length &gt; 0
+</fix>
+  </fix-group>
+</fix-content>

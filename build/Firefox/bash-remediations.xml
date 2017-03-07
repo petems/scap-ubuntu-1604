@@ -1,0 +1,114 @@
+<fix-content system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <fix-group id="bash" system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+    <fix rule="firefox_preferences-javascript_window_changes" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "dom.disable_window_flip" "true"
+</fix>
+    <fix rule="firefox_preferences-cookies_user_notice" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "privacy.sanitize.promptOnSanitize" "false"
+</fix>
+    <fix rule="firefox_preferences-pop-up_windows" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "dom.disable_window_open_feature.status" "true"
+</fix>
+    <fix rule="firefox_preferences-auto-download_actions" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "browser.helperApps.alwaysAsk.force" "true"
+</fix>
+    <fix rule="firefox_preferences-ssl_version_3" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "security.enable_ssl3" "false"
+</fix>
+    <fix rule="firefox_preferences-verification" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "security.default_personal_cert" "\"Ask Every Time\""
+</fix>
+    <fix rule="firefox_preferences-javascript_status_bar_text" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "dom.disable_window_open_feature.status" "true"
+</fix>
+    <fix rule="firefox_preferences-javascript_status_bar_changes" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "dom.disable_window_status_change" "true"
+</fix>
+    <fix rule="firefox_preferences-cookies_clear" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "privacy.sanitize.sanitizeOnShutdown" "true"
+</fix>
+    <fix rule="firefox_preferences-lock_settings_config_file" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_js_setting"/>
+firefox_js_setting "stig_settings.js" "general.config.filename" "\"stig.cfg\""
+</fix>
+    <fix rule="firefox_preferences-autofill_passwords" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "signon.prefillForms" "false"
+</fix>
+    <fix rule="firefox_preferences-shell_protocol" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "network.protocol-handler.external.shell" "false"
+</fix>
+    <fix rule="firefox_preferences-autofill_forms" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "browser.formfill.enable" "false"
+</fix>
+    <fix rule="firefox_preferences-ssl_version_2" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "security.enable_ssl2" "false"
+</fix>
+    <fix rule="firefox_preferences-javascript_context_menus" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "dom.event.contextmenu.enabled" "false"
+</fix>
+    <fix rule="firefox_preferences-auto-update_of_firefox" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "app.update.enabled" "false"
+</fix>
+    <fix rule="firefox_preferences-javascript_window_resizing" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "dom.disable_window_move_resize" "true"
+</fix>
+    <fix rule="firefox_preferences-addons_plugin_updates" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "extensions.update.enabled" "false"
+</fix>
+    <fix rule="firefox_preferences-ssl_protocol_tls" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "security.enable_tls" "true"
+</fix>
+    <fix rule="firefox_preferences-enable_ca_trust" complexity="high" disruption="medium" reboot="false" strategy="restrict">P11=$(readlink /etc/alternatives/libnssckbi.so*)
+P11LIB="/usr/lib/pkcs11/p11-kit-trust.so"
+P11LIB64="/usr/lib64/pkcs11/p11-kit-trust.so"
+
+if ! [[ ${P11} == "${P11LIB64}" ]] || ! [[ ${P11} == "${P11LIB}" ]] ; then
+   /usr/bin/update-ca-trust enable
+fi
+</fix>
+    <fix rule="firefox_preferences-open_confirmation" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_required_file_types="<sub idref="var_required_file_types"/>"
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "plugin.disable_full_page_plugin_for_types" "\"${var_required_file_types}\""
+</fix>
+    <fix rule="firefox_preferences-search_update" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "browser.search.update" "false"
+</fix>
+    <fix rule="firefox_preferences-password_store" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "signon.rememberSignons" "false"
+</fix>
+    <fix rule="firefox_preferences-lock_settings_obscure" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_js_setting"/>
+firefox_js_setting "stig_settings.js" "general.config.obscure_value" "0"
+</fix>
+    <fix rule="firefox_preferences-non-secure_page_warning" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "security.warn_leaving_secure" "true"
+</fix>
+    <fix rule="firefox_preferences-home_page" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_default_home_page="<sub idref="var_default_home_page"/>"
+<sub idref="function_firefox_cfg_setting"/>
+firefox_cfg_setting "stig.cfg" "browser.startup.homepage" "\"${var_default_home_page}\""
+</fix>
+  </fix-group>
+</fix-content>

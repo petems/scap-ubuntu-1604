@@ -1,0 +1,590 @@
+<fix-content system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <fix-group id="puppet" system="urn:xccdf:fix:script:puppet" xmlns="http://checklists.nist.gov/xccdf/1.1">
+    <fix rule="package_net-snmp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_net-snmp
+
+class remove_net-snmp {
+  package { 'net-snmp':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_ypbind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_ypbind
+
+class remove_ypbind {
+  package { 'ypbind':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_dovecot_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_dovecot
+
+class remove_dovecot {
+  package { 'dovecot':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_telnet_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_telnet
+
+class remove_telnet {
+  package { 'telnet':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_talk-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_talk-server
+
+class remove_talk-server {
+  package { 'talk-server':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_rsh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_rsh-server
+
+class remove_rsh-server {
+  package { 'rsh-server':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_rsh_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_rsh
+
+class remove_rsh {
+  package { 'rsh':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_audit_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_audit
+
+class install_audit {
+  package { 'audit':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_samba-common_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_samba-common
+
+class install_samba-common {
+  package { 'samba-common':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_aide_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_aide
+
+class install_aide {
+  package { 'aide':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_httpd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_httpd
+
+class remove_httpd {
+  package { 'httpd':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_vsftpd_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_vsftpd
+
+class install_vsftpd {
+  package { 'vsftpd':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_talk_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_talk
+
+class remove_talk {
+  package { 'talk':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="file_permissions_sshd_private_key" complexity="low" disruption="low" reboot="false" strategy="disable">include ssh_private_key_perms
+
+class ssh_private_key_perms {
+  exec { 'sshd_priv_key':
+    command =&gt; "chmod 0640 /etc/ssh/*_key",
+    path    =&gt; '/bin:/usr/bin'
+  }
+}
+</fix>
+    <fix rule="file_permissions_sshd_pub_key" complexity="low" disruption="low" reboot="false" strategy="disable">include ssh_public_key_perms
+
+class ssh_public_key_perms {
+  exec { 'sshd_pub_key':
+    command =&gt; "chmod 0644 /etc/ssh/*.pub",
+    path    =&gt; '/bin:/usr/bin'
+  }
+}
+</fix>
+    <fix rule="package_pam_ldap_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_pam_ldap
+
+class remove_pam_ldap {
+  package { 'pam_ldap':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_squid_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_squid
+
+class remove_squid {
+  package { 'squid':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_iptables-ipv6_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_iptables-ipv6
+
+class install_iptables-ipv6 {
+  package { 'iptables-ipv6':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_cpuspeed_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_cpuspeed
+
+class remove_cpuspeed {
+  package { 'cpuspeed':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_autofs_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_autofs
+
+class remove_autofs {
+  package { 'autofs':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_irqbalance_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_irqbalance
+
+class install_irqbalance {
+  package { 'irqbalance':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_iptables_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_iptables
+
+class install_iptables {
+  package { 'iptables':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_esc_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_esc
+
+class install_esc {
+  package { 'esc':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_mdadm_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_mdadm
+
+class remove_mdadm {
+  package { 'mdadm':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_dbus_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_dbus
+
+class remove_dbus {
+  package { 'dbus':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_ntpdate_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_ntpdate
+
+class remove_ntpdate {
+  package { 'ntpdate':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_abrt_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_abrt
+
+class remove_abrt {
+  package { 'abrt':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_iputils_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_iputils
+
+class remove_iputils {
+  package { 'iputils':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_vsftpd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_vsftpd
+
+class remove_vsftpd {
+  package { 'vsftpd':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_postfix_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_postfix
+
+class install_postfix {
+  package { 'postfix':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_rpcbind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_rpcbind
+
+class remove_rpcbind {
+  package { 'rpcbind':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_hal_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_hal
+
+class remove_hal {
+  package { 'hal':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_samba-common_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_samba-common
+
+class remove_samba-common {
+  package { 'samba-common':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_cronie_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_cronie
+
+class install_cronie {
+  package { 'cronie':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_tftp-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_tftp-server
+
+class remove_tftp-server {
+  package { 'tftp-server':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_pam_pkcs11_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_pam_pkcs11
+
+class install_pam_pkcs11 {
+  package { 'pam_pkcs11':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_cyrus-sasl_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_cyrus-sasl
+
+class remove_cyrus-sasl {
+  package { 'cyrus-sasl':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_openldap-servers_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_openldap-servers
+
+class remove_openldap-servers {
+  package { 'openldap-servers':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_gdm_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_gdm
+
+class install_gdm {
+  package { 'gdm':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_cups_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_cups
+
+class remove_cups {
+  package { 'cups':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_smartmontools_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_smartmontools
+
+class remove_smartmontools {
+  package { 'smartmontools':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_screen_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_screen
+
+class install_screen {
+  package { 'screen':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_dhcp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_dhcp
+
+class remove_dhcp {
+  package { 'dhcp':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_ntp_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_ntp
+
+class install_ntp {
+  package { 'ntp':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_pcsc-lite_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_pcsc-lite
+
+class install_pcsc-lite {
+  package { 'pcsc-lite':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_telnet-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_telnet-server
+
+class remove_telnet-server {
+  package { 'telnet-server':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_setroubleshoot_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_setroubleshoot
+
+class remove_setroubleshoot {
+  package { 'setroubleshoot':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_subscription-manager_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_subscription-manager
+
+class remove_subscription-manager {
+  package { 'subscription-manager':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_xinetd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_xinetd
+
+class remove_xinetd {
+  package { 'xinetd':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_sendmail_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_sendmail
+
+class remove_sendmail {
+  package { 'sendmail':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_openswan_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_openswan
+
+class install_openswan {
+  package { 'openswan':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_quota_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_quota
+
+class remove_quota {
+  package { 'quota':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_at_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_at
+
+class remove_at {
+  package { 'at':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_portreserve_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_portreserve
+
+class remove_portreserve {
+  package { 'portreserve':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_openssh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_openssh-server
+
+class remove_openssh-server {
+  package { 'openssh-server':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_sysstat_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_sysstat
+
+class remove_sysstat {
+  package { 'sysstat':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_kexec-tools_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_kexec-tools
+
+class remove_kexec-tools {
+  package { 'kexec-tools':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_GConf2_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_GConf2
+
+class install_GConf2 {
+  package { 'GConf2':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_bind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_bind
+
+class remove_bind {
+  package { 'bind':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_psacct_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_psacct
+
+class install_psacct {
+  package { 'psacct':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_mcstrans_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_mcstrans
+
+class remove_mcstrans {
+  package { 'mcstrans':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_qpid-cpp-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_qpid-cpp-server
+
+class remove_qpid-cpp-server {
+  package { 'qpid-cpp-server':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_rhnsd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_rhnsd
+
+class remove_rhnsd {
+  package { 'rhnsd':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_policycoreutils_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_policycoreutils
+
+class install_policycoreutils {
+  package { 'policycoreutils':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_rsyslog_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_rsyslog
+
+class install_rsyslog {
+  package { 'rsyslog':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_avahi_installed" complexity="low" disruption="low" reboot="false" strategy="enable">include install_avahi
+
+class install_avahi {
+  package { 'avahi':
+    ensure =&gt; 'installed',
+  }
+}
+</fix>
+    <fix rule="package_oddjob_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_oddjob
+
+class remove_oddjob {
+  package { 'oddjob':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_nfs-utils_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_nfs-utils
+
+class remove_nfs-utils {
+  package { 'nfs-utils':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_samba_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_samba
+
+class remove_samba {
+  package { 'samba':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_libcgroup_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_libcgroup
+
+class remove_libcgroup {
+  package { 'libcgroup':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_xorg-x11-server-common_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_xorg-x11-server-common
+
+class remove_xorg-x11-server-common {
+  package { 'xorg-x11-server-common':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_ypserv_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_ypserv
+
+class remove_ypserv {
+  package { 'ypserv':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+    <fix rule="package_tftp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">include remove_tftp
+
+class remove_tftp {
+  package { 'tftp':
+    ensure =&gt; 'purged',
+  }
+}
+</fix>
+  </fix-group>
+</fix-content>

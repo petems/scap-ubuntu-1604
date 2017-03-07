@@ -1,0 +1,1 @@
+echo "install bridge /bin/true" > /etc/modprobe.d/bridge.conf

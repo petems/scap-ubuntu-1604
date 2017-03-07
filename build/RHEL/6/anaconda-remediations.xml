@@ -1,0 +1,220 @@
+<fix-content system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <fix-group id="anaconda" system="urn:redhat:anaconda:pre" xmlns="http://checklists.nist.gov/xccdf/1.1">
+    <fix rule="package_net-snmp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=net-snmp
+</fix>
+    <fix rule="package_ypbind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=ypbind
+</fix>
+    <fix rule="package_samba-common_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=samba-common
+</fix>
+    <fix rule="package_telnet_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=telnet
+</fix>
+    <fix rule="package_rsh_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=rsh
+</fix>
+    <fix rule="package_dovecot_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=dovecot
+</fix>
+    <fix rule="package_vsftpd_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=vsftpd
+</fix>
+    <fix rule="package_rsh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=rsh-server
+</fix>
+    <fix rule="package_aide_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=aide
+</fix>
+    <fix rule="package_audit_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=audit
+</fix>
+    <fix rule="package_httpd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=httpd
+</fix>
+    <fix rule="package_talk-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=talk-server
+</fix>
+    <fix rule="package_talk_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=talk
+</fix>
+    <fix rule="mount_option_tmp_nodev" complexity="low" disruption="high" reboot="false" strategy="enable">
+part /tmp -mountoptions="nodev"
+</fix>
+    <fix rule="package_iputils_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=iputils
+</fix>
+    <fix rule="package_psacct_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=psacct
+</fix>
+    <fix rule="package_portreserve_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=portreserve
+</fix>
+    <fix rule="package_cups_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=cups
+</fix>
+    <fix rule="package_smartmontools_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=smartmontools
+</fix>
+    <fix rule="package_dhcp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=dhcp
+</fix>
+    <fix rule="package_pam_ldap_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=pam_ldap
+</fix>
+    <fix rule="package_GConf2_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=GConf2
+</fix>
+    <fix rule="package_openssh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=openssh-server
+</fix>
+    <fix rule="package_kexec-tools_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=kexec-tools
+</fix>
+    <fix rule="package_policycoreutils_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=policycoreutils
+</fix>
+    <fix rule="package_hal_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=hal
+</fix>
+    <fix rule="package_qpid-cpp-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=qpid-cpp-server
+</fix>
+    <fix rule="package_samba_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=samba
+</fix>
+    <fix rule="package_postfix_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=postfix
+</fix>
+    <fix rule="package_autofs_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=autofs
+</fix>
+    <fix rule="package_screen_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=screen
+</fix>
+    <fix rule="package_ntp_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=ntp
+</fix>
+    <fix rule="package_libcgroup_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=libcgroup
+</fix>
+    <fix rule="package_rpcbind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=rpcbind
+</fix>
+    <fix rule="package_quota_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=quota
+</fix>
+    <fix rule="package_pam_pkcs11_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=pam_pkcs11
+</fix>
+    <fix rule="package_sysstat_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=sysstat
+</fix>
+    <fix rule="package_openswan_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=openswan
+</fix>
+    <fix rule="package_bind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=bind
+</fix>
+    <fix rule="package_sendmail_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=sendmail
+</fix>
+    <fix rule="package_subscription-manager_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=subscription-manager
+</fix>
+    <fix rule="package_tftp-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=tftp-server
+</fix>
+    <fix rule="package_setroubleshoot_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=setroubleshoot
+</fix>
+    <fix rule="package_openldap-servers_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=openldap-servers
+</fix>
+    <fix rule="package_dbus_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=dbus
+</fix>
+    <fix rule="package_rhnsd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=rhnsd
+</fix>
+    <fix rule="package_abrt_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=abrt
+</fix>
+    <fix rule="package_ntpdate_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=ntpdate
+</fix>
+    <fix rule="package_cpuspeed_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=cpuspeed
+</fix>
+    <fix rule="package_esc_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=esc
+</fix>
+    <fix rule="package_iptables-ipv6_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=iptables-ipv6
+</fix>
+    <fix rule="package_squid_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=squid
+</fix>
+    <fix rule="package_rsyslog_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=rsyslog
+</fix>
+    <fix rule="package_mcstrans_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=mcstrans
+</fix>
+    <fix rule="package_avahi_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=avahi
+</fix>
+    <fix rule="package_xorg-x11-server-common_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=xorg-x11-server-common
+</fix>
+    <fix rule="package_gdm_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=gdm
+</fix>
+    <fix rule="package_vsftpd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=vsftpd
+</fix>
+    <fix rule="package_irqbalance_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=irqbalance
+</fix>
+    <fix rule="package_nfs-utils_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=nfs-utils
+</fix>
+    <fix rule="package_cyrus-sasl_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=cyrus-sasl
+</fix>
+    <fix rule="package_iptables_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=iptables
+</fix>
+    <fix rule="package_telnet-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=telnet-server
+</fix>
+    <fix rule="package_cronie_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=cronie
+</fix>
+    <fix rule="package_at_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=at
+</fix>
+    <fix rule="package_mdadm_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=mdadm
+</fix>
+    <fix rule="package_tftp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=tftp
+</fix>
+    <fix rule="package_oddjob_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=oddjob
+</fix>
+    <fix rule="package_xinetd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=xinetd
+</fix>
+    <fix rule="package_pcsc-lite_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+package -add=pcsc-lite
+</fix>
+    <fix rule="package_samba-common_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=samba-common
+</fix>
+    <fix rule="package_ypserv_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+package -remove=ypserv
+</fix>
+  </fix-group>
+</fix-content>

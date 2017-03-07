@@ -1,0 +1,129 @@
+<html xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cdf="http://checklists.nist.gov/xccdf/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title> Rules with
+			cis
+			Reference in Guide to the Secure Configuration of Red Hat Enterprise Linux 6</title>
+</head>
+<body>
+<br><br><div style="text-align: center; font-size: x-large; font-weight:bold">
+			Rules with  cis Reference in Guide to the Secure Configuration of Red Hat Enterprise Linux 6</div>
+<br><br><style type="text/css">
+		table
+		{
+			border-collapse:collapse;
+		}
+		table, th, td
+		{
+			border: 2px solid #dcdcdc;
+			border-left: none;
+			border-right: none;
+			vertical-align: top;
+			padding: 2px;
+			font-family: verdana,arial,sans-serif;
+			font-size:11px;
+		}
+		pre { 
+			white-space: pre-wrap;
+			white-space: -moz-pre-wrap !important;
+			word-wrap:break-word; 
+		}
+		table tr:nth-child(2n+2) { background-color: #f4f4f4; }
+		thead
+		{
+			display: table-header-group;
+			font-weight: bold;
+			background-color: #dedede;
+		}
+	</style>
+<table>
+<thead>
+<td>Reference (cis)</td>
+<td>Rule Title</td>
+<td>Description</td>
+<td>Rationale</td>
+<td>Variable Setting</td>
+</thead>
+<tr>
+<td>4.4.1.1</td>
+<td>Configure Accepting IPv6 Router Advertisements</td>
+<td xml:lang="en-US">
+                
+    To set the runtime status of the <code>net.ipv6.conf.all.accept_ra</code> kernel parameter,
+    run the following command:
+    <pre xml:space="preserve">$ sudo sysctl -w net.ipv6.conf.all.accept_ra=0</pre>
+    If this is not the system's default value, add the following line to <code>/etc/sysctl.conf</code>:
+    <pre xml:space="preserve">net.ipv6.conf.all.accept_ra = 0</pre>
+              </td>
+<td xml:lang="en-US">
+An illicit router advertisement message could result in a man-in-the-middle attack.
+</td>
+<td></td>
+</tr>
+<tr>
+<td>4.4.1.1</td>
+<td>Configure Accepting IPv6 Router Advertisements</td>
+<td xml:lang="en-US">
+                
+    To set the runtime status of the <code>net.ipv6.conf.default.accept_ra</code> kernel parameter,
+    run the following command:
+    <pre xml:space="preserve">$ sudo sysctl -w net.ipv6.conf.default.accept_ra=0</pre>
+    If this is not the system's default value, add the following line to <code>/etc/sysctl.conf</code>:
+    <pre xml:space="preserve">net.ipv6.conf.default.accept_ra = 0</pre>
+              </td>
+<td xml:lang="en-US">
+An illicit router advertisement message could result in a man-in-the-middle attack.
+</td>
+<td></td>
+</tr>
+<tr>
+<td>4.4.1.2</td>
+<td>Configure Accepting IPv6 Redirects By Default</td>
+<td xml:lang="en-US">
+                
+    To set the runtime status of the <code>net.ipv6.conf.all.accept_redirects</code> kernel parameter,
+    run the following command:
+    <pre xml:space="preserve">$ sudo sysctl -w net.ipv6.conf.all.accept_redirects=0</pre>
+    If this is not the system's default value, add the following line to <code>/etc/sysctl.conf</code>:
+    <pre xml:space="preserve">net.ipv6.conf.all.accept_redirects = 0</pre>
+              </td>
+<td xml:lang="en-US">
+An illicit ICMP redirect message could result in a man-in-the-middle attack.
+</td>
+<td></td>
+</tr>
+<tr>
+<td>4.4.1.2</td>
+<td>Configure Accepting IPv6 Redirects By Default</td>
+<td xml:lang="en-US">
+                
+    To set the runtime status of the <code>net.ipv6.conf.default.accept_redirects</code> kernel parameter,
+    run the following command:
+    <pre xml:space="preserve">$ sudo sysctl -w net.ipv6.conf.default.accept_redirects=0</pre>
+    If this is not the system's default value, add the following line to <code>/etc/sysctl.conf</code>:
+    <pre xml:space="preserve">net.ipv6.conf.default.accept_redirects = 0</pre>
+              </td>
+<td xml:lang="en-US">
+An illicit ICMP redirect message could result in a man-in-the-middle attack.
+</td>
+<td></td>
+</tr>
+<tr>
+<td>4.1.1</td>
+<td>Disable Kernel Parameter for IPv6 Forwarding</td>
+<td xml:lang="en-US">
+                
+    To set the runtime status of the <code>net.ipv6.conf.all.forwarding</code> kernel parameter,
+    run the following command:
+    <pre xml:space="preserve">$ sudo sysctl -w net.ipv6.conf.all.forwarding=0</pre>
+    If this is not the system's default value, add the following line to <code>/etc/sysctl.conf</code>:
+    <pre xml:space="preserve">net.ipv6.conf.all.forwarding = 0</pre>
+              </td>
+<td xml:lang="en-US">IP forwarding permits the kernel to forward packets from one network
+interface to another. The ability to forward packets between two networks is
+only appropriate for systems acting as routers.</td>
+<td></td>
+</tr>
+</table>
+</body>
+</html>

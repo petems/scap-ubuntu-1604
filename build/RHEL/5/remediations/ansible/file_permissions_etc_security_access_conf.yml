@@ -1,0 +1,11 @@
+# platform = Red Hat Enterprise Linux 6, Red Hat Enterprise Linux 7, multi_platform_fedora, Debian 8
+# reboot = false
+# strategy = configure
+# complexity = low
+# disruption = low
+- name: Ensure permission 0640 on /etc/security/access.conf
+  file:
+    path="{{item}}"
+    mode=0640
+  with_items:
+    - /etc/security/access.conf

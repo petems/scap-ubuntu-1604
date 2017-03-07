@@ -1,0 +1,849 @@
+<?xml version="1.0"?>
+<ocil xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://scap.nist.gov/schema/ocil/2.0" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <generator>
+    <schema_version>2.0</schema_version>
+    <timestamp>2017-03-07T15:01:04Z</timestamp>
+  </generator>
+  <questionnaires>
+    <questionnaire id="file_permissions_boot_system_map_ocil">
+      <title>Verify that local System.map file (if exists) is readable only by root</title>
+      <actions>
+        <test_action_ref>file_permissions_boot_system_map_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="file_permissions_etc_shadow_ocil">
+      <title>Verify Permissions and ownership on shadow File</title>
+      <actions>
+        <test_action_ref>file_permissions_etc_shadow_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="file_permissions_etc_gshadow_ocil">
+      <title>Verify Permissions and ownership on gshadow File</title>
+      <actions>
+        <test_action_ref>file_permissions_etc_gshadow_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="file_permissions_etc_passwd_ocil">
+      <title>Verify Permissions and ownership on passwd File</title>
+      <actions>
+        <test_action_ref>file_permissions_etc_passwd_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="file_permissions_etc_group_ocil">
+      <title>Verify Permissions and ownership on group File</title>
+      <actions>
+        <test_action_ref>file_permissions_etc_group_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="sysctl_fs_suid_dumpable_ocil">
+      <title>Disable Core Dumps for SUID programs</title>
+      <actions>
+        <test_action_ref>sysctl_fs_suid_dumpable_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="sysctl_kernel_randomize_va_space_ocil">
+      <title>Enable Randomized Layout of Virtual Address Space</title>
+      <actions>
+        <test_action_ref>sysctl_kernel_randomize_va_space_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="sysctl_kernel_kptr_restrict_ocil">
+      <title>Restrict exposed kernel pointers addresses access</title>
+      <actions>
+        <test_action_ref>sysctl_kernel_kptr_restrict_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="partition_for_tmp_ocil">
+      <title>Ensure /tmp Located On Separate Partition</title>
+      <actions>
+        <test_action_ref>partition_for_tmp_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="partition_for_var_ocil">
+      <title>Ensure /var Located On Separate Partition</title>
+      <actions>
+        <test_action_ref>partition_for_var_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="partition_for_var_log_ocil">
+      <title>Ensure /var/log Located On Separate Partition</title>
+      <actions>
+        <test_action_ref>partition_for_var_log_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="partition_for_var_log_audit_ocil">
+      <title>Ensure /var/log/audit Located On Separate Partition</title>
+      <actions>
+        <test_action_ref>partition_for_var_log_audit_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="partition_for_home_ocil">
+      <title>Ensure /home Located On Separate Partition</title>
+      <actions>
+        <test_action_ref>partition_for_home_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="partition_for_srv_ocil">
+      <title>Ensure /srv Located On Separate Partition</title>
+      <actions>
+        <test_action_ref>partition_for_srv_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="sysctl_fs_protected_symlinks_ocil">
+      <title>Disallow creating symlinks to a file you not own</title>
+      <actions>
+        <test_action_ref>sysctl_fs_protected_symlinks_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="sysctl_fs_protected_hardlinks_ocil">
+      <title>Disallow creating symlinks to a file you not own</title>
+      <actions>
+        <test_action_ref>sysctl_fs_protected_hardlinks_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="package_rsyslog_installed_ocil">
+      <title>Ensure rsyslog is Installed</title>
+      <actions>
+        <test_action_ref>package_rsyslog_installed_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="service_rsyslog_enabled_ocil">
+      <title>Enable rsyslog Service</title>
+      <actions>
+        <test_action_ref>service_rsyslog_enabled_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="rsyslog_files_ownership_ocil">
+      <title>Ensure Log Files Are Owned By Appropriate User</title>
+      <actions>
+        <test_action_ref>rsyslog_files_ownership_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="rsyslog_files_groupownership_ocil">
+      <title>Ensure Log Files Are Owned By Appropriate Group</title>
+      <actions>
+        <test_action_ref>rsyslog_files_groupownership_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="rsyslog_files_permissions_ocil">
+      <title>Ensure System Log Files Have Correct Permissions</title>
+      <actions>
+        <test_action_ref>rsyslog_files_permissions_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="rsyslog_remote_loghost_ocil">
+      <title>Ensure Logs Sent To Remote Host</title>
+      <actions>
+        <test_action_ref>rsyslog_remote_loghost_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ensure_logrotate_activated_ocil">
+      <title>Ensure Logrotate Runs Periodically</title>
+      <actions>
+        <test_action_ref>ensure_logrotate_activated_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="service_auditd_enabled_ocil">
+      <title>Enable the auditd service</title>
+      <actions>
+        <test_action_ref>service_auditd_enabled_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="service_ntpd_enabled_ocil">
+      <title>Enable the ntpd service</title>
+      <actions>
+        <test_action_ref>service_ntpd_enabled_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="sshd_allow_only_protocol2_ocil">
+      <title>Allow Only SSH Protocol 2</title>
+      <actions>
+        <test_action_ref>sshd_allow_only_protocol2_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="sshd_set_idle_timeout_ocil">
+      <title>Set SSH Idle Timeout Interval</title>
+      <actions>
+        <test_action_ref>sshd_set_idle_timeout_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="sshd_set_keepalive_ocil">
+      <title>Set SSH Client Alive Count</title>
+      <actions>
+        <test_action_ref>sshd_set_keepalive_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="sshd_disable_root_login_ocil">
+      <title>Disable SSH Root Login</title>
+      <actions>
+        <test_action_ref>sshd_disable_root_login_action</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="sshd_disable_empty_passwords_ocil">
+      <title>Disable SSH Access via Empty Passwords</title>
+      <actions>
+        <test_action_ref>sshd_disable_empty_passwords_action</test_action_ref>
+      </actions>
+    </questionnaire>
+  </questionnaires>
+  <test_actions>
+    <boolean_question_test_action id="file_permissions_boot_system_map_action" question_ref="file_permissions_boot_system_map_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="file_permissions_etc_shadow_action" question_ref="file_permissions_etc_shadow_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="file_permissions_etc_gshadow_action" question_ref="file_permissions_etc_gshadow_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="file_permissions_etc_passwd_action" question_ref="file_permissions_etc_passwd_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="file_permissions_etc_group_action" question_ref="file_permissions_etc_group_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="sysctl_fs_suid_dumpable_action" question_ref="sysctl_fs_suid_dumpable_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="sysctl_kernel_randomize_va_space_action" question_ref="sysctl_kernel_randomize_va_space_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="sysctl_kernel_kptr_restrict_action" question_ref="sysctl_kernel_kptr_restrict_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="partition_for_tmp_action" question_ref="partition_for_tmp_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="partition_for_var_action" question_ref="partition_for_var_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="partition_for_var_log_action" question_ref="partition_for_var_log_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="partition_for_var_log_audit_action" question_ref="partition_for_var_log_audit_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="partition_for_home_action" question_ref="partition_for_home_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="partition_for_srv_action" question_ref="partition_for_srv_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="sysctl_fs_protected_symlinks_action" question_ref="sysctl_fs_protected_symlinks_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="sysctl_fs_protected_hardlinks_action" question_ref="sysctl_fs_protected_hardlinks_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="package_rsyslog_installed_action" question_ref="package_rsyslog_installed_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="service_rsyslog_enabled_action" question_ref="service_rsyslog_enabled_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="rsyslog_files_ownership_action" question_ref="rsyslog_files_ownership_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="rsyslog_files_groupownership_action" question_ref="rsyslog_files_groupownership_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="rsyslog_files_permissions_action" question_ref="rsyslog_files_permissions_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="rsyslog_remote_loghost_action" question_ref="rsyslog_remote_loghost_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ensure_logrotate_activated_action" question_ref="ensure_logrotate_activated_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="service_auditd_enabled_action" question_ref="service_auditd_enabled_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="service_ntpd_enabled_action" question_ref="service_ntpd_enabled_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="sshd_allow_only_protocol2_action" question_ref="sshd_allow_only_protocol2_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="sshd_set_idle_timeout_action" question_ref="sshd_set_idle_timeout_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="sshd_set_keepalive_action" question_ref="sshd_set_keepalive_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="sshd_disable_root_login_action" question_ref="sshd_disable_root_login_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="sshd_disable_empty_passwords_action" question_ref="sshd_disable_empty_passwords_question">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+  </test_actions>
+  <questions>
+    <boolean_question id="file_permissions_boot_system_map_question">
+      <question_text>
+              
+    To check the permissions of /boot/Sysem.map-*, run the command:
+    $ ls -l /boot/Sysem.map-*
+    If properly configured, the output should indicate the following permissions:
+    -rw-------
+              
+    To check the ownership of /boot/System.map-*, run the command:
+    $ ls -lL /boot/System.map-*
+    If properly configured, the output should indicate the following owner:
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="file_permissions_etc_shadow_question">
+      <question_text>
+              
+    To check the permissions of /etc/shadow, run the command:
+    $ ls -l /etc/shadow
+    If properly configured, the output should indicate the following permissions:
+    -rw-r-----
+              
+    To check the ownership of /etc/shadow, run the command:
+    $ ls -lL /etc/shadow
+    If properly configured, the output should indicate the following owner:
+    root
+              
+    To check the group ownership of /etc/shadow, run the command:
+    $ ls -lL /etc/shadow
+    If properly configured, the output should indicate the following group-owner.
+    shadow
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="file_permissions_etc_gshadow_question">
+      <question_text>
+              
+    To check the permissions of /etc/gshadow, run the command:
+    $ ls -l /etc/gshadow
+    If properly configured, the output should indicate the following permissions:
+    -rw-r-----
+              
+    To check the ownership of /etc/gshadow, run the command:
+    $ ls -lL /etc/gshadow
+    If properly configured, the output should indicate the following owner:
+    root
+              
+    To check the group ownership of /etc/gshadow, run the command:
+    $ ls -lL /etc/gshadow
+    If properly configured, the output should indicate the following group-owner.
+    shadow
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="file_permissions_etc_passwd_question">
+      <question_text>
+              
+    To check the permissions of /etc/passwd, run the command:
+    $ ls -l /etc/passwd
+    If properly configured, the output should indicate the following permissions:
+    -rw-r--r--
+              
+    To check the ownership of /etc/passwd, run the command:
+    $ ls -lL /etc/passwd
+    If properly configured, the output should indicate the following owner:
+    root
+              
+    To check the group ownership of /etc/passwd, run the command:
+    $ ls -lL /etc/passwd
+    If properly configured, the output should indicate the following group-owner.
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="file_permissions_etc_group_question">
+      <question_text>
+              
+    To check the permissions of /etc/passwd, run the command:
+    $ ls -l /etc/passwd
+    If properly configured, the output should indicate the following permissions:
+    -rw-r--r--
+              
+    To check the ownership of /etc/passwd, run the command:
+    $ ls -lL /etc/passwd
+    If properly configured, the output should indicate the following owner:
+    root
+              
+    To check the group ownership of /etc/passwd, run the command:
+    $ ls -lL /etc/passwd
+    If properly configured, the output should indicate the following group-owner.
+    root
+            
+			Is it the case that it does not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="sysctl_fs_suid_dumpable_question">
+      <question_text>
+              
+    The status of the fs.suid_dumpable kernel parameter can be queried
+    by running the following command:
+    preserve$ sysctl fs.suid_dumpable
+    The output of the command should indicate a value of 0.
+    If this value is not the default value, investigate how it could have been
+    adjusted at runtime, and verify it is not set improperly in
+    /etc/sysctl.conf.
+    
+            
+			Is it the case that the correct value is not returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="sysctl_kernel_randomize_va_space_question">
+      <question_text>
+              
+    The status of the kernel.randomize_va_space kernel parameter can be queried
+    by running the following command:
+    preserve$ sysctl kernel.randomize_va_space
+    The output of the command should indicate a value of 2.
+    If this value is not the default value, investigate how it could have been
+    adjusted at runtime, and verify it is not set improperly in
+    /etc/sysctl.conf.
+    
+            
+			Is it the case that the correct value is not returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="sysctl_kernel_kptr_restrict_question">
+      <question_text>
+              
+    The status of the kernel.kptr_restrict kernel parameter can be queried
+    by running the following command:
+    preserve$ sysctl kernel.kptr_restrict
+    The output of the command should indicate a value of 1.
+    If this value is not the default value, investigate how it could have been
+    adjusted at runtime, and verify it is not set improperly in
+    /etc/sysctl.conf.
+    
+            
+			Is it the case that the correct value is not returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="partition_for_tmp_question">
+      <question_text>
+            
+    Run the following command to determine if /tmp 
+    is on its own partition or logical volume:
+
+  $ mount | grep "on /tmp "
+  If /tmp  has its own partition or volume group, a line
+  will be returned.
+  
+          
+			Is it the case that no line is returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="partition_for_var_question">
+      <question_text>
+            
+    Run the following command to determine if /var 
+    is on its own partition or logical volume:
+
+  $ mount | grep "on /var "
+  If /var  has its own partition or volume group, a line
+  will be returned.
+  
+          
+			Is it the case that no line is returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="partition_for_var_log_question">
+      <question_text>
+            
+    Run the following command to determine if /var/log 
+    is on its own partition or logical volume:
+
+  $ mount | grep "on /var/log "
+  If /var/log  has its own partition or volume group, a line
+  will be returned.
+  
+          
+			Is it the case that no line is returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="partition_for_var_log_audit_question">
+      <question_text>
+            
+    Run the following command to determine if /var/log/audit 
+    is on its own partition or logical volume:
+
+  $ mount | grep "on /var/log/audit "
+  If /var/log/audit  has its own partition or volume group, a line
+  will be returned.
+  
+          
+			Is it the case that no line is returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="partition_for_home_question">
+      <question_text>
+            
+    Run the following command to determine if /home 
+    is on its own partition or logical volume:
+
+  $ mount | grep "on /home "
+  If /home  has its own partition or volume group, a line
+  will be returned.
+  
+          
+			Is it the case that no line is returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="partition_for_srv_question">
+      <question_text>
+            
+    Run the following command to determine if /home 
+    is on its own partition or logical volume:
+
+  $ mount | grep "on /home "
+  If /home  has its own partition or volume group, a line
+  will be returned.
+  
+          
+			Is it the case that no line is returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="sysctl_fs_protected_symlinks_question">
+      <question_text>
+            
+    The status of the fs.protected_symlinks kernel parameter can be queried
+    by running the following command:
+    preserve$ sysctl fs.protected_symlinks
+    The output of the command should indicate a value of 1.
+    If this value is not the default value, investigate how it could have been
+    adjusted at runtime, and verify it is not set improperly in
+    /etc/sysctl.conf.
+    
+          
+			Is it the case that the correct value is not returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="sysctl_fs_protected_hardlinks_question">
+      <question_text>
+            
+    The status of the fs.protected_hardlinks kernel parameter can be queried
+    by running the following command:
+    preserve$ sysctl fs.protected_hardlinks
+    The output of the command should indicate a value of 1.
+    If this value is not the default value, investigate how it could have been
+    adjusted at runtime, and verify it is not set improperly in
+    /etc/sysctl.conf.
+    
+          
+			Is it the case that the correct value is not returned?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="package_rsyslog_installed_question">
+      <question_text>
+          
+    Run the following command to determine if the rsyslog package is installed:
+    $ rpm -q rsyslog
+        
+			Is it the case that the package is not installed?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="service_rsyslog_enabled_question">
+      <question_text>
+          
+        Run the following command to determine the current status of the
+rsyslog service:
+        $ sudo service rsyslog status
+        If the service is enabled, it should return the following: rsyslog is running...
+        
+			Is it the case that ?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="rsyslog_files_ownership_question">
+      <question_text>
+The owner of all log files written by rsyslog should be root.
+These log files are determined by the second part of each Rule line in
+/etc/rsyslog.conf and typically all appear in /var/log.
+To see the owner of a given log file, run the following command:
+$ ls -l LOGFILE
+
+			Is it the case that the owner is not root?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="rsyslog_files_groupownership_question">
+      <question_text>
+The group-owner of all log files written by rsyslog should be adm.
+These log files are determined by the second part of each Rule line in
+/etc/rsyslog.conf and typically all appear in /var/log.
+To see the group-owner of a given log file, run the following command:
+$ ls -l LOGFILE
+
+			Is it the case that the group-owner is not adm?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="rsyslog_files_permissions_question">
+      <question_text>
+The file permissions for all log files written by rsyslog 
+should be set to 640, or more restrictive.
+These log files are determined by the second part of each Rule line in
+/etc/rsyslog.conf and typically all appear in /var/log.
+To see the permissions of a given log file, run the following command:
+$ ls -l LOGFILE
+The permissions should be 640, or more restrictive.
+
+			Is it the case that the permissions are not correct?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="rsyslog_remote_loghost_question">
+      <question_text>
+To ensure logs are sent to a remote host, examine the file
+/etc/rsyslog.conf.
+If using UDP, a line similar to the following should be present:
+ *.* @loghost.example.com
+If using TCP, a line similar to the following should be present:
+ *.* @@loghost.example.com
+If using RELP, a line similar to the following should be present:
+ *.* :omrelp:loghost.example.com
+
+			Is it the case that none of these are present?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ensure_logrotate_activated_question">
+      <question_text>
+To determine the status and frequency of logrotate, run the following command:
+$ sudo grep logrotate /var/log/cron*
+If logrotate is configured properly, output should include references to 
+/etc/cron.daily.
+
+			Is it the case that logrotate is not configured to run daily?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="service_auditd_enabled_question">
+      <question_text>
+          
+        Run the following command to determine the current status of the
+auditd service:
+        $ sudo service auditd status
+        If the service is enabled, it should return the following: auditd is running...
+        
+			Is it the case that ?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="service_ntpd_enabled_question">
+      <question_text>
+          
+        Run the following command to determine the current status of the
+ntpd service:
+        $ sudo service ntpd status
+        If the service is enabled, it should return the following: ntpd is running...
+        
+			Is it the case that ?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="sshd_allow_only_protocol2_question">
+      <question_text>
+To check which SSH protocol version is allowed, run the following command:
+$ sudo grep Protocol /etc/ssh/sshd_config
+If configured properly, output should be Protocol 2
+
+			Is it the case that it is not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="sshd_set_idle_timeout_question">
+      <question_text>
+Run the following command to see what the timeout interval is:
+$ sudo grep ClientAliveInterval /etc/ssh/sshd_config
+If properly configured, the output should be:
+ClientAliveInterval 900
+
+			Is it the case that it is not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="sshd_set_keepalive_question">
+      <question_text>
+To ensure the SSH idle timeout will occur when the ClientAliveCountMax is set, run the following command:
+$ sudo grep ClientAliveCountMax /etc/ssh/sshd_config
+If properly configured, output should be:
+ClientAliveCountMax 0
+
+			Is it the case that it is not?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="sshd_disable_root_login_question">
+      <question_text>
+            
+    To determine how the SSH daemon's
+    PermitRootLogin
+    option is set, run the following command:
+    preserve$ sudo grep -i PermitRootLogin /etc/ssh/sshd_config
+      If a line indicating no is returned, then the required value is set.
+    
+          
+			Is it the case that the required value is not set?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="sshd_disable_empty_passwords_question">
+      <question_text>
+            
+    To determine how the SSH daemon's
+    PermitEmptyPasswords
+    option is set, run the following command:
+    preserve$ sudo grep -i PermitEmptyPasswords /etc/ssh/sshd_config
+      If no line, a commented line, or a line indicating the value
+      no is returned, then the required value is set.
+    
+          
+			Is it the case that the required value is not set?
+			</question_text>
+    </boolean_question>
+  </questions>
+</ocil>

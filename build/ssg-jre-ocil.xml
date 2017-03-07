@@ -1,0 +1,292 @@
+<?xml version="1.0"?>
+<ocil xmlns="http://scap.nist.gov/schema/ocil/2.0">
+  <generator>
+    <schema_version>2.0</schema_version>
+    <timestamp>2017-03-07T14:41:25Z</timestamp>
+  </generator>
+  <questionnaires>
+    <questionnaire id="ocil:ssg-java_jre_deployment_config_exists_ocil:questionnaire:1">
+      <title>The Java Configuration File Exists</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_deployment_config_exists_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-java_jre_deployment_config_properties_ocil:questionnaire:1">
+      <title>Configure the deployment.properties File Path</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_deployment_config_properties_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-java_jre_deployment_config_mandatory_ocil:questionnaire:1">
+      <title>Configure The Java Deployment Mandatory Setting</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_deployment_config_mandatory_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-java_jre_deployment_properties_exists_ocil:questionnaire:1">
+      <title>The Java Properties File Exists</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_deployment_properties_exists_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-java_jre_untrusted_sources_ocil:questionnaire:1">
+      <title>Disable Java Execution From Untrusted Sources</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_untrusted_sources_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-java_jre_untrusted_sources_locked_ocil:questionnaire:1">
+      <title>Disable User Access to Untrusted Sources Settings</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_untrusted_sources_locked_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-java_jre_validation_crl_ocil:questionnaire:1">
+      <title>Enable Revocation Checks for Publisher Certificates</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_validation_crl_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-java_jre_validation_crl_locked_ocil:questionnaire:1">
+      <title>Disable User Access to Revocation Check Settings</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_validation_crl_locked_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-java_jre_validation_ocsp_ocil:questionnaire:1">
+      <title>Enable Online Certificate Validation</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_validation_ocsp_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-java_jre_validation_ocsp_locked_ocil:questionnaire:1">
+      <title>Disable User Access to Online Certificate Validation Settings</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_validation_ocsp_locked_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+    <questionnaire id="ocil:ssg-java_jre_updated_ocil:questionnaire:1">
+      <title>Ensure Java Patches Installed</title>
+      <actions>
+        <test_action_ref>ocil:ssg-java_jre_updated_action:testaction:1</test_action_ref>
+      </actions>
+    </questionnaire>
+  </questionnaires>
+  <test_actions>
+    <boolean_question_test_action id="ocil:ssg-java_jre_deployment_config_exists_action:testaction:1" question_ref="ocil:ssg-java_jre_deployment_config_exists_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-java_jre_deployment_config_properties_action:testaction:1" question_ref="ocil:ssg-java_jre_deployment_config_properties_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-java_jre_deployment_config_mandatory_action:testaction:1" question_ref="ocil:ssg-java_jre_deployment_config_mandatory_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-java_jre_deployment_properties_exists_action:testaction:1" question_ref="ocil:ssg-java_jre_deployment_properties_exists_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-java_jre_untrusted_sources_action:testaction:1" question_ref="ocil:ssg-java_jre_untrusted_sources_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-java_jre_untrusted_sources_locked_action:testaction:1" question_ref="ocil:ssg-java_jre_untrusted_sources_locked_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-java_jre_validation_crl_action:testaction:1" question_ref="ocil:ssg-java_jre_validation_crl_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-java_jre_validation_crl_locked_action:testaction:1" question_ref="ocil:ssg-java_jre_validation_crl_locked_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-java_jre_validation_ocsp_action:testaction:1" question_ref="ocil:ssg-java_jre_validation_ocsp_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-java_jre_validation_ocsp_locked_action:testaction:1" question_ref="ocil:ssg-java_jre_validation_ocsp_locked_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+    <boolean_question_test_action id="ocil:ssg-java_jre_updated_action:testaction:1" question_ref="ocil:ssg-java_jre_updated_question:question:1">
+      <when_true>
+        <result>PASS</result>
+      </when_true>
+      <when_false>
+        <result>FAIL</result>
+      </when_false>
+    </boolean_question_test_action>
+  </test_actions>
+  <questions>
+    <boolean_question id="ocil:ssg-java_jre_deployment_config_exists_question:question:1">
+      <question_text>
+To verify that the deployment.config file exists,
+run the following command:
+$ ls /etc/.java/deployment
+The output should contain:
+deployment.config
+
+			Is it the case that it does not exist?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-java_jre_deployment_config_properties_question:question:1">
+      <question_text>
+To verify that deployment.config is configured properly,
+run the following command:
+$ grep 'deployment.system.config=file' /etc/.java/deployment/deployment.config
+If properly configured, the output should return:
+deployment.system.config=file:///etc/.java/deployment/deployment.properties
+
+			Is it the case that it is not configured?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-java_jre_deployment_config_mandatory_question:question:1">
+      <question_text>
+To verify that deployment.config is configured properly,
+run the following command:
+$ grep 'deployment.system.config.mandatory' /etc/.java/deployment/deployment.config
+If properly configured, the output should return:
+deployment.system.config.mandatory=false
+
+			Is it the case that it is not configured?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-java_jre_deployment_properties_exists_question:question:1">
+      <question_text>
+To verify that the deployment.properties file exists,
+run the following command:
+$ ls /etc/.java/deployment
+The output should contain:
+deployment.properties
+
+			Is it the case that it does not exist?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-java_jre_untrusted_sources_question:question:1">
+      <question_text>
+To verify that Java cannot execute from untrusted sources,
+run the following command:
+$ grep 'askgrantdialog.notinca=false' /etc/.java/deployment/deployment.properties
+If properly configured, the output should return:
+deployment.security.askgrantdialog.notinca=false
+
+			Is it the case that it does not exist or is not configured properly?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-java_jre_untrusted_sources_locked_question:question:1">
+      <question_text>
+To verify that users cannot change the untrusted sources settings,
+run the following command:
+$ grep 'askgrantdialog.notinca.locked' /etc/.java/deployment/deployment.properties
+If properly configured, the output should return:
+deployment.security.askgrantdialog.notinca.locked
+
+			Is it the case that it does not exist or is not configured properly?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-java_jre_validation_crl_question:question:1">
+      <question_text>
+To verify that revocation checks are enabled, run the following command:
+$ grep 'validation.crl=true' /etc/.java/deployment/deployment.properties
+If properly configured, the output should return:
+deployment.security.validation.crl=true
+
+			Is it the case that it does not exist or is not configured properly?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-java_jre_validation_crl_locked_question:question:1">
+      <question_text>
+To verify that users cannot change revocation check settings,
+run the following command:
+$ grep 'validation.crl.locked' /etc/.java/deployment/deployment.properties
+If properly configured, the output should return:
+deployment.security.validation.crl.locked
+
+			Is it the case that it does not exist or is not configured properly?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-java_jre_validation_ocsp_question:question:1">
+      <question_text>
+To verify that online certificate verification is enabled,
+run the following command:
+$ grep 'validation.ocsp=true' /etc/.java/deployment/deployment.properties
+If properly configured, the output should return:
+deployment.security.validation.ocsp=true
+
+			Is it the case that it does not exist or is not configured properly?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-java_jre_validation_ocsp_locked_question:question:1">
+      <question_text>
+To verify that users cannot change online certificate verification,
+run the following command:
+$ grep 'validation.ocsp.locked' /etc/.java/deployment/deployment.properties
+If properly configured, the output should return:
+deployment.security.validation.ocsp.locked
+
+			Is it the case that it does not exist or is not configured properly?
+			</question_text>
+    </boolean_question>
+    <boolean_question id="ocil:ssg-java_jre_updated_question:question:1">
+      <question_text>
+If the system is joined to the Red Hat Network, a Red Hat Satellite Server, or
+a yum server which provides updates, invoking the following command will
+indicate if updates are available:
+$ sudo yum check-update
+If the system is not configured to update from one of these sources,
+run the following command to list when each package was last updated:
+$ rpm -qa -last
+Compare this to Red Hat Security Advisories (RHSA) listed at
+https://access.redhat.com/security/updates/active/https://access.redhat.com/security/updates/active/
+to determine if the system is missing applicable updates.
+
+			Is it the case that it is not updated?
+			</question_text>
+    </boolean_question>
+  </questions>
+</ocil>

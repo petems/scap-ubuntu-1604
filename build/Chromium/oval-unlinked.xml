@@ -1,0 +1,838 @@
+<?xml version="1.0"?>
+<oval_definitions xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5" xmlns:oval="http://oval.mitre.org/XMLSchema/oval-common-5" xmlns:ind="http://oval.mitre.org/XMLSchema/oval-definitions-5#independent" xmlns:unix="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix" xmlns:linux="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://oval.mitre.org/XMLSchema/oval-common-5 oval-common-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5 oval-definitions-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5#independent independent-definitions-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5#unix unix-definitions-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5#linux linux-definitions-schema.xsd">
+  <generator>
+    <oval:product_name>python</oval:product_name>
+    <oval:product_version>2.7.5</oval:product_version>
+    <oval:schema_version>5.11</oval:schema_version>
+    <oval:timestamp>2017-03-07T14:40:32</oval:timestamp>
+  </generator>
+  <definitions>
+    <definition class="compliance" id="chromium_blacklist_extension_installation" version="1">
+      <metadata>
+        <title>Blacklist Extension Installation</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Extensions installation must be blacklisted by default.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium blacklist extension installation" test_ref="test_chromium_extension_installation"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_block_desktop_notifications" version="1">
+      <metadata>
+        <title>Block Desktop Notifications</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Sites ability for showing desktop notifications must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium block desktop notifications" test_ref="test_chromium_block_notifications"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_check_cert_revocation" version="1">
+      <metadata>
+        <title>Check Certificate Revocation</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Online revocation checks must be done.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium check certificate revocation" test_ref="test_chromium_check_cert_revocation"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_default_block_plugins" version="1">
+      <metadata>
+        <title>Block Plugin Execution By Default</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Default behavior must block webpages from automatically running plugins.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium block plugin execution" test_ref="test_chromium_default_block_plugins"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_default_search_provider" version="1">
+      <metadata>
+        <title>Enable Default Search Provider</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Default search provider must be enabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium enable default search provider" test_ref="test_chromium_default_search_provider"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_default_search_provider_name" version="1">
+      <metadata>
+        <title>Set Default Search Provider Name</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>The default search providers name must be set.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium set default search provider" test_ref="test_chromium_search_provider_name"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_3d_graphics_api" version="1">
+      <metadata>
+        <title>Disable 3D Graphics APIs</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>3D Graphics APIs must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable 3D graphics apis" test_ref="test_chromium_disable_3d_graphics_api"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_autocomplete" version="1">
+      <metadata>
+        <title>Disable Autocomplete For Forms</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>AutoFill must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable autocomplete for forms" test_ref="test_chromium_disable_autocomplete"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_automatic_installation" version="1">
+      <metadata>
+        <title>Disable Automatic Plugin Search And Installation</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Automated installation of missing plugins must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable automatic plugin search and installation" test_ref="test_chromium_disable_automatic_installation"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_background_processing" version="1">
+      <metadata>
+        <title>Disable Background Processing</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Background processing must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable background processing" test_ref="test_chromium_disable_background_processing"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_cleartext_passwords" version="1">
+      <metadata>
+        <title>Disable Cleartext Passwords</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Cleartext passwords in the Password Manager must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable cleartext passwords" test_ref="test_chromium_disable_cleartext_passwords"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_cloud_print_sharing" version="1">
+      <metadata>
+        <title>Disable Cloud Print Sharing</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Cloud print sharing must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable cloud pring sharing" test_ref="test_chromium_disable_cloud_print_sharing"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_firewall_traversal" version="1">
+      <metadata>
+        <title>Disable Firewall Traversal</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Firewall traversal from remote host must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Test Chromium firewall traversal policy" test_ref="test_chromium_firewall_traversal"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_google_sync" version="1">
+      <metadata>
+        <title>Disable Google Data Synchronization</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Google Data Synchronization must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable Google data sync" test_ref="test_chromium_disable_google_sync"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_incognito_mode" version="1">
+      <metadata>
+        <title>Disable Incognito Mode</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Incognito mode must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable incognito mode" test_ref="test_chromium_disable_incognito_mode"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_metrics_reporting" version="1">
+      <metadata>
+        <title>Disable Metrics Reporting</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Metrics reporting to Google must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable metrics reporting" test_ref="test_chromium_disable_metrics_reporting"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_network_prediction" version="1">
+      <metadata>
+        <title>Disable Network Prediction</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Network prediction must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable network prediction" test_ref="test_chromium_disable_network_prediction"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_outdated_plugins" version="1">
+      <metadata>
+        <title>Disable Outdated Plugins</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>The running of outdated plugins must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable outdated plugins" test_ref="test_chromium_disable_outdated_plugins"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_password_manager" version="1">
+      <metadata>
+        <title>Disable Password Manager</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>The Password Manager must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable password manager" test_ref="test_chromium_disable_password_manager"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_plugin_blacklist" version="1">
+      <metadata>
+        <title>Blacklist Plugins</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Plugins must be disabled by default.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable plugins by default" test_ref="test_chromium_plugin_blacklist"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_popups" version="1">
+      <metadata>
+        <title>Disable Pop-ups</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Sites ability to show pop-ups must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable pop-ups" test_ref="test_chromium_disable_popups"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_protocol_schemas" version="1">
+      <metadata>
+        <title>Disable Javascript URL Protocol Schemas</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>The URL protocol schema javascript must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable URL protocol schemas" test_ref="test_chromium_disable_protocol_schemas"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_saved_passwords" version="1">
+      <metadata>
+        <title>Disable Importing Saved Passwords</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Importing of saved passwords must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable importing saved passwords" test_ref="test_chromium_disable_saved_passwords"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_search_suggestions" version="1">
+      <metadata>
+        <title>Disable Search Suggestopms</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Search suggestions must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable search suggestions" test_ref="test_chromium_disable_search_suggestions"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_session_cookies" version="1">
+      <metadata>
+        <title>Disable Per Session Cookies</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Session only based cookies must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disable per session cookies" test_ref="test_chromium_disable_session_cookies"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disable_thirdparty_cookies" version="1">
+      <metadata>
+        <title>Disable Third Party Cookies</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Third party cookies must be blocked.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium block third party cookies" test_ref="test_chromium_disable_thirdparty_cookies"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_disallow_location_tracking" version="1">
+      <metadata>
+        <title>Disallow Location Tracking</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Site tracking users location must be disabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium disallow location tracking" test_ref="test_chromium_location_tracking"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_enable_approved_plugins" version="1">
+      <metadata>
+        <title>Enable Approved Plugins</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Plugins approved for use must be enabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium enable approved plugins" test_ref="test_chromium_enable_approved_plugins"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_enable_browser_history" version="1">
+      <metadata>
+        <title>Enable Browser History</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Browser history must be saved.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium enable browser history" test_ref="test_chromium_enable_browser_history"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_enable_encrypted_searching" version="1">
+      <metadata>
+        <title>Enable Encrypted Searching</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>The default search provider URL must be set to perform encrypted searches.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium enable encrypted searching" test_ref="test_chromium_encrypted_search"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_enable_safe_browsing" version="1">
+      <metadata>
+        <title>Enable Safe Browsing</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Safe Browsing must be enabled.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromiumi enable safe browsing" test_ref="test_chromium_enable_safe_browsing"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_extension_whitelist" version="1">
+      <metadata>
+        <title>Extension Whitelist</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Extensions that are approved for use must be whitelisted.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium whitelist extension" test_ref="test_chromium_extension_whitelist"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_http_authentication" version="1">
+      <metadata>
+        <title>HTTP Authentication</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>The HTTP Authentication must be set to negotiate.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium check HTTP authentication" test_ref="test_chromium_http_authentication"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_plugins_require_authorization" version="1">
+      <metadata>
+        <title>Plugins Require Authentication</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>Plugins requiring authorization must ask for user permission.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium require plugin authorization" test_ref="test_chromium_plugins_require_authorization"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_policy_file" version="1">
+      <metadata>
+        <title>Chromium Policy File Exists</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>The Chromium policy file must exist and be configured correctly.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium policy file" test_ref="test_chromium_policy_file"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_trusted_home_page" version="1">
+      <metadata>
+        <title>Set Trusted Homepage URL</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>The homepage must be set to a trusted site.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium set trusted homepage URL" test_ref="test_chromium_trusted_home_page"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="chromium_whitelist_plugin_urls" version="1">
+      <metadata>
+        <title>Configure Whitelisted Plugins For Use</title>
+        <affected family="unix">
+          <platform>Google Chromium Browser</platform>
+        </affected>
+        <description>URLs must be whitelisted for plugin use.</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Chromium whitelist plugin urls" test_ref="test_chromium_whitelist_plugin_urls"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="installed_OS_is_part_of_Unix_family" version="1">
+      <metadata>
+        <title>Installed operating system is part of the Unix family</title>
+        <affected family="unix">
+          <product>Google Chromium Browser</product>
+        </affected>
+        <description>The operating system installed on the system is part of the Unix OS family</description>
+      </metadata>
+      <criteria>
+        <criterion comment="Installed operating system is part of the unix family" test_ref="test_unix_family"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="installed_app_is_chromium" version="2">
+      <metadata>
+        <title>Google Chromium Browser</title>
+        <affected family="unix">
+          <product>Google Chromium Browser</product>
+        </affected>
+        <reference ref_id="cpe:/a:google:chromium-browser" source="CPE"/>
+        <description>The application installed on the system is the Google Chromium Browser</description>
+      </metadata>
+      <criteria operator="AND">
+        <extend_definition comment="Installed OS is part of the Unix family" definition_ref="installed_OS_is_part_of_Unix_family"/>
+        <criteria operator="OR">
+          <criterion comment="Chromium is installed" test_ref="test_chromium-browser_installed"/>
+          <criterion comment="Chromium is installed" test_ref="test_chromium_installed"/>
+        </criteria>
+      </criteria>
+    </definition>
+  </definitions>
+  <tests>
+    <ind:textfilecontent54_test check="all" comment="Chromium blacklist extension installation" id="test_chromium_extension_installation" version="1">
+      <ind:object object_ref="object_chromium_extension_installation"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium block desktop notifications" id="test_chromium_block_notifications" version="1">
+      <ind:object object_ref="object_chromium_block_notifications"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium check certificate revocation" id="test_chromium_check_cert_revocation" version="1">
+      <ind:object object_ref="object_chromium_check_cert_revocation"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium block plugin execution" id="test_chromium_default_block_plugins" version="1">
+      <ind:object object_ref="object_chromium_default_block_plugins"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium enable default search provider" id="test_chromium_default_search_provider" version="1">
+      <ind:object object_ref="object_chromium_default_search_provider"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium set default search provider" id="test_chromium_search_provider_name" version="1">
+      <ind:object object_ref="object_chromium_search_provider_name"/>
+      <ind:state state_ref="state_chromium_search_provider_name"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable 3D graphics apis" id="test_chromium_disable_3d_graphics_api" version="1">
+      <ind:object object_ref="object_chromium_disable_3d_graphics_api"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable autocomplete for forms" id="test_chromium_disable_autocomplete" version="1">
+      <ind:object object_ref="object_chromium_disable_autocomplete"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable automatic plugin search and installation" id="test_chromium_disable_automatic_installation" version="1">
+      <ind:object object_ref="object_chromium_disable_automatic_installation"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable background processing" id="test_chromium_disable_background_processing" version="1">
+      <ind:object object_ref="object_chromium_disable_background_processing"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable cleartext passwords" id="test_chromium_disable_cleartext_passwords" version="1">
+      <ind:object object_ref="object_chromium_disable_cleartext_passwords"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable cloud pring sharing" id="test_chromium_disable_cloud_print_sharing" version="1">
+      <ind:object object_ref="object_chromium_disable_cloud_print_sharing"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Test Chromium firewall traversal policy" id="test_chromium_firewall_traversal" version="1">
+      <ind:object object_ref="object_chromium_firewall_traversal"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable Google data sync" id="test_chromium_disable_google_sync" version="1">
+      <ind:object object_ref="object_chromium_disable_google_sync"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable incognito mode" id="test_chromium_disable_incognito_mode" version="1">
+      <ind:object object_ref="object_chromium_disable_incognito_mode"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable metrics reporting" id="test_chromium_disable_metrics_reporting" version="1">
+      <ind:object object_ref="object_chromium_disable_metrics_reporting"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable network prediction" id="test_chromium_disable_network_prediction" version="1">
+      <ind:object object_ref="object_chromium_disable_network_prediction"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable outdated plugins" id="test_chromium_disable_outdated_plugins" version="1">
+      <ind:object object_ref="object_chromium_disable_outdated_plugins"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable password manager" id="test_chromium_disable_password_manager" version="1">
+      <ind:object object_ref="object_chromium_disable_password_manager"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable plugins by default" id="test_chromium_plugin_blacklist" version="1">
+      <ind:object object_ref="object_chromium_plugin_blacklist"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable pop-ups" id="test_chromium_disable_popups" version="1">
+      <ind:object object_ref="object_chromium_disable_popups"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable URL protocol schemas" id="test_chromium_disable_protocol_schemas" version="1">
+      <ind:object object_ref="object_chromium_disable_protocol_schemas"/>
+      <ind:state state_ref="state_chromium_disable_protocol_schemas"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable importing saved passwords" id="test_chromium_disable_saved_passwords" version="1">
+      <ind:object object_ref="object_chromium_disable_saved_passwords"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable search suggestions" id="test_chromium_disable_search_suggestions" version="1">
+      <ind:object object_ref="object_chromium_disable_search_suggestions"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disable per session cookies" id="test_chromium_disable_session_cookies" version="1">
+      <ind:object object_ref="object_chromium_disable_session_cookies"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium block third party cookies" id="test_chromium_disable_thirdparty_cookies" version="1">
+      <ind:object object_ref="object_chromium_disable_thirdparty_cookies"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium disallow location tracking" id="test_chromium_location_tracking" version="1">
+      <ind:object object_ref="object_chromium_location_tracking"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium enable approved plugins" id="test_chromium_enable_approved_plugins" version="1">
+      <ind:object object_ref="object_chromium_enable_approved_plugins"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium enable browser history" id="test_chromium_enable_browser_history" version="1">
+      <ind:object object_ref="object_chromium_enable_browser_history"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium enable encrypted searching" id="test_chromium_encrypted_search" version="1">
+      <ind:object object_ref="object_chromium_encrypted_search"/>
+      <ind:state state_ref="state_chromium_encrypted_search"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromiumi enable safe browsing" id="test_chromium_enable_safe_browsing" version="1">
+      <ind:object object_ref="object_chromium_enable_safe_browsing"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium whitelist extension" id="test_chromium_extension_whitelist" version="1">
+      <ind:object object_ref="object_chromium_extension_whitelist"/>
+      <ind:state state_ref="state_chromium_extension_whitelist"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium check HTTP authentication" id="test_chromium_http_authentication" version="1">
+      <ind:object object_ref="object_chromium_http_authentication"/>
+      <ind:state state_ref="state_chromium_http_authentication"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium require plugin authorization" id="test_chromium_plugins_require_authorization" version="1">
+      <ind:object object_ref="object_chromium_plugins_require_authorization"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium policy file" id="test_chromium_policy_file" version="1">
+      <ind:object object_ref="object_chromium_policy_file"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium set trusted homepage URL" id="test_chromium_trusted_home_page" version="1">
+      <ind:object object_ref="object_chromium_trusted_home_page"/>
+      <ind:state state_ref="state_chromium_trusted_home_page"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="Chromium whitelist plugin urls" id="test_chromium_whitelist_plugin_urls" version="1">
+      <ind:object object_ref="object_chromium_whitelist_plugin_urls"/>
+    </ind:textfilecontent54_test>
+    <ind:family_test id="test_unix_family" check="all" check_existence="at_least_one_exists" comment="Test installed OS is part of the unix family" version="1">
+      <ind:object object_ref="object_unix_family"/>
+      <ind:state state_ref="state_unix_family"/>
+    </ind:family_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="Chromium is installed" id="test_chromium-browser_installed" version="1">
+      <linux:object object_ref="obj_chromium-browser_installed"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="Chromium is installed" id="test_chromium_installed" version="1">
+      <linux:object object_ref="obj_chromium_installed"/>
+    </linux:rpminfo_test>
+  </tests>
+  <objects>
+    <ind:textfilecontent54_object id="object_chromium_extension_installation" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"ExtensionInstallBlacklist\"\:[\s]+\[\"\*\"\],</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_block_notifications" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"DefaultNotificationsSetting\"\:[\s]+2,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_check_cert_revocation" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"EnableOnlineRevocationChecks\"\:[\s]+true,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_default_block_plugins" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"DefaultPluginsSetting\"\:[\s]+3,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_default_search_provider" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"DefaultSearchProviderEnabled\"\:[\s]+true,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_search_provider_name" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]+"DefaultSearchProviderName"\:[\s]+"(\S+)",$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_3d_graphics_api" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"Disable3DAPIs\"\:[\s]+true,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_autocomplete" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"AutoFillEnabled\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_automatic_installation" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"DisablePluginFinder\"\:[\s]+true,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_background_processing" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"BackgroundModeEnabled\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_cleartext_passwords" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"PasswordManagerAllowShowPasswords\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_cloud_print_sharing" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"CloudPrintProxyEnabled\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_firewall_traversal" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"RemoteAccessHostFirewallTraversal\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_google_sync" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"SyncDisabled\"\:[\s]+true,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_incognito_mode" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"IncognitoModeAvailability\"\:[\s]+1,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_metrics_reporting" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"MetricsReportingEnabled\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_network_prediction" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"DnsPrefetchingEnabled\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_outdated_plugins" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"AllowOutdatedPlugins\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_password_manager" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"PasswordManagerEnabled\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_plugin_blacklist" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"DisabledPlugins\"\:[\s]+\[\"\*\"\],</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_popups" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"DefaultPopupsSetting\"\:[\s]+2,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_protocol_schemas" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]+\"URLBlacklist\"\:[\s]+\[\"(\S+)"\],</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_saved_passwords" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"ImportSavedPasswords\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_search_suggestions" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"SearchSuggestEnabled\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_session_cookies" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]+\"CookiesSessionOnlyForUrls\"\:[\s]+\[\"(none|)"\],</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_disable_thirdparty_cookies" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"BlockThirdPartyCookies\"\:[\s]+true,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_location_tracking" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"DefaultGeolocationSetting\"\:[\s]+2,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_enable_approved_plugins" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]+\"EnabledPlugins\"\:[\s]+\[\"((none|[a-zA-Z]*)|!*)\"\],</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_enable_browser_history" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"SavingBrowserHistoryDisabled\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_encrypted_search" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]+\"DefaultSearchProviderSearchURL\"\:[\s]+\"(\S+)",</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_enable_safe_browsing" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"SafeBrowsingEnabled\"\:[\s]+true,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_extension_whitelist" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]+\"ExtensionInstallWhitelist\"\:[\s]+\[\"(\S+)\"],</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_http_authentication" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]+\"AuthSchemes\"\:[\s]+\"(\S+)\",</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_plugins_require_authorization" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\"AlwaysAuthorizePlugins\"\:[\s]+false,</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_policy_file" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^\{([^\n]*\n+)+[\s]+\".*\"\:[\s]+.*,([^\n]*\n+)+\}</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_trusted_home_page" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]+\"HomepageLocation\"\:[\s]+\"(\S+)\",</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="object_chromium_whitelist_plugin_urls" version="1">
+      <ind:filepath operation="pattern match">/etc/chromium/policies/managed/.*\.json</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]+\"PluginsAllowedForUrls\"\:[\s]+\[\"(none|!*)\"\],</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:family_object id="object_unix_family" version="1"/>
+    <linux:rpminfo_object id="obj_chromium-browser_installed" version="1">
+      <linux:name>chromium-browser</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="obj_chromium_installed" version="1">
+      <linux:name>chromium</linux:name>
+    </linux:rpminfo_object>
+  </objects>
+  <states>
+    <ind:textfilecontent54_state id="state_chromium_search_provider_name" version="1">
+      <ind:subexpression operation="equals" var_check="all" var_ref="var_default_search_provider_name"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="state_chromium_disable_protocol_schemas" version="1">
+      <ind:subexpression operation="equals" var_check="all" var_ref="var_url_blacklist"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="state_chromium_encrypted_search" version="1">
+      <ind:subexpression operation="equals" var_check="all" var_ref="var_enable_encrypted_searching"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="state_chromium_extension_whitelist" version="1">
+      <ind:subexpression operation="equals" var_check="all" var_ref="var_extension_whitelist"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="state_chromium_http_authentication" version="1">
+      <ind:subexpression operation="equals" var_check="all" var_ref="var_auth_schema"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="state_chromium_trusted_home_page" version="1">
+      <ind:subexpression operation="equals" var_check="all" var_ref="var_trusted_home_page"/>
+    </ind:textfilecontent54_state>
+    <ind:family_state id="state_unix_family" version="1">
+      <ind:family>unix</ind:family>
+    </ind:family_state>
+  </states>
+  <variables>
+    <external_variable id="var_default_search_provider_name" datatype="string" version="1" comment="Expected search provider name"/>
+    <external_variable id="var_url_blacklist" datatype="string" version="1" comment="Expected URL protocol schema"/>
+    <external_variable id="var_enable_encrypted_searching" datatype="string" version="1" comment="Expected search provider name"/>
+    <external_variable id="var_extension_whitelist" datatype="string" version="1" comment="Expected approved extensions"/>
+    <external_variable id="var_auth_schema" datatype="string" version="1" comment="Expected HTTP authentication type"/>
+    <external_variable id="var_trusted_home_page" datatype="string" version="1" comment="Expected home page"/>
+  </variables>
+</oval_definitions>

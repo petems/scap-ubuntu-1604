@@ -1,0 +1,3329 @@
+<fix-content system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+  <fix-group id="bash" system="urn:xccdf:fix:script:sh" xmlns="http://checklists.nist.gov/xccdf/1.1">
+    <fix rule="package_talk_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove talk
+</fix>
+    <fix rule="package_httpd_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove httpd
+</fix>
+    <fix rule="package_rsh_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove rsh
+</fix>
+    <fix rule="package_rsh-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">yum -y remove rsh-server --disablerepo=* 1&gt;/dev/null
+</fix>
+    <fix rule="package_ypbind_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove ypbind
+</fix>
+    <fix rule="package_dovecot_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove dovecot
+</fix>
+    <fix rule="kernel_module_usb-storage_disabled" complexity="low" disruption="medium" reboot="true" strategy="disable">if [ -d /etc/modprobe.d/ ]; then
+	echo "install usb-storage /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+else
+	echo "install usb-storage /bin/true" &gt;&gt; /etc/modprobe.conf
+fi
+</fix>
+    <fix rule="package_samba-common_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install samba-common
+</fix>
+    <fix rule="kernel_module_bluetooth_disabled" complexity="low" disruption="medium" reboot="true" strategy="disable">if [ -d /etc/modprobe.d/ ]; then
+	echo "install bluetooth /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+else
+	echo "install bluetooth /bin/true" &gt;&gt; /etc/modprobe.conf
+fi
+</fix>
+    <fix rule="package_talk-server_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove talk-server
+</fix>
+    <fix rule="package_aide_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install aide
+</fix>
+    <fix rule="package_vsftpd_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install vsftpd
+</fix>
+    <fix rule="package_telnet_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove telnet
+</fix>
+    <fix rule="package_audit_installed" complexity="low" disruption="low" reboot="false" strategy="enable">
+<sub idref="function_package_command"/>
+package_command install audit
+</fix>
+    <fix rule="package_net-snmp_removed" complexity="low" disruption="low" reboot="false" strategy="disable">
+<sub idref="function_package_command"/>
+package_command remove net-snmp
+</fix>
+    <fix rule="no_rsh_trust_files" complexity="low" disruption="low" reboot="false" strategy="disable">find -type f -name .rhosts -exec rm -f '{}' \;
+rm /etc/hosts.equiv
+</fix>
+    <fix rule="file_permissions_httpd_server_conf_d_files" complexity="low" disruption="low" reboot="false" strategy="disable">chmod 640 /etc/httpd/conf.d/*
+</fix>
+    <fix rule="file_groupowner_etc_gshadow" complexity="low" disruption="low" reboot="false" strategy="disable">chgrp root /etc/gshadow
+</fix>
+    <fix rule="restrict_serial_port_logins" complexity="low" disruption="low" reboot="false" strategy="disable">sed -i '/ttyS/d' /etc/securetty
+</fix>
+    <fix rule="accounts_umask_etc_csh_cshrc" complexity="low" disruption="low" reboot="false" strategy="disable">
+var_accounts_user_umask="<sub idref="var_accounts_user_umask"/>"
+
+grep -q umask /etc/csh.cshrc &amp;&amp; \
+  sed -i "s/umask.*/umask $var_accounts_user_umask/g" /etc/csh.cshrc
+if ! [ $? -eq 0 ]; then
+    echo "umask $var_accounts_user_umask" &gt;&gt; /etc/csh.cshrc
+fi
+</fix>
+    <fix rule="accounts_passwords_pam_faillock_deny" complexity="low" disruption="low" reboot="false" strategy="disable">
+var_accounts_passwords_pam_faillock_deny="<sub idref="var_accounts_passwords_pam_faillock_deny"/>"
+
+AUTH_FILES[0]="/etc/pam.d/system-auth"
+AUTH_FILES[1]="/etc/pam.d/password-auth"
+
+for pamFile in "${AUTH_FILES[@]}"
+do
+	
+	# pam_faillock.so already present?
+	if grep -q "^auth.*pam_faillock.so.*" $pamFile; then
+
+		# pam_faillock.so present, deny directive present?
+		if grep -q "^auth.*[default=die].*pam_faillock.so.*authfail.*deny=" $pamFile; then
+
+			# both pam_faillock.so &amp; deny present, just correct deny directive value
+			sed -i --follow-symlinks "s/\(^auth.*required.*pam_faillock.so.*preauth.*silent.*\)\(deny *= *\).*/\1\2$var_accounts_passwords_pam_faillock_deny/" $pamFile
+			sed -i --follow-symlinks "s/\(^auth.*[default=die].*pam_faillock.so.*authfail.*\)\(deny *= *\).*/\1\2$var_accounts_passwords_pam_faillock_deny/" $pamFile
+
+		# pam_faillock.so present, but deny directive not yet
+		else
+
+			# append correct deny value to appropriate places
+			sed -i --follow-symlinks "/^auth.*required.*pam_faillock.so.*preauth.*silent.*/ s/$/ deny=$var_accounts_passwords_pam_faillock_deny/" $pamFile
+			sed -i --follow-symlinks "/^auth.*[default=die].*pam_faillock.so.*authfail.*/ s/$/ deny=$var_accounts_passwords_pam_faillock_deny/" $pamFile
+		fi
+
+	# pam_faillock.so not present yet
+	else
+
+		# insert pam_faillock.so preauth &amp; authfail rows with proper value of the 'deny' option
+		sed -i --follow-symlinks "/^auth.*sufficient.*pam_unix.so.*/i auth        required      pam_faillock.so preauth silent deny=$var_accounts_passwords_pam_faillock_deny" $pamFile
+		sed -i --follow-symlinks "/^auth.*sufficient.*pam_unix.so.*/a auth        [default=die] pam_faillock.so authfail deny=$var_accounts_passwords_pam_faillock_deny" $pamFile
+		sed -i --follow-symlinks "/^account.*required.*pam_unix.so/i account     required      pam_faillock.so" $pamFile
+	fi
+done
+</fix>
+    <fix rule="auditd_data_retention_space_left_action" complexity="low" disruption="low" reboot="false" strategy="disable">
+var_auditd_space_left_action="<sub idref="var_auditd_space_left_action"/>"
+
+#
+# If space_left_action present in /etc/audit/auditd.conf, change value
+# to var_auditd_space_left_action, else
+# add "space_left_action = $var_auditd_space_left_action" to /etc/audit/auditd.conf
+#
+
+if grep --silent ^space_left_action /etc/audit/auditd.conf ; then
+        sed -i 's/^space_left_action.*/space_left_action = '"$var_auditd_space_left_action"'/g' /etc/audit/auditd.conf
+else
+        echo -e "\n# Set space_left_action to $var_auditd_space_left_action per security requirements" &gt;&gt; /etc/audit/auditd.conf
+        echo "space_left_action = $var_auditd_space_left_action" &gt;&gt; /etc/audit/auditd.conf
+fi
+</fix>
+    <fix rule="sticky_world_writable_dirs" complexity="low" disruption="low" reboot="false" strategy="disable">df --local -P | awk {'if (NR!=1) print $6'} \
+| xargs -I '{}' find '{}' -xdev -type d \
+\( -perm -0002 -a ! -perm -1000 \) 2&gt;/dev/null \
+| xargs chmod a+t
+</fix>
+    <fix rule="aide_periodic_cron_checking" complexity="low" disruption="low" reboot="false" strategy="disable">echo "/usr/sbin/aide --config=/etc/aide.conf --check" &gt; /etc/cron.weekly/aide
+chmod 700 /etc/cron.weekly/aide
+</fix>
+    <fix rule="rpm_verify_permissions" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+# Declare array to hold list of RPM packages we need to correct permissions for
+declare -a SETPERMS_RPM_LIST
+
+# Create a list of files on the system having permissions different from what
+# is expected by the RPM database
+FILES_WITH_INCORRECT_PERMS=($(rpm -Va --nofiledigest | grep '^.M'))
+
+# For each file path from that list:
+# * Determine the RPM package the file path is shipped by,
+# * Include it into SETPERMS_RPM_LIST array
+
+for FILE_PATH in "${FILES_WITH_INCORRECT_PERMS[@]}"
+do
+	RPM_PACKAGE=$(rpm -qf "$FILE_PATH")
+	SETPERMS_RPM_LIST=("${SETPERMS_RPM_LIST[@]}" "$RPM_PACKAGE")
+done
+
+# Remove duplicate mention of same RPM in $SETPERMS_RPM_LIST (if any)
+SETPERMS_RPM_LIST=( $(echo "${SETPERMS_RPM_LIST[@]}" | sort -n | uniq) )
+
+# For each of the RPM packages left in the list -- reset its permissions to the
+# correct values
+for RPM_PACKAGE in "${SETPERMS_RPM_LIST[@]}"
+do
+	rpm --setperms "${RPM_PACKAGE}"
+done
+</fix>
+    <fix rule="accounts_umask_etc_bashrc" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_accounts_user_umask="<sub idref="var_accounts_user_umask"/>"
+
+grep -q umask /etc/bashrc &amp;&amp; \
+  sed -i "s/umask.*/umask $var_accounts_user_umask/g" /etc/bashrc
+if ! [ $? -eq 0 ]; then
+    echo "umask $var_accounts_user_umask" &gt;&gt; /etc/bashrc
+fi
+</fix>
+    <fix rule="file_groupowner_etc_group" complexity="high" disruption="medium" reboot="false" strategy="restrict">chgrp root /etc/group
+</fix>
+    <fix rule="auditd_data_retention_max_log_file_action" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_auditd_max_log_file_action="<sub idref="var_auditd_max_log_file_action"/>"
+
+AUDITCONFIG=/etc/audit/auditd.conf
+
+grep -q ^max_log_file_action $AUDITCONFIG &amp;&amp; \
+  sed -i 's/^max_log_file_action.*/max_log_file_action = '"$var_auditd_max_log_file_action"'/g' $AUDITCONFIG
+if ! [ $? -eq 0 ]; then
+  echo "max_log_file_action = $var_auditd_max_log_file_action" &gt;&gt; $AUDITCONFIG
+fi
+</fix>
+    <fix rule="accounts_passwords_pam_faillock_unlock_time" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_accounts_passwords_pam_faillock_unlock_time="<sub idref="var_accounts_passwords_pam_faillock_unlock_time"/>"
+
+AUTH_FILES[0]="/etc/pam.d/system-auth"
+AUTH_FILES[1]="/etc/pam.d/password-auth"
+
+for pamFile in "${AUTH_FILES[@]}"
+do
+	
+	# pam_faillock.so already present?
+	if grep -q "^auth.*pam_faillock.so.*" $pamFile; then
+
+		# pam_faillock.so present, unlock_time directive present?
+		if grep -q "^auth.*[default=die].*pam_faillock.so.*authfail.*unlock_time=" $pamFile; then
+
+			# both pam_faillock.so &amp; unlock_time present, just correct unlock_time directive value
+			sed -i --follow-symlinks "s/\(^auth.*required.*pam_faillock.so.*preauth.*silent.*\)\(unlock_time *= *\).*/\1\2$var_accounts_passwords_pam_faillock_unlock_time/" $pamFile
+			sed -i --follow-symlinks "s/\(^auth.*[default=die].*pam_faillock.so.*authfail.*\)\(unlock_time *= *\).*/\1\2$var_accounts_passwords_pam_faillock_unlock_time/" $pamFile
+
+		# pam_faillock.so present, but unlock_time directive not yet
+		else
+
+			# append correct unlock_time value to appropriate places
+			sed -i --follow-symlinks "/^auth.*required.*pam_faillock.so.*preauth.*silent.*/ s/$/ unlock_time=$var_accounts_passwords_pam_faillock_unlock_time/" $pamFile
+			sed -i --follow-symlinks "/^auth.*[default=die].*pam_faillock.so.*authfail.*/ s/$/ unlock_time=$var_accounts_passwords_pam_faillock_unlock_time/" $pamFile
+		fi
+
+	# pam_faillock.so not present yet
+	else
+
+		# insert pam_faillock.so preauth &amp; authfail rows with proper value of the 'unlock_time' option
+		sed -i --follow-symlinks "/^auth.*sufficient.*pam_unix.so.*/i auth        required      pam_faillock.so preauth silent unlock_time=$var_accounts_passwords_pam_faillock_unlock_time" $pamFile
+		sed -i --follow-symlinks "/^auth.*sufficient.*pam_unix.so.*/a auth        [default=die] pam_faillock.so authfail unlock_time=$var_accounts_passwords_pam_faillock_unlock_time" $pamFile
+		sed -i --follow-symlinks "/^account.*required.*pam_unix.so/i account     required      pam_faillock.so" $pamFile
+	fi
+done
+</fix>
+    <fix rule="file_permissions_binary_dirs" complexity="high" disruption="medium" reboot="false" strategy="restrict">find /etc /bin /usr/bin /usr/lbin /usr/usb /sbin /usr/sbin -follow -perm -20 -o -perm -2 2&gt;/dev/null | xargs chmod go-w
+</fix>
+    <fix rule="security_patches_up_to_date" complexity="high" disruption="medium" reboot="false" strategy="restrict">yum -y update
+</fix>
+    <fix rule="file_permissions_var_log_audit" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+if `grep -q ^log_group /etc/audit/auditd.conf` ; then
+  GROUP=$(awk -F "=" '/log_group/ {print $2}' /etc/audit/auditd.conf | tr -d ' ')
+  if ! [ "${GROUP}" == 'root' ] ; then
+    chmod 0640 /var/log/audit/audit.log
+    chmod 0440 /var/log/audit/audit.log.*
+  else
+    chmod 0600 /var/log/audit/audit.log
+    chmod 0400 /var/log/audit/audit.log.*
+  fi
+
+  chmod 0640 /etc/audit/audit*
+  chmod 0640 /etc/audit/rules.d/*
+else
+  chmod 0600 /var/log/audit/audit.log
+  chmod 0400 /var/log/audit/audit.log.*
+  chmod 0640 /etc/audit/audit*
+  chmod 0640 /etc/audit/rules.d/*
+fi
+</fix>
+    <fix rule="sshd_disable_empty_passwords" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+SSHD_CONFIG='/etc/ssh/sshd_config'
+
+# Obtain line number of first uncommented case-insensitive occurrence of Match
+# block directive (possibly prefixed with whitespace) present in $SSHD_CONFIG
+FIRST_MATCH_BLOCK=$(sed -n '/^[[:space:]]*Match[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Obtain line number of first uncommented case-insensitive occurence of
+# PermitEmptyPasswords directive (possibly prefixed with whitespace) present in
+# $SSHD_CONFIG
+FIRST_PERMIT_EMPTY_PASSWORDS=$(sed -n '/^[[:space:]]*PermitEmptyPasswords[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Case: Match block directive not present in $SSHD_CONFIG
+if [ -z "$FIRST_MATCH_BLOCK" ]
+then
+
+    # Case: PermitEmptyPasswords directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_PERMIT_EMPTY_PASSWORDS" ]
+    then
+        # Append 'PermitEmptyPasswords no' at the end of $SSHD_CONFIG
+        echo -e "\nPermitEmptyPasswords no" &gt;&gt; $SSHD_CONFIG
+
+    # Case: PermitEmptyPasswords directive present in $SSHD_CONFIG already
+    else
+        # Replace first uncommented case-insensitive occurrence
+        # of PermitEmptyPasswords directive
+        sed -i "$FIRST_PERMIT_EMPTY_PASSWORDS s/^[[:space:]]*PermitEmptyPasswords.*$/PermitEmptyPasswords no/I" $SSHD_CONFIG
+    fi
+
+# Case: Match block directive present in $SSHD_CONFIG
+else
+
+    # Case: PermitEmptyPasswords directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_PERMIT_EMPTY_PASSWORDS" ]
+    then
+        # Prepend 'PermitEmptyPasswords no' before first uncommented
+        # case-insensitive occurrence of Match block directive
+        sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/PermitEmptyPasswords no\n\1/I" $SSHD_CONFIG
+
+    # Case: PermitEmptyPasswords directive present in $SSHD_CONFIG and placed
+    #       before first Match block directive
+    elif [ "$FIRST_PERMIT_EMPTY_PASSWORDS" -lt "$FIRST_MATCH_BLOCK" ]
+    then
+        # Replace first uncommented case-insensitive occurrence
+        # of PermitEmptyPasswords directive
+        sed -i "$FIRST_PERMIT_EMPTY_PASSWORDS s/^[[:space:]]*PermitEmptyPasswords.*$/PermitEmptyPasswords no/I" $SSHD_CONFIG
+
+    # Case: PermitEmptyPasswords directive present in $SSHD_CONFIG and placed
+    # after first Match block directive
+    else
+         # Prepend 'PermitEmptyPasswords no' before first uncommented
+         # case-insensitive occurrence of Match block directive
+         sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/PermitEmptyPasswords no\n\1/I" $SSHD_CONFIG
+    fi
+fi
+</fix>
+    <fix rule="disable_host_auth" complexity="high" disruption="medium" reboot="false" strategy="restrict">grep -q ^HostbasedAuthentication /etc/ssh/sshd_config &amp;&amp; \
+  sed -i "s/HostbasedAuthentication.*/HostbasedAuthentication no/g" /etc/ssh/sshd_config
+if ! [ $? -eq 0 ]; then
+    echo "HostbasedAuthentication no" &gt;&gt; /etc/ssh/sshd_config
+fi
+</fix>
+    <fix rule="ensure_gpgcheck_never_disabled" complexity="high" disruption="medium" reboot="false" strategy="restrict">grep -R gpgcheck /etc/yum.repos.d/* /etc/yum.conf /root/rpmrc /usr/lib/rpm/redhat/rpmrc /usr/lib/rpm/rpmrc /etc/rpmrc 2&gt;/dev/null | grep -v 'gpgcheck=1' | cut -d: -f1 | sort -u | while read YUM_FILE; do
+	sed -i 's/gpgcheck=.*/gpgcheck=1/g' ${YUM_FILE}
+done
+</fix>
+    <fix rule="set_password_hashing_algorithm_systemauth" complexity="high" disruption="medium" reboot="false" strategy="restrict">if [ $(grep "password.*pam_unix.so" /etc/pam.d/system-auth | egrep -c '(descrypt|bigcrypt|md5|sha256)') != 0 ]; then
+	sed -i '/password.*pam_unix.so/s/\(descrypt\|bigcrypt\|md5\|sha256\)/sha512/' /etc/pam.d/system-auth
+else
+	sed -i '/password.*pam_unix.so/s/$/ sha512/' /etc/pam.d/system-auth
+fi
+if [ -e /etc/pam.d/system-auth-ac ]; then
+	if [ $(grep "password.*pam_unix.so" /etc/pam.d/system-auth-ac | egrep -c '(descrypt|bigcrypt|md5|sha256)') != 0 ]; then
+		sed -i '/password.*pam_unix.so/s/\(descrypt\|bigcrypt\|md5\|sha256\)/sha512/' /etc/pam.d/system-auth-ac
+	else
+		sed -i '/password.*pam_unix.so/s/$/ sha512/' /etc/pam.d/system-auth-ac
+	fi
+fi</fix>
+    <fix rule="set_password_hashing_algorithm_logindefs" complexity="high" disruption="medium" reboot="false" strategy="restrict">if grep --silent ^ENCRYPT_METHOD /etc/login.defs ; then
+	sed -i 's/^ENCRYPT_METHOD.*/ENCRYPT_METHOD SHA512/g' /etc/login.defs
+else
+	echo "" &gt;&gt; /etc/login.defs
+	echo "ENCRYPT_METHOD SHA512" &gt;&gt; /etc/login.defs
+fi
+</fix>
+    <fix rule="no_empty_passwords" complexity="high" disruption="medium" reboot="false" strategy="restrict">sed --follow-symlinks -i 's/\&lt;nullok\&gt;//g' /etc/pam.d/system-auth
+</fix>
+    <fix rule="accounts_passwords_pam_faillock_interval" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_accounts_passwords_pam_faillock_fail_interval="<sub idref="var_accounts_passwords_pam_faillock_fail_interval"/>"
+
+AUTH_FILES[0]="/etc/pam.d/system-auth"
+AUTH_FILES[1]="/etc/pam.d/password-auth"
+
+for pamFile in "${AUTH_FILES[@]}"
+do
+	
+	# pam_faillock.so already present?
+	if grep -q "^auth.*pam_faillock.so.*" $pamFile; then
+
+		# pam_faillock.so present, 'fail_interval' directive present?
+		if grep -q "^auth.*[default=die].*pam_faillock.so.*authfail.*fail_interval=" $pamFile; then
+
+			# both pam_faillock.so &amp; 'fail_interval' present, just correct 'fail_interval' directive value
+			sed -i --follow-symlinks "s/\(^auth.*required.*pam_faillock.so.*preauth.*silent.*\)\(fail_interval *= *\).*/\1\2$var_accounts_passwords_pam_faillock_fail_interval/" $pamFile
+			sed -i --follow-symlinks "s/\(^auth.*[default=die].*pam_faillock.so.*authfail.*\)\(fail_interval *= *\).*/\1\2$var_accounts_passwords_pam_faillock_fail_interval/" $pamFile
+
+		# pam_faillock.so present, but 'fail_interval' directive not yet
+		else
+
+			# append correct 'fail_interval' value to appropriate places
+			sed -i --follow-symlinks "/^auth.*required.*pam_faillock.so.*preauth.*silent.*/ s/$/ fail_interval=$var_accounts_passwords_pam_faillock_fail_interval/" $pamFile
+			sed -i --follow-symlinks "/^auth.*[default=die].*pam_faillock.so.*authfail.*/ s/$/ fail_interval=$var_accounts_passwords_pam_faillock_fail_interval/" $pamFile
+		fi
+
+	# pam_faillock.so not present yet
+	else
+
+		# insert pam_faillock.so preauth &amp; authfail rows with proper value of the 'fail_interval' option
+		sed -i --follow-symlinks "/^auth.*sufficient.*pam_unix.so.*/i auth        required      pam_faillock.so preauth silent fail_interval=$var_accounts_passwords_pam_faillock_fail_interval" $pamFile
+		sed -i --follow-symlinks "/^auth.*sufficient.*pam_unix.so.*/a auth        [default=die] pam_faillock.so authfail fail_interval=$var_accounts_passwords_pam_faillock_fail_interval" $pamFile
+		sed -i --follow-symlinks "/^account.*required.*pam_unix.so/i account     required      pam_faillock.so" $pamFile
+	fi
+done
+</fix>
+    <fix rule="selinux_state" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_selinux_state="<sub idref="var_selinux_state"/>"
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/sysconfig/selinux' '^SELINUX=' $var_selinux_state '$CCENUM' '%s=%s'
+</fix>
+    <fix rule="sshd_disable_compression" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^Compression' 'no' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="sshd_disable_rhosts_rsa" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^RhostsRSAAuthentication' 'no' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="file_ownership_library_dirs" complexity="high" disruption="medium" reboot="false" strategy="restrict">for LIBDIR in /usr/lib /usr/lib64 /lib /lib64
+do
+  if [ -d $LIBDIR ]
+  then
+    find -L $LIBDIR \! -user root -exec chown root {} \; 
+  fi
+done
+</fix>
+    <fix rule="aide_build_database" complexity="high" disruption="medium" reboot="false" strategy="restrict">/usr/sbin/aide --init
+/bin/cp -p /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+</fix>
+    <fix rule="file_groupowner_etc_passwd" complexity="high" disruption="medium" reboot="false" strategy="restrict">chgrp root /etc/passwd
+</fix>
+    <fix rule="sshd_use_priv_separation" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^UsePrivilegeSeparation' 'yes' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="securetty_root_login_console_only" complexity="high" disruption="medium" reboot="false" strategy="restrict">echo tty1 &gt; /etc/securetty
+</fix>
+    <fix rule="auditd_data_retention_num_logs" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_auditd_num_logs="<sub idref="var_auditd_num_logs"/>"
+
+AUDITCONFIG=/etc/audit/auditd.conf
+
+grep -q ^num_logs $AUDITCONFIG &amp;&amp; \
+  sed -i 's/^num_logs.*/num_logs = '"$var_auditd_num_logs"'/g' $AUDITCONFIG
+if ! [ $? -eq 0 ]; then
+  echo "num_logs = $var_auditd_num_logs" &gt;&gt; $AUDITCONFIG
+fi
+</fix>
+    <fix rule="accounts_max_concurrent_login_sessions" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+max_concurrent_login_sessions_value="<sub idref="max_concurrent_login_sessions_value"/>"
+
+if [ $(grep -v "#" /etc/security/limits.conf | grep -c "maxlogins") = "0" ]; then
+	echo "* hard maxlogins ${max_concurrent_login_sessions_value}" &gt;&gt;/etc/security/limits.conf
+else
+	sed -i 's/.*maxlogins.*/* hard maxlogins ${max_concurrent_login_sessions_value}/' /etc/security/limits.conf
+fi
+</fix>
+    <fix rule="file_permissions_etc_group" complexity="high" disruption="medium" reboot="false" strategy="restrict">chmod 0644 /etc/group
+</fix>
+    <fix rule="file_owner_etc_passwd" complexity="high" disruption="medium" reboot="false" strategy="restrict">chown root /etc/passwd
+</fix>
+    <fix rule="mount_option_var_tmp_bind" complexity="high" disruption="medium" reboot="false" strategy="restrict"># Delete particular /etc/fstab's row if /var/tmp is already configured to
+# represent a mount point (for some device or filesystem other than /tmp)
+if grep -q -P '.*\/var\/tmp.*' /etc/fstab
+then
+  sed -i '/.*\/var\/tmp.*/d' /etc/fstab
+fi
+
+# Bind-mount /var/tmp to /tmp via /etc/fstab (preserving the /etc/fstab form)
+printf "%-24s%-24s%-8s%-32s%-3s\n" "/tmp" "/var/tmp" "none" "rw,nodev,noexec,nosuid,bind" "0 0" &gt;&gt; /etc/fstab
+</fix>
+    <fix rule="file_owner_etc_group" complexity="high" disruption="medium" reboot="false" strategy="restrict">chown root /etc/group
+</fix>
+    <fix rule="sshd_disable_rhosts" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^IgnoreRhosts' 'yes' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="sshd_enable_strictmodes" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^StrictModes' 'yes' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="sshd_disable_user_known_hosts" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^IgnoreUserKnownHosts' 'yes' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="file_permissions_etc_passwd" complexity="high" disruption="medium" reboot="false" strategy="restrict">chmod 0644 /etc/passwd
+</fix>
+    <fix rule="require_smb_client_signing" complexity="high" disruption="medium" reboot="false" strategy="restrict">######################################################################
+#By Luke "Brisk-OH" Brisk
+#luke.brisk@boeing.com or luke.brisk@gmail.com
+######################################################################
+
+CLIENTSIGNING=$( grep -ic 'client signing' /etc/samba/smb.conf )
+
+if [ "$CLIENTSIGNING" -eq 0 ];  then
+	# Add to global section
+	sed -i 's/\[global\]/\[global\]\n\n\tclient signing = mandatory/g' /etc/samba/smb.conf
+else
+	sed -i 's/[[:blank:]]*client[[:blank:]]signing[[:blank:]]*=[[:blank:]]*no/        client signing = mandatory/g' /etc/samba/smb.conf
+fi
+
+</fix>
+    <fix rule="sshd_set_idle_timeout" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+declare sshd_idle_timeout_value
+sshd_idle_timeout_value="<sub idref="sshd_idle_timeout_value"/>"
+
+SSHD_CONFIG='/etc/ssh/sshd_config'
+
+# Obtain line number of first uncommented case-insensitive occurrence of Match
+# block directive (possibly prefixed with whitespace) present in $SSHD_CONFIG
+FIRST_MATCH_BLOCK=$(sed -n '/^[[:space:]]*Match[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Obtain line number of first uncommented case-insensitive occurence of
+# ClientAliveInterval directive (possibly prefixed with whitespace) present in
+# $SSHD_CONFIG
+FIRST_CLIENT_ALIVE_INTERVAL=$(sed -n '/^[[:space:]]*ClientAliveInterval[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Case: Match block directive not present in $SSHD_CONFIG
+if [ -z "$FIRST_MATCH_BLOCK" ]
+then
+
+    # Case: ClientAliveInterval directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_CLIENT_ALIVE_INTERVAL" ]
+    then
+        # Append 'ClientAliveInterval $sshd_idle_timeout_value' at the end of $SSHD_CONFIG
+        echo -e "\nClientAliveInterval $sshd_idle_timeout_value" &gt;&gt; $SSHD_CONFIG
+
+    # Case: ClientAliveInterval directive present in $SSHD_CONFIG already
+    else
+        # Replace first uncommented case-insensitive occurrence
+        # of ClientAliveInterval directive
+        sed -i "$FIRST_CLIENT_ALIVE_INTERVAL s/^[[:space:]]*ClientAliveInterval.*$/ClientAliveInterval $sshd_idle_timeout_value/I" $SSHD_CONFIG
+    fi
+
+# Case: Match block directive present in $SSHD_CONFIG
+else
+
+    # Case: ClientAliveInterval directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_CLIENT_ALIVE_INTERVAL" ]
+    then
+        # Prepend 'ClientAliveInterval $sshd_idle_timeout_value' before first uncommented
+        # case-insensitive occurrence of Match block directive
+        sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/ClientAliveInterval $sshd_idle_timeout_value\n\1/I" $SSHD_CONFIG
+
+    # Case: ClientAliveInterval directive present in $SSHD_CONFIG and placed
+    #       before first Match block directive
+    elif [ "$FIRST_CLIENT_ALIVE_INTERVAL" -lt "$FIRST_MATCH_BLOCK" ]
+    then
+        # Replace first uncommented case-insensitive occurrence
+        # of ClientAliveInterval directive
+        sed -i "$FIRST_CLIENT_ALIVE_INTERVAL s/^[[:space:]]*ClientAliveInterval.*$/ClientAliveInterval $sshd_idle_timeout_value/I" $SSHD_CONFIG
+
+    # Case: ClientAliveInterval directive present in $SSHD_CONFIG and placed
+    # after first Match block directive
+    else
+         # Prepend 'ClientAliveInterval $sshd_idle_timeout_value' before first uncommented
+         # case-insensitive occurrence of Match block directive
+         sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/ClientAliveInterval $sshd_idle_timeout_value\n\1/I" $SSHD_CONFIG
+    fi
+fi
+</fix>
+    <fix rule="rsyslog_files_permissions" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+# List of log file paths to be inspected for correct permissions
+# * Primarily inspect log file paths listed in /etc/rsyslog.conf
+RSYSLOG_ETC_CONFIG="/etc/rsyslog.conf"
+# * And also the log file paths listed after rsyslog's $IncludeConfig directive
+#   (store the result into array for the case there's shell glob used as value of IncludeConfig)
+RSYSLOG_INCLUDE_CONFIG=($(grep -e "\$IncludeConfig[[:space:]]\+[^[:space:];]\+" /etc/rsyslog.conf | cut -d ' ' -f 2))
+# Declare an array to hold the final list of different log file paths
+declare -a LOG_FILE_PATHS
+
+# Browse each file selected above as containing paths of log files
+# ('/etc/rsyslog.conf' and '/etc/rsyslog.d/*.conf' in the default configuration)
+for LOG_FILE in "${RSYSLOG_ETC_CONFIG}" "${RSYSLOG_INCLUDE_CONFIG[@]}"
+do
+	# From each of these files extract just particular log file path(s), thus:
+	# * Ignore lines starting with space (' '), comment ('#"), or variable syntax ('$') characters,
+	# * Ignore empty lines,
+	# * From the remaining valid rows select only fields constituting a log file path
+	# Text file column is understood to represent a log file path if and only if all of the following are met:
+	# * it contains at least one slash '/' character,
+	# * it doesn't contain space (' '), colon (':'), and semicolon (';') characters
+	# Search log file for path(s) only in case it exists!
+	if [[ -f "${LOG_FILE}" ]]
+	then
+		MATCHED_ITEMS=$(sed -e "/^[[:space:]|#|$]/d ; s/[^\/]*[[:space:]]*\([^:;[:space:]]*\)/\1/g ; /^$/d" "${LOG_FILE}")
+		# Since above sed command might return more than one item (delimited by newline), split the particular
+		# matches entries into new array specific for this log file
+		readarray -t ARRAY_FOR_LOG_FILE &lt;&lt;&lt; "$MATCHED_ITEMS"
+		# Concatenate the two arrays - previous content of $LOG_FILE_PATHS array with
+		# items from newly created array for this log file
+		LOG_FILE_PATHS=("${LOG_FILE_PATHS[@]}" "${ARRAY_FOR_LOG_FILE[@]}")
+		# Delete the temporary array
+		unset ARRAY_FOR_LOG_FILE
+	fi
+done
+
+for PATH in "${LOG_FILE_PATHS[@]}"
+do
+	# Sanity check - if particular $PATH is empty string, skip it from further processing
+	if [ -z "$PATH" ]
+	then
+		continue
+	fi
+	# Per https://access.redhat.com/solutions/66805 '/var/log/boot.log' log file needs special care =&gt; perform it
+	if [ "$PATH" == "/var/log/boot.log" ]
+	then
+		# Ensure permissions of /var/log/boot.log are configured to be updated in /etc/rc.local
+		if ! /bin/grep -q "boot.log" "/etc/rc.local"
+		then
+			echo "/bin/chmod 600 /var/log/boot.log" &gt;&gt; /etc/rc.local
+		fi
+		# Ensure /etc/rc.d/rc.local has user-executable permission
+		# (in order to be actually executed during boot)
+		if [ "$(/usr/bin/stat -c %a /etc/rc.d/rc.local)" -ne 744 ]
+		then
+			/bin/chmod u+x /etc/rc.d/rc.local
+		fi
+	fi
+	# Also for each log file check if its permissions differ from 600. If so, correct them
+	if [ "$(/usr/bin/stat -c %a "$PATH")" -ne 600 ]
+	then
+		/bin/chmod 600 "$PATH"
+	fi
+done
+</fix>
+    <fix rule="file_ownership_binary_dirs" complexity="high" disruption="medium" reboot="false" strategy="restrict">find /bin/ \
+/usr/bin/ \
+/usr/local/bin/ \
+/sbin/ \
+/usr/sbin/ \
+/usr/local/sbin/ \
+/usr/libexec \
+\! -user root -execdir chown root {} \;
+</fix>
+    <fix rule="no_direct_root_logins" complexity="high" disruption="medium" reboot="false" strategy="restrict">echo &gt; /etc/securetty
+</fix>
+    <fix rule="sshd_disable_gssapi_auth" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^GSSAPIAuthentication' 'no' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="auditd_data_retention_flush" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_auditd_flush="<sub idref="var_auditd_flush"/>"
+
+AUDITCONFIG=/etc/audit/auditd.conf
+
+# if flush is present, flush param edited to var_auditd_flush
+# else flush param is defined by var_auditd_flush
+#
+# the freq param is only used value 'incremental' and will be
+# commented out if flush != incremental
+#
+# if flush == incremental &amp;&amp; freq param is not defined, it 
+# will be defined as the package-default value of 20
+
+grep -q ^flush $AUDITCONFIG &amp;&amp; \
+  sed -i 's/^flush.*/flush = '"$var_auditd_flush"'/g' $AUDITCONFIG
+if ! [ $? -eq 0 ]; then
+  echo "flush = $var_auditd_flush" &gt;&gt; $AUDITCONFIG
+fi
+
+if ! [ "$var_auditd_flush" == "incremental" ]; then
+  sed -i 's/^freq/##freq/g' $AUDITCONFIG
+elif [ "$var_auditd_flush" == "incremental" ]; then
+  grep -q freq $AUDITCONFIG &amp;&amp; \
+    sed -i 's/^#\+freq/freq/g' $AUDITCONFIG
+  if ! [ $? -eq 0 ]; then
+    echo "freq = 20" &gt;&gt; $AUDITCONFIG
+  fi
+fi
+</fix>
+    <fix rule="auditd_data_retention_action_mail_acct" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_auditd_action_mail_acct="<sub idref="var_auditd_action_mail_acct"/>"
+
+AUDITCONFIG=/etc/audit/auditd.conf
+
+grep -q ^action_mail_acct $AUDITCONFIG &amp;&amp; \
+  sed -i 's/^action_mail_acct.*/action_mail_acct = '"$var_auditd_action_mail_acct"'/g' $AUDITCONFIG
+if ! [ $? -eq 0 ]; then
+  echo "action_mail_acct = $var_auditd_action_mail_acct" &gt;&gt; $AUDITCONFIG
+fi
+</fix>
+    <fix rule="sshd_set_keepalive" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+SSHD_CONFIG='/etc/ssh/sshd_config'
+
+# Obtain line number of first uncommented case-insensitive occurrence of Match
+# block directive (possibly prefixed with whitespace) present in $SSHD_CONFIG
+FIRST_MATCH_BLOCK=$(sed -n '/^[[:space:]]*Match[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Obtain line number of first uncommented case-insensitive occurence of
+# ClientAliveCountMax directive (possibly prefixed with whitespace) present in
+# $SSHD_CONFIG
+FIRST_CLIENT_ALIVE_COUNT_MAX=$(sed -n '/^[[:space:]]*ClientAliveCountMax[^\n]*/I{=;q}' $SSHD_CONFIG)
+
+# Case: Match block directive not present in $SSHD_CONFIG
+if [ -z "$FIRST_MATCH_BLOCK" ]
+then
+
+    # Case: ClientAliveCountMax directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_CLIENT_ALIVE_COUNT_MAX" ]
+    then
+        # Append 'ClientAliveCountMax 0' at the end of $SSHD_CONFIG
+        echo -e "\nClientAliveCountMax 0" &gt;&gt; $SSHD_CONFIG
+
+    # Case: ClientAliveCountMax directive present in $SSHD_CONFIG already
+    else
+        # Replace first uncommented case-insensitive occurrence
+        # of ClientAliveCountMax directive
+        sed -i "$FIRST_CLIENT_ALIVE_COUNT_MAX s/^[[:space:]]*ClientAliveCountMax.*$/ClientAliveCountMax 0/I" $SSHD_CONFIG
+    fi
+
+# Case: Match block directive present in $SSHD_CONFIG
+else
+
+    # Case: ClientAliveCountMax directive not present in $SSHD_CONFIG yet
+    if [ -z "$FIRST_CLIENT_ALIVE_COUNT_MAX" ]
+    then
+        # Prepend 'ClientAliveCountMax 0' before first uncommented
+        # case-insensitive occurrence of Match block directive
+        sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/ClientAliveCountMax 0\n\1/I" $SSHD_CONFIG
+
+    # Case: ClientAliveCountMax directive present in $SSHD_CONFIG and placed
+    #       before first Match block directive
+    elif [ "$FIRST_CLIENT_ALIVE_COUNT_MAX" -lt "$FIRST_MATCH_BLOCK" ]
+    then
+        # Replace first uncommented case-insensitive occurrence
+        # of ClientAliveCountMax directive
+        sed -i "$FIRST_CLIENT_ALIVE_COUNT_MAX s/^[[:space:]]*ClientAliveCountMax.*$/ClientAliveCountMax 0/I" $SSHD_CONFIG
+
+    # Case: ClientAliveCountMax directive present in $SSHD_CONFIG and placed
+    # after first Match block directive
+    else
+         # Prepend 'ClientAliveCountMax 0' before first uncommented
+         # case-insensitive occurrence of Match block directive
+         sed -i "$FIRST_MATCH_BLOCK s/^\([[:space:]]*Match[^\n]*\)/ClientAliveCountMax 0\n\1/I" $SSHD_CONFIG
+    fi
+fi
+</fix>
+    <fix rule="sshd_allow_only_protocol2" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^Protocol' '2' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="auditd_data_retention_max_log_file" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_auditd_max_log_file="<sub idref="var_auditd_max_log_file"/>"
+
+AUDITCONFIG=/etc/audit/auditd.conf
+
+grep -q ^max_log_file $AUDITCONFIG &amp;&amp; \
+  sed -i 's/^max_log_file.*/max_log_file = '"$var_auditd_max_log_file"'/g' $AUDITCONFIG
+if ! [ $? -eq 0 ]; then
+  echo "max_log_file = $var_auditd_max_log_file" &gt;&gt; $AUDITCONFIG
+fi
+</fix>
+    <fix rule="file_permissions_etc_gshadow" complexity="high" disruption="medium" reboot="false" strategy="restrict">chmod 0400 /etc/gshadow
+</fix>
+    <fix rule="sshd_disable_root_login" complexity="high" disruption="medium" reboot="false" strategy="restrict">grep -q ^PermitRootLogin /etc/ssh/sshd_config &amp;&amp; \
+  sed -i "s/PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
+if ! [ $? -eq 0 ]; then
+    echo "PermitRootLogin no" &gt;&gt; /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="file_permissions_sshd_pub_key" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+chmod 0644 /etc/ssh/*.pub
+</fix>
+    <fix rule="sshd_disable_kerb_auth" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/ssh/sshd_config' '^KerberosAuthentication' 'no' '$CCENUM' '%s %s'
+</fix>
+    <fix rule="file_ownership_var_log_audit" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+if `grep -q ^log_group /etc/audit/auditd.conf` ; then
+  GROUP=$(awk -F "=" '/log_group/ {print $2}' /etc/audit/auditd.conf | tr -d ' ')
+  if ! [ "${GROUP}" == 'root' ] ; then
+    chown root.${GROUP} /var/log/audit
+    chown root.${GROUP} /var/log/audit/audit.log*
+  else
+    chown root.root /var/log/audit
+    chown root.root /var/log/audit/audit.log*
+  fi
+else
+  chown root.root /var/log/audit
+  chown root.root /var/log/audit/audit.log*
+fi
+</fix>
+    <fix rule="auditd_audispd_syslog_plugin_activated" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+grep -q ^active /etc/audisp/plugins.d/syslog.conf &amp;&amp; \
+  sed -i "s/active.*/active = yes/g" /etc/audisp/plugins.d/syslog.conf
+if ! [ $? -eq 0 ]; then
+    echo "active = yes" &gt;&gt; /etc/audisp/plugins.d/syslog.conf
+fi
+</fix>
+    <fix rule="ensure_gpgcheck_globally_activated" complexity="high" disruption="medium" reboot="false" strategy="restrict">sed -i 's/gpgcheck=.*/gpgcheck=1/g' /etc/yum.conf
+</fix>
+    <fix rule="file_permissions_httpd_server_conf_files" complexity="high" disruption="medium" reboot="false" strategy="restrict">chmod 640 /etc/httpd/conf/*
+</fix>
+    <fix rule="ensure_redhat_gpgkey_installed" complexity="high" disruption="medium" reboot="false" strategy="restrict"># The two fingerprints below are retrieved from https://access.redhat.com/security/team/key
+readonly REDHAT_RELEASE_2_FINGERPRINT="567E 347A D004 4ADE 55BA 8A5F 199E 2F91 FD43 1D51"
+readonly REDHAT_AUXILIARY_FINGERPRINT="43A6 E49C 4A38 F4BE 9ABF 2A53 4568 9C88 2FA6 58E0"
+# Location of the key we would like to import (once it's integrity verified)
+readonly REDHAT_RELEASE_KEY="/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+
+RPM_GPG_DIR_PERMS=$(stat -c %a "$(dirname "$REDHAT_RELEASE_KEY")")
+
+# Verify /etc/pki/rpm-gpg directory permissions are safe
+if [ "${RPM_GPG_DIR_PERMS}" -le "755" ]
+then
+  # If they are safe, try to obtain fingerprints from the key file
+  # (to ensure there won't be e.g. CRC error).
+  IFS=$'\n' GPG_OUT=($(gpg --with-fingerprint "${REDHAT_RELEASE_KEY}" | grep 'Key fingerprint ='))
+  GPG_RESULT=$?
+  # No CRC error, safe to proceed
+  if [ "${GPG_RESULT}" -eq "0" ]
+  then
+    tr -s ' ' &lt;&lt;&lt; "${GPG_RESULT}" | grep -vE "${REDHAT_RELEASE_2_FINGERPRINT}|${REDHAT_AUXILIARY_FINGERPRINT}" || {
+      # If file doesn't contains any keys with unknown fingerprint, import it
+      rpm --import "${REDHAT_RELEASE_KEY}"
+    }
+  fi
+fi
+</fix>
+    <fix rule="file_permissions_sshd_private_key" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+chmod 0640 /etc/ssh/*_key
+</fix>
+    <fix rule="file_owner_etc_gshadow" complexity="high" disruption="medium" reboot="false" strategy="restrict">chown root /etc/gshadow
+</fix>
+    <fix rule="selinux_policytype" complexity="high" disruption="medium" reboot="false" strategy="restrict">
+var_selinux_policy_name="<sub idref="var_selinux_policy_name"/>"
+<sub idref="function_replace_or_append"/>
+replace_or_append '/etc/sysconfig/selinux' '^SELINUXTYPE=' $var_selinux_policy_name '$CCENUM' '%s=%s'
+</fix>
+    <fix rule="sshd_use_approved_macs" complexity="high" disruption="medium" reboot="false" strategy="restrict">if [ $(cat /etc/ssh/sshd_config | grep -c "^MACs") = "0" ]; then
+	echo "MACs hmac-sha1" | tee -a /etc/ssh/sshd_config &amp;&gt;/dev/null
+else
+	sed -i 's/^MACs.*/MACs hmac-sha1/' /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="file_permissions_etc_services" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/services
+</fix>
+    <fix rule="file_permissions_etc_news_incoming_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/news/incoming.conf
+</fix>
+    <fix rule="file_permissions_etc_cups_printers_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/cups/printers.conf
+</fix>
+    <fix rule="package_xinetd_removed" complexity="low" disruption="low" reboot="false" strategy="configure">yum -y remove xinetd --disablerepo=* 1&gt;/dev/null
+</fix>
+    <fix rule="service_ypbind_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Disable ypbind for all run levels
+#
+/sbin/chkconfig --level 0123456 ypbind off
+
+#
+# Stop ypbind if currently running
+#
+/sbin/service ypbind stop 1&gt;/dev/null
+</fix>
+    <fix rule="sysctl_net_ipv4_icmp_echo_ignore_broadcasts" complexity="low" disruption="medium" reboot="true" strategy="disable">#
+# Set runtime for net.ipv4.icmp_echo_ignore_broadcasts
+#
+/sbin/sysctl -q -n -w net.ipv4.icmp_echo_ignore_broadcasts=1
+
+#
+# If net.ipv4.icmp_echo_ignore_broadcasts present in /etc/sysctl.conf, change value to "1"
+#	else, add "net.ipv4.icmp_echo_ignore_broadcasts = 1" to /etc/sysctl.conf
+#
+if grep --silent ^net.ipv4.icmp_echo_ignore_broadcasts /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.icmp_echo_ignore_broadcasts.*/net.ipv4.icmp_echo_ignore_broadcasts = 1/g' /etc/sysctl.conf
+else
+	echo -e "\n# Set net.ipv4.icmp_echo_ignore_broadcasts to 1 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.icmp_echo_ignore_broadcasts = 1" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="service_rsh_disabled" complexity="low" disruption="medium" reboot="true" strategy="disable">#
+# Disable rsh for all run levels
+#
+/sbin/chkconfig --level 0123456 rsh off
+
+#
+# Stop rsh if currently running
+#
+/sbin/service rsh stop 1&gt;/dev/null
+</fix>
+    <fix rule="service_autofs_disabled" complexity="low" disruption="medium" reboot="true" strategy="disable">#
+# Disable autofs for all run levels
+#
+/sbin/chkconfig --level 0123456 autofs off
+
+#
+# Stop autofs if currently running
+#
+/sbin/service autofs stop 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_etc_hosts" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/hosts
+</fix>
+    <fix rule="file_permissions_etc_security_access_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0640 /etc/security/access.conf
+</fix>
+    <fix rule="kernel_module_rds_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -d /etc/modprobe.d/ ]; then
+	echo "install rds /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+else
+	echo "install rds /bin/true" &gt;&gt; /etc/modprobe.conf
+fi
+</fix>
+    <fix rule="service_tftp_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Disable tftp for all run levels
+#
+/sbin/chkconfig --level 0123456 tftp off
+
+#
+# Stop tftp if currently running
+#
+/sbin/service tftp stop 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_etc_cron_allow" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/cron.allow
+</fix>
+    <fix rule="sysctl_net_ipv4_tcp_max_syn_backlog" complexity="low" disruption="medium" reboot="true" strategy="disable">#
+# Set runtime for net.ipv4.tcp_max_syn_backlog
+#
+/sbin/sysctl -q -n -w net.ipv4.tcp_max_syn_backlog=1280
+
+#
+# If net.ipv4.tcp_max_syn_backlog present in /etc/sysctl.conf, change value to "1280"
+#	else, add "net.ipv4.tcp_max_syn_backlog = 1280" to /etc/sysctl.conf
+#
+if grep --silent ^net.ipv4.tcp_max_syn_backlog /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.tcp_max_syn_backlog.*/net.ipv4.tcp_max_syn_backlog = 1280/g' /etc/sysctl.conf
+else
+	echo -e "\n# Set net.ipv4.tcp_max_syn_backlog to 1280 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.tcp_max_syn_backlog = 1280" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="file_permissions_etc_news_infeed_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/news/infeed.conf
+</fix>
+    <fix rule="service_xinetd_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Disable xinetd for all run levels
+#
+/sbin/chkconfig --level 0123456 xinetd off
+
+#
+# Stop xinetd if currently running
+#
+/sbin/service xinetd stop 1&gt;/dev/null
+</fix>
+    <fix rule="service_rlogin_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Disable rlogin for all run levels
+#
+/sbin/chkconfig --level 0123456 rlogin off
+
+#
+# Stop rlogin if currently running
+#
+/sbin/service rlogin stop 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_etc_at_deny" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/at.deny
+</fix>
+    <fix rule="service_yum-updatesd_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Disable yum-updatesd for all run levels
+#
+/sbin/chkconfig --level 0123456 yum-updatesd off
+
+#
+# Stop yum-updatesd if currently running
+#
+/sbin/service yum-updatesd stop 1&gt;/dev/null
+</fix>
+    <fix rule="service_rexec_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Disable rexec for all run levels
+#
+/sbin/chkconfig --level 0123456 rexec off
+
+#
+# Stop rexec if currently running
+#
+/sbin/service rexec stop 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_etc_ntp_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0640 /etc/ntp.conf
+</fix>
+    <fix rule="file_permissions_bin_traceroute" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 700 /bin/traceroute
+</fix>
+    <fix rule="file_permissions_etc_syslog_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0640 /etc/syslog.conf
+</fix>
+    <fix rule="service_iptables_enabled" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Enable iptables for all run levels
+#
+/sbin/chkconfig --level 0123456 iptables on
+
+#
+# Start iptables if not currently running
+#
+/sbin/service iptables start 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_etc_cron_deny" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/cron.deny
+</fix>
+    <fix rule="kernel_module_tipc_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -d /etc/modprobe.d/ ]; then
+	echo "install tipc /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+else
+	echo "install tipc /bin/true" &gt;&gt; /etc/modprobe.conf
+fi
+</fix>
+    <fix rule="file_permissions_etc_exports" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/exports
+</fix>
+    <fix rule="file_permissions_etc_news_passwd_nntp" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/news/passwd.nntp
+</fix>
+    <fix rule="kernel_module_ieee1394_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -d /etc/modprobe.d/ ]; then
+	echo "install ieee1394 /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+else
+	echo "install ieee1394 /bin/true" &gt;&gt; /etc/modprobe.conf
+fi
+</fix>
+    <fix rule="file_permissions_etc_resolv_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/resolv.conf
+</fix>
+    <fix rule="sysctl_net_ipv4_ip_forward" complexity="low" disruption="medium" reboot="true" strategy="disable">#
+# Set runtime for net.ipv4.ip_forward
+#
+/sbin/sysctl -q -n -w net.ipv4.ip_forward=0
+
+#
+# If net.ipv4.ip_forward present in /etc/sysctl.conf, change value to "0"
+#	else, add "net.ipv4.ip_forward = 0" to /etc/sysctl.conf
+#
+if grep --silent ^net.ipv4.ip_forward /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.ip_forward.*/net.ipv4.ip_forward = 0/g' /etc/sysctl.conf
+else
+	echo -e "\n# Set net.ipv4.ip_forward to 0 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.ip_forward = 0" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="service_telnetd_disabled" complexity="low" disruption="medium" reboot="true" strategy="disable">#
+# Disable telnetd for all run levels
+#
+/sbin/chkconfig --level 0123456 telnetd off
+
+#
+# Stop telnetd if currently running
+#
+/sbin/service telnetd stop 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_etc_ldap_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/ldap.conf
+</fix>
+    <fix rule="file_permissions_etc_shadow" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0400 /etc/shadow
+</fix>
+    <fix rule="kernel_module_sctp_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -d /etc/modprobe.d/ ]; then
+	echo "install sctp /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+else
+	echo "install sctp /bin/true" &gt;&gt; /etc/modprobe.conf
+fi
+</fix>
+    <fix rule="sysctl_net_ipv4_tcp_syncookies" complexity="low" disruption="medium" reboot="true" strategy="disable">#
+# Set runtime for net.ipv4.tcp_syncookies
+#
+/sbin/sysctl -q -n -w net.ipv4.tcp_syncookies=1
+
+#
+# If net.ipv4.tcp_syncookies present in /etc/sysctl.conf, change value to "1"
+#	else, add "net.ipv4.tcp_syncookies = 1" to /etc/sysctl.conf
+#
+if grep --silent ^net.ipv4.tcp_syncookies /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.tcp_syncookies.*/net.ipv4.tcp_syncookies = 1/g' /etc/sysctl.conf
+else
+	echo -e "\n# Set net.ipv4.tcp_syncookies to 1 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.tcp_syncookies = 1" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="kernel_module_bridge_disabled" complexity="low" disruption="medium" reboot="true" strategy="disable">if [ -d /etc/modprobe.d/ ]; then
+	echo "install bridge /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+else
+	echo "install bridge /bin/true" &gt;&gt; /etc/modprobe.conf
+fi
+</fix>
+    <fix rule="kernel_module_appletalk_disabled" complexity="low" disruption="medium" reboot="true" strategy="disable">if [ -d /etc/modprobe.d/ ]; then
+	echo "install appletalk /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+else
+	echo "install appletalk /bin/true" &gt;&gt; /etc/modprobe.conf
+fi
+</fix>
+    <fix rule="file_permissions_etc_nsswitch_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/nsswitch.conf
+</fix>
+    <fix rule="file_permissions_etc_securetty" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/securetty
+</fix>
+    <fix rule="file_permissions_etc_at_allow" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/at.allow
+</fix>
+    <fix rule="service_ntpd_enabled" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Enable ntpd for all run levels
+#
+/sbin/chkconfig --level 0123456 ntpd on
+
+#
+# Start ntpd if not currently running
+#
+/sbin/service ntpd start 1&gt;/dev/null
+</fix>
+    <fix rule="service_auditd_enabled" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Enable auditd for all run levels
+#
+/sbin/chkconfig --level 0123456 auditd on
+
+#
+# Start auditd if not currently running
+#
+/sbin/service auditd start 1&gt;/dev/null
+</fix>
+    <fix rule="ftp_log_transactions" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/xinetd.d/gssftp ]; then
+	if [ "$(grep server_args /etc/xinetd.d/gssftp | grep -c " -l")" = "0" ]; then
+		sed -i "/server_args/s/$/ -l/" /etc/xinetd.d/gssftp
+	fi
+fi
+if [ -e /etc/vsftpd/vsftpd.conf ]; then
+	if [ "$(grep -ic "^xferlog_enable=yes" /etc/vsftpd/vsftpd.conf)" = "0" ]; then
+		sed -i "s/xferlog_enable.*/xferlog_enable=yes/" /etc/xinetd.d/gssftp
+	fi
+fi
+</fix>
+    <fix rule="file_owner_audit_tools" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /sbin/auditctl /sbin/auditd /sbin/ausearch /sbin/aureport /sbin/autrace /sbin/audispd</fix>
+    <fix rule="accounts_password_pam_cracklib_ucredit" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_password_pam_cracklib_ucredit="<sub idref="var_password_pam_cracklib_ucredit"/>"
+
+if [ $(grep -c "ucredit=" /etc/pam.d/system-auth) != 0 ]; then
+	sed -i "s/ucredit=[0-9]*/ucredit=$var_password_pam_cracklib_ucredit/" /etc/pam.d/system-auth
+else
+	sed -i "/password.*pam_cracklib.so/s/$/ ucredit=$var_password_pam_cracklib_ucredit/" /etc/pam.d/system-auth
+fi
+if [ -e /etc/pam.d/system-auth-ac ]; then
+	if [ $(grep -c "ucredit=" /etc/pam.d/system-auth-ac) != 0 ]; then
+		sed -i "s/ucredit=[0-9]*/ucredit=$var_password_pam_cracklib_ucredit/" /etc/pam.d/system-auth-ac
+	else
+		sed -i "/password.*pam_cracklib.so/s/$/ ucredit=$var_password_pam_cracklib_ucredit/" /etc/pam.d/system-auth-ac
+	fi
+fi
+</fix>
+    <fix rule="file_owner_aliases" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/postfix/aliases /etc/postfix/aliases.db /etc/aliases /etc/aliases.db 2&gt;/dev/null</fix>
+    <fix rule="iptables_timestamp_reject_rule" complexity="low" disruption="low" reboot="false" strategy="configure">if [ "$(egrep -c '(--icmp-type 14|timestamp-reply) -j DROP')" = "0" ]; then
+	/sbin/iptables -I INPUT -p ICMP --icmp-type timestamp-reply -j DROP
+fi
+if [ "$(egrep -c '(--icmp-type 13|timestamp-request) -j DROP')" = "0" ]; then
+	/sbin/iptables -I INPUT -p ICMP --icmp-type timestamp-request -j DROP
+fi
+/sbin/iptables-save &gt; /etc/sysconfig/iptables
+if [ "$(grep -c 'icmp-type 13' /etc/sysconfig/iptables)" != "0" ]; then
+	sed -i 's/icmp-type 13/icmp-type timestamp-request/' /etc/sysconfig/iptables
+fi
+if [ "$(grep -c 'icmp-type 14' /etc/sysconfig/iptables)" != "0" ]; then
+	sed -i 's/icmp-type 14/icmp-type timestamp-reply/' /etc/sysconfig/iptables
+fi
+</fix>
+    <fix rule="global_initialization_files_mesg" complexity="low" disruption="low" reboot="false" strategy="configure">echo mesg n | tee -a /etc/profile &amp;&gt;/dev/null
+</fix>
+    <fix rule="samba_guest_ok_option" complexity="low" disruption="low" reboot="false" strategy="configure">sed -i '/^[#|;]/!s/\(guest ok =\).*/\1 no/g' /etc/samba/smb.conf</fix>
+    <fix rule="ip6tables_input_icmpv6_broadcast" complexity="low" disruption="low" reboot="false" strategy="configure">if [ ! -e /etc/sysconfig/ip6tables ] || [ "$(grep -c ^ /etc/sysconfig/ip6tables)" -lt "5" ]; then
+	echo -e "*filter\n:INPUT DROP [0:0]\n:FORWARD DROP [0:0]\n:OUTPUT ACCEPT [0:0]\nCOMMIT" | tee /etc/sysconfig/ip6tables &amp;&gt;/dev/null
+	echo "-A INPUT -p icmpv6 -d ff02::1 --icmpv6-type 128 -j DROP" | tee -a /etc/sysconfig/ip6tables &amp;&gt;/dev/null 
+else
+	echo "-A INPUT -p icmpv6 -d ff02::1 --icmpv6-type 128 -j DROP" | tee -a /etc/sysconfig/ip6tables &amp;&gt;/dev/null 
+fi
+</fix>
+    <fix rule="file_groupowner_aliases_files" complexity="low" disruption="low" reboot="false" strategy="configure">grep "/" /etc/aliases /etc/aliases.db | grep -v "#" | grep ^/ | sed 's/.*[\s|\t]\//\//' | xargs chown :root</fix>
+    <fix rule="accounts_fail_delay" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(grep -c ^FAIL_DELAY /etc/login.defs) != 0 ]; then
+	sed -i 's/^FAIL_DELAY.*[0-9]*/FAIL_DELAY 4/' /etc/login.defs
+else
+	echo "FAIL_DELAY 4" | tee -a /etc/login.defs &amp;&gt;/dev/null
+fi
+
+if [ $(grep -c pam_faildelay.so /etc/pam.d/system-auth) != 0 ]; then
+	if [ $(grep -c pam_faildelay.so.*delay\= /etc/pam.d/system-auth) != 0 ]; then
+		sed -i '/pam_faildelay.so/s/\(delay=\)[0-9]*/\14000000/' /etc/pam.d/system-auth
+	else
+		sed -i '/pam_faildelay.so/s/$/ delay=4000000/' /etc/pam.d/system-auth
+	fi
+else
+	sed -i '/auth.*include.*system-auth-ac/iauth        optional     pam_faildelay.so delay=4000000' /etc/pam.d/system-auth
+fi
+</fix>
+    <fix rule="selinux_enforcing" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_selinux_policy_name="<sub idref="var_selinux_policy_name"/>"
+
+if [ "`grep -c ^SELINUX= /etc/sysconfig/selinux`" = "0" ]; then
+	echo SELINUX=enforcing &gt;&gt; /etc/sysconfig/selinux
+else
+	sed -i 's/^SELINUX=.*/SELINUX=enforcing/' /etc/sysconfig/selinux
+fi
+
+if [ "`grep -c ^SELINUX= /etc/selinux/config`" = "0" ]; then
+	echo SELINUX=enforcing &gt;&gt; /etc/selinux/config
+else
+	sed -i 's/^SELINUX=.*/SELINUX=enforcing/' /etc/selinux/config
+fi
+
+if [ "`grep -c ^SELINUXTYPE= /etc/sysconfig/selinux`" = "0" ]; then
+	echo SELINUXTYPE=${var_selinux_policy_name} &gt;&gt; /etc/sysconfig/selinux
+else
+	sed -i "s/^SELINUXTYPE=.*/SELINUXTYPE=${var_selinux_policy_name}/" /etc/sysconfig/selinux
+fi
+
+if [ "`grep -c ^SELINUXTYPE= /etc/selinux/config`" = "0" ]; then
+	echo SELINUXTYPE=${var_selinux_policy_name} &gt;&gt; /etc/selinux/config
+else
+	sed -i "s/^SELINUXTYPE=.*/SELINUXTYPE=${var_selinux_policy_name}/" /etc/selinux/config
+fi
+</fix>
+    <fix rule="file_groupowner_ldap_certs" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_cert' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs chown -R :root</fix>
+    <fix rule="iptables_input_reject_rule" complexity="low" disruption="low" reboot="false" strategy="configure">/sbin/iptables -A INPUT -j REJECT --reject-with icmp-host-prohibited
+/sbin/iptables-save &gt; /etc/sysconfig/iptables</fix>
+    <fix rule="ftp_enable_warning_banner" complexity="low" disruption="low" reboot="false" strategy="configure">
+ftp_login_banner_text="<sub idref="ftp_login_banner_text"/>"
+
+if [ -e /etc/xinetd.d/gssftp ]; then
+	if [ "`egrep -c '^(\s|\t)banner' /etc/xinetd.d/gssftp`" = "0" ]; then
+		sed -i "/^}$/i\\\tbanner\t\t= /etc/issue" /etc/xinetd.d/gssftp
+	else
+		GSSFTP_BANNER_FILE="`egrep '^(\s|\t)banner' /etc/xinetd.d/gssftp | awk '{ print $3 }'`"
+		echo $ftp_login_banner_text | sed -e 's/\[\\s\\n\][+|*]/ /g' -e 's/\&amp;amp;/\&amp;/g' -e 's/\\//g' -e 's/ - /\n- /g' &gt;"${GSSFTP_BANNER_FILE}"
+	fi
+fi
+
+if [ -e /etc/vsftpd/vsftpd.conf ]; then
+	if [ "`egrep -c '^banner_file' /etc/vsftpd/vsftpd.conf`" = "0" ]; then
+		echo "banner_file=/etc/issue" &gt;&gt; /etc/vsftpd/vsftpd.conf
+	else
+		VSFTPD_BANNER_FILE="`egrep '^banner_file' /etc/vsftpd/vsftpd.conf | awk -F= '{ print $2 }'`"
+		echo $ftp_login_banner_text | sed -e 's/\[\\s\\n\][+|*]/ /g' -e 's/\&amp;amp;/\&amp;/g' -e 's/\\//g' -e 's/ - /\n- /g' &gt;"${VSFTPD_BANNER_FILE}"
+	fi
+fi
+</fix>
+    <fix rule="audit_rules_login_events" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+else
+	exit
+fi
+for FILE in /var/log/faillog /var/log/lastlog; do
+	if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE}"`" = "0" ]; then
+		echo "-w ${FILE} -p wa -k audit_login_events" &gt;&gt;${AUDIT_RULES_FILE}
+	elif [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p [x]*\(wa\|aw\)"`" = "0" ]; then
+		SED_FILE="$(echo ${FILE} | sed 's/\//\\\//g')"
+		if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p "`" = "0" ]; then
+			sed -i "s/\(-w ${SED_FILE}\)/\1 -p wa/" ${AUDIT_RULES_FILE}
+		else
+			if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p [xa]*w"`" = "0" ]; then
+				sed -i "s/\(-w ${SED_FILE} -p \)/\1w/" ${AUDIT_RULES_FILE}
+			fi
+			if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p [xw]*a"`" = "0" ]; then
+				sed -i "s/\(-w ${SED_FILE} -p \)/\1a/" ${AUDIT_RULES_FILE}
+			fi
+		fi
+	fi
+done
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_extended_ldap_cacerts" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_cacert' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs setfacl --remove-all</fix>
+    <fix rule="file_permissions_extended_etc_security_access_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/security/access.conf</fix>
+    <fix rule="file_permissions_core_dump_dir" complexity="low" disruption="low" reboot="false" strategy="configure">grep path.*/ /etc/kdump.conf | awk '{ print $2 }' | xargs chmod 700</fix>
+    <fix rule="file_permissions_extended_etc_xinetd_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/xinetd.conf</fix>
+    <fix rule="audit_rules_dac_modification_lremovexattr" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S lremovexattr '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S lremovexattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S lremovexattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_extended_etc_news_passwd_nntp" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/news/passwd.nntp</fix>
+    <fix rule="file_permissions_extended_etc_ntp_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/ntp.conf</fix>
+    <fix rule="accounts_password_pam_cracklib_minlen" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_password_pam_cracklib_minlen="<sub idref="var_password_pam_cracklib_minlen"/>"
+
+if [ $(grep -c "minlen=" /etc/pam.d/system-auth) != 0 ]; then
+	sed -i "s/minlen=[0-9]*/minlen=$var_password_pam_cracklib_minlen/" /etc/pam.d/system-auth
+else
+	sed -i "/password.*pam_cracklib.so/s/$/ minlen=$var_password_pam_cracklib_minlen/" /etc/pam.d/system-auth
+fi
+if [ -e /etc/pam.d/system-auth-ac ]; then
+	if [ $(grep -c "minlen=" /etc/pam.d/system-auth-ac) != 0 ]; then
+		sed -i "s/minlen=[0-9]*/minlen=$var_password_pam_cracklib_minlen/" /etc/pam.d/system-auth-ac
+	else
+		sed -i "/password.*pam_cracklib.so/s/$/ minlen=$var_password_pam_cracklib_minlen/" /etc/pam.d/system-auth-ac
+	fi
+fi
+</fix>
+    <fix rule="file_groupowner_exports_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">cat /etc/exports | awk '{ print $1 }' | xargs chown :root</fix>
+    <fix rule="file_permissions_extended_ldap_keys" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_key' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs setfacl --remove-all</fix>
+    <fix rule="file_permissions_extended_crontab_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/cron.d /etc/crontab /etc/cron.daily /etc/cron.hourly /etc/cron.monthly /etc/cron.weekly /var/spool/cron 2&gt;/dev/null</fix>
+    <fix rule="file_permissions_extended_etc_cron_allow" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/cron.allow</fix>
+    <fix rule="file_permissions_crontab_files" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 600 /etc/crontab /etc/cron.d/* /var/spool/cron/* 2&gt;/dev/null</fix>
+    <fix rule="file_groupowner_audio_devices" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /dev/audio* /dev/snd/*
+if [[ "`uname -r`" = "2.6.9"* ]]; then
+	sed -i 's/\(^audio\*:[a-z]*:\)[a-z]*:/\1sys:/' /etc/udev/permissions.d/50-udev.permissions
+elif [[ "`uname -r`" = "2.6.18"* ]]; then
+	sed -i '/^&lt;console&gt;  [0-9]* &lt;sound&gt;/s/&lt;sound&gt;.*/&lt;sound&gt;      0600 root.root/' /etc/security/console.perms.d/50-default.perms
+fi
+</fix>
+    <fix rule="file_permissions_aliases_files" complexity="low" disruption="low" reboot="false" strategy="configure">grep "/" /etc/aliases /etc/aliases.db | grep -v "#" | grep ^/ | sed 's/.*[\s|\t]\//\//' | xargs chmod 755</fix>
+    <fix rule="audit_rules_sethostname" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k set_hostname"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`uname -p`" != "x86_64" ]; then
+	echo "-a exit,always -F arch=b32 -S sethostname ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+else
+	echo "-a exit,always -F arch=b64 -S sethostname ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="audit_rules_unsuccessful_file_creat" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	if [ "`grep " -S creat " /etc/audit/audit.rules | grep -v '#' | grep -c '\-F exit=-EACCES'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S creat -F exit=-EACCES -k access" &gt;&gt;/etc/audit/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S creat -F exit=-EACCES -k access" &gt;&gt;/etc/audit/audit.rules
+		fi
+	fi
+	if [ "`grep " -S creat " /etc/audit/audit.rules | grep -v '#' | grep -c '\-F exit=-EPERM'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S creat -F exit=-EPERM -k access" &gt;&gt;/etc/audit/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S creat -F exit=-EPERM -k access" &gt;&gt;/etc/audit/audit.rules
+		fi
+	fi
+elif [ -e /etc/audit.rules ]; then
+	if [ "`grep " -S creat " /etc/audit.rules | grep -v '#' | grep -c '\success=0'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S creat -F success=0" &gt;&gt;/etc/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S creat -F success=0" &gt;&gt;/etc/audit.rules
+		fi
+	fi
+else
+	exit
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_usr_bin_ldd" complexity="low" disruption="low" reboot="false" strategy="configure">chmod a-x /usr/bin/ldd
+</fix>
+    <fix rule="file_permissions_etc_samba_tdb" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/samba/passdb.tdb /etc/samba/secrets.tdb</fix>
+    <fix rule="file_permissions_extended_root_dir" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl -RLb /root/*
+</fix>
+    <fix rule="file_permissions_extended_etc_at_deny" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/at.deny</fix>
+    <fix rule="audit_rules_audit_rules" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${AUDIT_RULES_FILE}"`" = "0" ]; then
+	echo "-w ${AUDIT_RULES_FILE} -p wa -k audit_rules_changes" &gt;&gt;${AUDIT_RULES_FILE}
+elif [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${AUDIT_RULES_FILE} -p [x]*\(wa\|aw\)"`" = "0" ]; then
+	if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${AUDIT_RULES_FILE} -p "`" = "0" ]; then
+		sed -i "s/\(-w ${AUDIT_RULES_FILE}\)/\1 -p wa/" ${AUDIT_RULES_FILE}
+	else
+		if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${AUDIT_RULES_FILE} -p [xa]*w"`" = "0" ]; then
+			sed -i "s/\(-w ${AUDIT_RULES_FILE} -p \)/\1w/" ${AUDIT_RULES_FILE}
+		fi
+		if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${AUDIT_RULES_FILE} -p [xw]*a"`" = "0" ]; then
+			sed -i "s/\(-w ${AUDIT_RULES_FILE} -p \)/\1a/" ${AUDIT_RULES_FILE}
+		fi
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_groupowner_etc_cron_allow" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/cron.allow</fix>
+    <fix rule="audit_rules_kernel_module_loading" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k modules"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S init_module '`" = "0" ]; then
+	if [ "`uname -p`" != "x86_64" ]; then
+		echo "-a exit,always -F arch=b32 -S init_module ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b64 -S init_module ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S delete_module '`" = "0" ]; then
+	if [ "`uname -p`" != "x86_64" ]; then
+		echo "-a exit,always -F arch=b32 -S delete_module ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b64 -S delete_module ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+
+for FILE in /sbin/insmod /sbin/rmmod /sbin/modprobe; do
+	if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE}"`" = "0" ]; then
+		echo "-w ${FILE} -p x -k modules" &gt;&gt;${AUDIT_RULES_FILE}
+	elif [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p [wa]*x"`" = "0" ]; then
+		SED_FILE="$(echo ${FILE} | sed 's/\//\\\//g')"
+		if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p "`" = "0" ]; then
+			sed -i "s/\(-w ${SED_FILE}\)/\1 -p x/" ${AUDIT_RULES_FILE}
+		else
+			sed -i "s/\(-w ${SED_FILE} -p \)/\1x/" ${AUDIT_RULES_FILE}
+		fi
+	fi
+done
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="shells_file_references" complexity="low" disruption="low" reboot="false" strategy="configure">for USHELL in `cut -d: -f7 /etc/passwd | egrep -v '(/usr/bin/false|/bin/false|/dev/null|/sbin/nologin|/bin/sync|/sbin/halt|/sbin/shutdown)' | uniq`; do
+	if [ "$(grep -c "${USHELL}" /etc/shells)" = "0" ]; then
+		echo "${USHELL}" &gt;&gt; /etc/shells
+	fi
+done
+</fix>
+    <fix rule="sysconfig_networking_bootproto_ifcfg" complexity="low" disruption="low" reboot="false" strategy="configure">sed -i 's/^BOOTPROTO=.*/BOOTPROTO="static"/' /etc/sysconfig/network-scripts/ifcfg-*</fix>
+    <fix rule="samba_encrypt_passwords_option" complexity="low" disruption="low" reboot="false" strategy="configure">if [ "$(grep -c '^[ |\t]*encrypt passwords' /etc/samba/smb.conf)" = "0" ]; then
+	sed -i 's/\(^\[global\]$\)/\1\n\n\tencrypt passwords = yes/' /etc/samba/smb.conf
+else
+	sed -i '/^[#|;]/!s/\(encrypt passwords =\).*/\1 yes/g' /etc/samba/smb.conf
+fi
+</fix>
+    <fix rule="file_owner_etc_services" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/services</fix>
+    <fix rule="audit_rules_sched_setscheduler" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k set_scheduler_setting"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+# check for realtime capabilities
+if [ `lsmod | grep -ic jiffies` = 0 ]; then
+	if [ "`uname -p`" != "x86_64" ]; then
+		echo "-a exit,always -F arch=b32 -S sched_setscheduler ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b64 -S sched_setscheduler ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_groupowner_crontab_files" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/crontab /etc/cron.d/* /var/spool/cron/* 2&gt;/dev/null</fix>
+    <fix rule="file_permissions_extended_aliases" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/aliases /etc/aliases.db /etc/postfix/aliases /etc/postfix/aliases.db 2&gt;/dev/null</fix>
+    <fix rule="file_permissions_extended_bin_traceroute" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /bin/traceroute</fix>
+    <fix rule="audit_rules_time_adjtimex" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k audit_time_rules"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S adjtimex '`" = "0" ]; then
+	if [ "`uname -p`" != "x86_64" ]; then
+		echo "-a exit,always -F arch=b32 -S adjtimex ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b64 -S adjtimex ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_owner_etc_samba_smb_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/samba/smb.conf</fix>
+    <fix rule="file_permissions_ldap_certs" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_cert' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs chmod -R 644</fix>
+    <fix rule="audit_rules_sched_setparam" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k set_scheduler_parameters"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+# check for realtime capabilities
+if [ `lsmod | grep -ic jiffies` = 0 ]; then
+	if [ "`uname -p`" != "x86_64" ]; then
+		echo "-a exit,always -F arch=b32 -S sched_setparam ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b64 -S sched_setparam ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="sshd_ipfiltering" complexity="low" disruption="low" reboot="false" strategy="configure">MANAGEMENT_IP=$(/sbin/ifconfig | grep inet | grep -v 127.0.0.1 | cut -d: -f2 | awk '{ print $1}' | head -1 | cut -d. -f1-2)
+sed -i '/sshd/d' /etc/hosts.allow
+echo "sshd: ${MANAGEMENT_IP}.: spawn /bin/echo SSHD accessed on \$(/bin/date) from %h&gt;&gt;/var/log/host.access" | tee -a /etc/hosts.allow &amp;&gt;/dev/null
+</fix>
+    <fix rule="file_groupowner_crontab_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/cron.d /etc/cron.daily /etc/cron.hourly /etc/cron.monthly /etc/cron.weekly /var/spool/cron 2&gt;/dev/null</fix>
+    <fix rule="gconf_gnome_screensaver_lock_enabled" complexity="low" disruption="low" reboot="false" strategy="configure">gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory --type bool --set /apps/gnome-screensaver/lock_enabled true &amp;&gt;/dev/null
+</fix>
+    <fix rule="rhosts_auth_pam_files" complexity="low" disruption="low" reboot="false" strategy="configure">sed -i '/.*rhosts_auth.*/d' /etc/pam.d/*
+</fix>
+    <fix rule="file_permissions_extended_snmpd_conf" complexity="low" disruption="low" reboot="false" strategy="configure">find / -name snmpd.conf 2&gt;/dev/null | xargs setfacl --remove-all</fix>
+    <fix rule="file_permissions_extended_etc_sysctl_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/sysctl.conf</fix>
+    <fix rule="accounts_password_pam_cracklib_lcredit" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_password_pam_cracklib_lcredit="<sub idref="var_password_pam_cracklib_lcredit"/>"
+
+if [ $(grep -c "lcredit=" /etc/pam.d/system-auth) != 0 ]; then
+	sed -i "s/lcredit=[0-9]*/lcredit=$var_password_pam_cracklib_lcredit/" /etc/pam.d/system-auth
+else
+	sed -i "/password.*pam_cracklib.so/s/$/ lcredit=$var_password_pam_cracklib_lcredit/" /etc/pam.d/system-auth
+fi
+if [ -e /etc/pam.d/system-auth-ac ]; then
+	if [ $(grep -c "lcredit=" /etc/pam.d/system-auth-ac) != 0 ]; then
+		sed -i "s/lcredit=[0-9]*/lcredit=$var_password_pam_cracklib_lcredit/" /etc/pam.d/system-auth-ac
+	else
+		sed -i "/password.*pam_cracklib.so/s/$/ lcredit=$var_password_pam_cracklib_lcredit/" /etc/pam.d/system-auth-ac
+	fi
+fi
+</fix>
+    <fix rule="at_access_controlled" complexity="low" disruption="low" reboot="false" strategy="configure">if [ ! -e [/etc/at.allow ]; then
+	&gt; /etc/at.allow
+	chown root:root /etc/at.allow
+	chmod 0600 /etc/at.allow
+fi
+if [ ! -e [/etc/at.deny ]; then
+	SYS_USER=$(cat /etc/passwd | while read entry; do if [ "$(echo ${entry} | cut -d: -f3)" -lt "500" ]; then echo ${entry} | cut -d: -f1 ; fi; done)
+	for USER in `echo $SYS_USER`; do
+		if [ $(grep -c "^${USER}$" /etc/at.deny) = 0 ]; then
+			echo ${USER} | tee -a /etc/at.deny &amp;&gt;/dev/null
+		fi
+	done
+	chown root:root /etc/at.deny
+	chmod 0600 /etc/at.deny
+fi
+</fix>
+    <fix rule="file_owner_audit_log" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/auditd.conf ]; then
+	grep ^log_file /etc/audit/auditd.conf | awk '{ print $3 }' | xargs chown root
+if [ -e /etc/auditd.conf ]; then
+	grep ^log_file /etc/auditd.conf | awk '{ print $3 }' | xargs chown root
+fi
+</fix>
+    <fix rule="file_permissions_local_initialization_files" complexity="low" disruption="low" reboot="false" strategy="configure">find /root /home -maxdepth 2 -type f \( -perm -o+r -o -perm -o+w  -o -perm -o+x -o -perm -g+w -o -perm -g+x \) -a \( -name \.bashrc -o -name \.bash_login -o -name \.bash_logout -o -name \.bash_profile -o -name \.cshrc -o -name \.kshrc -o -name \.login -o -name \.logout -o -name \.profile -o -name \.env -o -name \.dtprofile -o -name \.dispatch -o -name \.emacs -o -name \.exrc \) 2&gt;/dev/null | xargs chmod o-rwx,g-wx
+</fix>
+    <fix rule="accounts_disable_post_pw_expiration" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_account_disable_post_pw_expiration="<sub idref="var_account_disable_post_pw_expiration"/>"
+
+if [ $(cat /etc/default/useradd | grep -c "^INACTIVE=") != 0 ]; then
+	sed -i "s/^INACTIVE=.*/INACTIVE=${var_account_disable_post_pw_expiration}/" /etc/default/useradd
+else
+	echo INACTIVE=${var_account_disable_post_pw_expiration} &gt;&gt;/etc/default/useradd
+fi
+</fix>
+    <fix rule="file_permissions_ldap_keys" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_key' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs chmod -R 600	</fix>
+    <fix rule="file_permissions_extended_var_spool_at" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /var/spool/at</fix>
+    <fix rule="sysctl_net_ipv4_conf_send_redirects" complexity="low" disruption="low" reboot="false" strategy="configure">/sbin/sysctl -q -n -w net.ipv4.conf.all.send_redirects=0
+/sbin/sysctl -q -n -w net.ipv4.conf.default.send_redirects=0
+
+if grep --silent ^net.ipv4.conf.all.send_redirects /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.conf.all.send_redirects.*/net.ipv4.conf.all.send_redirects = 0/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv4.conf.all.send_redirects to 0 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.conf.all.send_redirects = 0" &gt;&gt; /etc/sysctl.conf
+fi
+
+if grep --silent ^net.ipv4.conf.default.send_redirects /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.conf.default.send_redirects.*/net.ipv4.conf.default.send_redirects = 0/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv4.conf.default.send_redirects to 0 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.conf.default.send_redirects = 0" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="ldap_client_tls_checkpeer" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ldap.conf | grep -c "^tls_checkpeer") = "0" ]; then
+	echo "tls_checkpeer yes" | tee -a /etc/ldap.conf &amp;&gt;/dev/null
+else
+	sed -i 's/^tls_checkpeer.*/tls_checkpeer yes/' /etc/ldap.conf
+fi
+</fix>
+    <fix rule="package_samba_removed" complexity="low" disruption="low" reboot="false" strategy="configure">yum -y remove samba-common --disablerepo=* 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_extended_run_control_scripts" complexity="low" disruption="low" reboot="false" strategy="configure">find /etc/rc* /etc/init.d -type f 2&gt;/dev/null | xargs setfacl --remove-all</fix>
+    <fix rule="file_owner_binary_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">find /etc /bin /usr/bin /usr/lbin /usr/usb /sbin /usr/sbin -follow -uid +499 2&gt;/dev/null | xargs chown root
+</fix>
+    <fix rule="file_permissions_extended_grub_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/grub.conf /boot/grub/grub.conf</fix>
+    <fix rule="snmpd_use_newer_protocol" complexity="low" disruption="low" reboot="false" strategy="configure">find / -xdev -name snmpd.conf 2&gt;/dev/null | xargs sed -i '/.*\(v1\|v2c\|community\|com2sec\).*/s/^/#/'
+</fix>
+    <fix rule="file_permissions_root_dir" complexity="low" disruption="low" reboot="false" strategy="configure">grep ^root: /etc/passwd | awk -F: ' { print $6 }' | xargs -I entry chmod g-rwx,o-rwx "entry"
+</fix>
+    <fix rule="file_permissions_cron_log_files" complexity="low" disruption="low" reboot="false" strategy="configure">grep ^cron /etc/syslog.conf | awk '{ print $2 }' | xargs chmod 0600
+</fix>
+    <fix rule="dir_perms_world_writable_sticky_bits" complexity="low" disruption="low" reboot="false" strategy="configure">find / /home /var /var/log /var/log/audit -xdev -perm -2 ! -perm -1000 -type d 2&gt;/dev/null | xargs chmod o-w
+</fix>
+    <fix rule="audit_rules_dac_modification_fsetxattr" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S fsetxattr '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S fsetxattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S fsetxattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_extended_etc_gshadow" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/gshadow</fix>
+    <fix rule="file_permissions_extended_etc_syslog_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/syslog.conf</fix>
+    <fix rule="file_permissions_extended_xauthority_files" complexity="low" disruption="low" reboot="false" strategy="configure">cut -d: -f6 /etc/passwd | sort -u | xargs -n1 -IDIR find DIR -maxdepth 1 -name .Xauthority -o -name .xauth 2&gt;/dev/null | xargs setfacl --remove-all</fix>
+    <fix rule="file_owner_ldap_certs" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_cert' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs chown -R root</fix>
+    <fix rule="accounts_logins_logged" complexity="low" disruption="low" reboot="false" strategy="configure">if [ ! -e /var/log/btmp ]; then
+	&gt;/var/log/btmp
+	chmod 600 /var/log/btmp
+	chown root:root /var/log/btmp
+fi
+if [ ! -e /var/log/wtmp ]; then
+	&gt;/var/log/wtmp
+	chmod 664 /var/log/wtmp
+	chown root:root /var/log/wtmp
+fi
+</fix>
+    <fix rule="ip_6to4_tunnels" complexity="low" disruption="low" reboot="false" strategy="configure">ip tunnel list | cut -d: -f1 | while read TUNNEL_INTERFACE; do ip tunnel del $TUNNEL_INTERFACE 2&gt;/dev/null; done
+</fix>
+    <fix rule="file_permissions_ftpusers" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0640 /etc/ftpusers /etc/vsftpd.ftpusers /etc/vsftpd/ftpusers 2&gt;/dev/null</fix>
+    <fix rule="accounts_global_setting" complexity="low" disruption="low" reboot="false" strategy="configure">cat &gt; /etc/pam.d/system-auth-local &lt;&lt;'STOP_HERE'
+auth        include      system-auth-ac
+account     include      system-auth-ac
+password    include      system-auth-ac
+session     include      system-auth-ac
+STOP_HERE
+ln -sf /etc/pam.d/system-auth-local /etc/pam.d/system-auth
+</fix>
+    <fix rule="audit_rules_dac_modification_fchmod" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S fchmod '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S fchmod ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S fchmod ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_owner_etc_nsswitch_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/nsswitch.conf</fix>
+    <fix rule="file_permissions_cron_files" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0700 /etc/cron.daily/* /etc/cron.hourly/* /etc/cron.monthly/* /etc/cron.weekly/* 2&gt;/dev/null</fix>
+    <fix rule="file_permissions_extended_etc_nsswitch_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/nsswitch.conf</fix>
+    <fix rule="file_owner_ldap_cacerts" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_cacert' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs chown -R root</fix>
+    <fix rule="file_groupowner_etc_security_access_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/security/access.conf</fix>
+    <fix rule="audit_rules_file_deletion_events" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k delete"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S unlink '`" = "0" ]; then
+	if [ "`uname -p`" != "x86_64" ]; then
+		echo "-a exit,always -F arch=b32 -S unlink ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b64 -S unlink ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_owner_etc_ldap_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/ldap.conf</fix>
+    <fix rule="file_permissions_extended_crontab_files" complexity="low" disruption="low" reboot="false" strategy="configure">find /etc/cron.d /etc/crontab /etc/cron.daily /etc/cron.hourly /etc/cron.monthly /etc/cron.weekly /var/spool/cron  -type f 2&gt;/dev/null | xargs setfacl --remove-all</fix>
+    <fix rule="file_owner_etc_samba_tdb" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/samba/passdb.tdb /etc/samba/secrets.tdb</fix>
+    <fix rule="sysconfig_networking_userctl_ifcfg" complexity="low" disruption="low" reboot="false" strategy="configure">find /etc/sysconfig/network-scripts/ -name ifcfg-* | while read FILE; do
+	sed -i 's/^USERCTL=.*/USERCTL=no/' "${FILE}"
+done
+</fix>
+    <fix rule="file_owner_etc_syslog_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/syslog.conf</fix>
+    <fix rule="sysctl_net_ipv4_conf_accept_redirects" complexity="low" disruption="low" reboot="false" strategy="configure">/sbin/sysctl -q -n -w net.ipv4.conf.all.accept_redirects=0
+/sbin/sysctl -q -n -w net.ipv4.conf.default.accept_redirects=0
+
+if grep --silent ^net.ipv4.conf.all.accept_redirects /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.conf.all.accept_redirects.*/net.ipv4.conf.all.accept_redirects = 0/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv4.conf.all.accept_redirects to 0 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.conf.all.accept_redirects = 0" &gt;&gt; /etc/sysctl.conf
+fi
+
+if grep --silent ^net.ipv4.conf.default.accept_redirects /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.conf.default.accept_redirects.*/net.ipv4.conf.default.accept_redirects = 0/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv4.conf.default.accept_redirects to 0 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.conf.default.accept_redirects = 0" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="accounts_umask" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_accounts_user_umask="<sub idref="var_accounts_user_umask"/>"
+
+egrep -li ^[[:blank:]]*umask `find /etc /root /home/* -maxdepth 1 -type f 2&gt;/dev/null` | while read FILE; do
+	sed -i "s/\([uU][mM][aA][sS][kK]\s*[=]*\s*\)[0-9]*/\1${var_accounts_user_umask}/" "${FILE}"
+done
+
+</fix>
+    <fix rule="bootloader_password_hash" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /tmp/GRUB.TMP ]; then
+	/sbin/grub-md5-crypt &lt; /tmp/GRUB.TMP &amp;&gt; /tmp/GRUB.TMP.out
+	md5crypt=`tail -n1 /tmp/GRUB.TMP.out`
+	if [ -f /boot/grub/grub.conf ] &amp;&amp; [ ! -h /boot/grub/grub.conf ]; then
+		if [ "$(grep -c '^password' /boot/grub/grub.conf)" = "0" ]; then
+			sed -i "/timeout/apassword --md5 ${md5crypt}" /boot/grub/grub.conf
+		else
+			sed -i "s/^password .*/password --md5 ${md5crypt}/" /boot/grub/grub.conf
+		fi
+	fi
+	if [ -f /etc/grub.conf ] &amp;&amp; [ ! -h /etc/grub.conf ]; then
+		if [ "$(grep -c '^password' /etc/grub.conf)" = "0" ]; then
+			sed -i "/timeout/apassword --md5 ${md5crypt}" /etc/grub.conf
+		else
+			sed -i "s/^password .*/password --md5 ${md5crypt}/" /etc/grub.conf
+		fi
+	fi
+	rm -f /tmp/GRUB.TMP /tmp/GRUB.TMP.out
+fi
+</fix>
+    <fix rule="file_owner_etc_hosts" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/hosts</fix>
+    <fix rule="disable_users_coredumps" complexity="low" disruption="low" reboot="false" strategy="configure">echo "*     hard   core    0" &gt;&gt; /etc/security/limits.conf
+</fix>
+    <fix rule="sshd_enable_warning_banner" complexity="low" disruption="low" reboot="false" strategy="configure">grep -q ^Banner /etc/ssh/sshd_config &amp;&amp; \
+  sed -i "s/Banner.*/Banner \/etc\/issue/g" /etc/ssh/sshd_config
+if ! [ $? -eq 0 ]; then
+    echo "Banner /etc/issue" &gt;&gt; /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="banner_gui_enabled" complexity="low" disruption="low" reboot="false" strategy="configure">
+gui_login_banner_text="<sub idref="gui_login_banner_text"/>"
+
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory --type bool --set /apps/gdm/simple-greeter/banner_message_enable true &amp;&gt;/dev/null
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory --type string --set /apps/gdm/simple-greeter/banner_message_text "$(echo $gui_login_banner_text | sed -e 's/\[\\s\\n\][+|*]/ /g' -e 's/\&amp;amp;/\&amp;/g' -e 's/\\//g' -e 's/ - /\n- /g')" &amp;&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_extended_var_log" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl -RLb /var/log/*
+</fix>
+    <fix rule="restricted_accounts_ftp" complexity="low" disruption="low" reboot="false" strategy="configure">/usr/bin/id ftp &amp;&gt;/dev/null &amp;&amp; /usr/sbin/userdel ftp
+</fix>
+    <fix rule="accounts_maximum_age_login_defs" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_accounts_maximum_age_login_defs="<sub idref="var_accounts_maximum_age_login_defs"/>"
+
+grep -q ^PASS_MAX_DAYS /etc/login.defs &amp;&amp; \
+  sed -i "s/PASS_MAX_DAYS.*/PASS_MAX_DAYS     $var_accounts_maximum_age_login_defs/g" /etc/login.defs
+if ! [ $? -eq 0 ]; then
+    echo "PASS_MAX_DAYS      $var_accounts_maximum_age_login_defs" &gt;&gt; /etc/login.defs
+fi
+
+USERACCT=$(egrep -v "^\+|^#" /etc/passwd | cut -d":" -f1)
+for SYS_USER in ${USERACCT}; do
+	if [ $(grep -c ${SYS_USER} /etc/shadow) != 0 ]; then
+		passwd -x $var_accounts_maximum_age_login_defs ${SYS_USER} &amp;&gt;/dev/null
+	fi
+done
+</fix>
+    <fix rule="file_permissions_extended_home_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">cut -d: -f6 /etc/passwd | sort -u | xargs setfacl --remove-all 2&gt;/dev/null</fix>
+    <fix rule="file_permissions_extended_etc_hosts" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/hosts</fix>
+    <fix rule="file_owner_etc_resolv_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/resolv.conf</fix>
+    <fix rule="kernel_module_ipv6_option_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -d /etc/modprobe.d/ ]; then
+	echo "install ipv6 /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+else
+	echo "install ipv6 /bin/true" &gt;&gt; /etc/modprobe.conf
+fi
+chkconfig ip6tables off
+</fix>
+    <fix rule="audit_rules_usergroup_termination" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+else
+	exit
+fi
+
+for FILE in /usr/sbin/userdel /usr/sbin/groupdel; do
+	if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE}"`" = "0" ]; then
+		echo "-w ${FILE} -p x -k audit_account_changes" &gt;&gt;${AUDIT_RULES_FILE}
+	elif [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p [wa]*x"`" = "0" ]; then
+		SED_FILE="$(echo ${FILE} | sed 's/\//\\\//g')"
+		if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p "`" = "0" ]; then
+			sed -i "s/\(-w ${SED_FILE}\)/\1 -p x/" ${AUDIT_RULES_FILE}
+		else
+			sed -i "s/\(-w ${SED_FILE} -p \)/\1x/" ${AUDIT_RULES_FILE}
+		fi
+	fi
+done
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="accounts_minimum_age_login_defs" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_accounts_minimum_age_login_defs="<sub idref="var_accounts_minimum_age_login_defs"/>"
+
+grep -q ^PASS_MIN_DAYS /etc/login.defs &amp;&amp; \
+  sed -i "s/PASS_MIN_DAYS.*/PASS_MIN_DAYS     $var_accounts_minimum_age_login_defs/g" /etc/login.defs
+if ! [ $? -eq 0 ]; then
+    echo "PASS_MIN_DAYS      $var_accounts_minimum_age_login_defs" &gt;&gt; /etc/login.defs
+fi
+
+USERACCT=$(egrep -v "^\+|^#" /etc/passwd | cut -d":" -f1)
+for SYS_USER in ${USERACCT}; do
+	if [ $(grep -c ${SYS_USER} /etc/shadow) != 0 ]; then
+		passwd -n $var_accounts_minimum_age_login_defs ${SYS_USER} &amp;&gt;/dev/null
+	fi
+done
+</fix>
+    <fix rule="file_groupowner_etc_resolv_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/resolv.conf</fix>
+    <fix rule="file_owner_etc_shadow" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/shadow</fix>
+    <fix rule="auditd_data_retention_audit_processing_failure" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_auditd_disk_error_action="<sub idref="var_auditd_disk_error_action"/>"
+
+if [ -e /etc/audit/auditd.conf ]; then
+	AUDITD_CONF_FILE="/etc/audit/auditd.conf"
+elif [ -e /etc/auditd.conf ]; then
+	AUDITD_CONF_FILE="/etc/auditd.conf"
+else
+	exit
+fi
+
+grep -q ^disk_error_action ${AUDITD_CONF_FILE} &amp;&amp; \
+  sed -i "s/disk_error_action.*/disk_error_action = $var_auditd_disk_error_action/g" ${AUDITD_CONF_FILE}
+if ! [ $? -eq 0 ]; then
+    echo "disk_error_action = $var_auditd_disk_error_action" &gt;&gt; ${AUDITD_CONF_FILE}
+fi
+grep -q ^disk_full_action ${AUDITD_CONF_FILE} &amp;&amp; \
+  sed -i "s/disk_full_action.*/disk_full_action = $var_auditd_disk_error_action/g" ${AUDITD_CONF_FILE}
+if ! [ $? -eq 0 ]; then
+    echo "disk_full_action = $var_auditd_disk_error_action" &gt;&gt; ${AUDITD_CONF_FILE}
+fi
+</fix>
+    <fix rule="baseline_suid_files" complexity="low" disruption="low" reboot="false" strategy="configure"># Generate a suid file baseline
+find / -perm -4000 -type f 2&gt;/dev/null | sort &gt; /var/log/suid-file-list
+chmod 640 /var/log/suid-file-list
+chown root:root /var/log/suid-file-list
+
+
+# Generate a weekly cron job to check the suid file baseline and report differences
+cat &gt; /etc/cron.weekly/baseline_checker.sh &lt;&lt;'STOP_HERE'
+#!/bin/sh
+echo "Baseline check started on $(date +"%m-%d-%Y") at $(date +"%H:%M:%S")" | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+echo "Gathering current baseline." | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+rm -f /tmp/*BASELINE.tmp /tmp/*list.tmp
+find / -perm -4000 2&gt;/dev/null | sort &gt; /tmp/suid-file-list.tmp
+find / -perm -2000 2&gt;/dev/null | sort &gt; /tmp/sgid-file-list.tmp
+find / -type b -o -type c 2&gt;/dev/null | sort  &gt; /tmp/device-file-list.tmp
+echo "Comparing the current baseline with the last known good configuration." | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+diff /var/log/suid-file-list /tmp/suid-file-list.tmp &gt; /tmp/SUID_BASELINE.tmp
+diff /var/log/sgid-file-list /tmp/sgid-file-list.tmp &gt; /tmp/SGID_BASELINE.tmp
+diff /var/log/device-file-list /tmp/device-file-list.tmp &gt; /tmp/DEVICE_BASELINE.tmp
+if [ -s /tmp/SUID_BASELINE.tmp ]; then
+   if [ $(grep -c "^&gt;" /tmp/SUID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the suid bit added:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&gt;" /tmp/SUID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+	if [ $(grep -c "^&lt;" /tmp/SUID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the suid bit removed:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&lt;" /tmp/SUID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+fi
+if [ -s /tmp/SGID_BASELINE.tmp ]; then
+   if [ $(grep -c "^&gt;" /tmp/SGID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the sgid bit added:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&gt;" /tmp/SGID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+	if [ $(grep -c "^&lt;" /tmp/SGID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the sgid bit removed:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&lt;" /tmp/SGID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+fi
+if [ -s /tmp/DEVICE_BASELINE.tmp ]; then
+   if [ $(grep -c "^&gt;" /tmp/DEVICE_BASELINE.tmp) != 0 ]; then
+		echo "The following device files were detected to have been added:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&gt;" /tmp/DEVICE_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+	if [ $(grep -c "^&lt;" /tmp/DEVICE_BASELINE.tmp) != 0 ]; then
+		echo "The following device files were detected to have removed:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&lt;" /tmp/DEVICE_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+fi
+rm -f /tmp/*BASELINE.tmp /tmp/*list.tmp
+echo "Baseline check completed on $(date +"%m-%d-%Y") at $(date +"%H:%M:%S")" | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+echo "####################################################################" | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+chmod 640 /var/log/baseline.log
+chown root:root /var/log/baseline.log
+STOP_HERE
+chmod 700 /etc/cron.weekly/baseline_checker.sh
+chown root:root /etc/cron.weekly/baseline_checker.sh
+</fix>
+    <fix rule="file_permissions_extended_etc_at_allow" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/at.allow</fix>
+    <fix rule="file_permissions_extended_core_dump_dir" complexity="low" disruption="low" reboot="false" strategy="configure">grep path /etc/kdump.conf | grep -v "#" | awk '{ print $2 }' | xargs setfacl --remove-all</fix>
+    <fix rule="file_groupowner_bin_traceroute" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /bin/traceroute</fix>
+    <fix rule="file_owner_crontab_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/cron.d /etc/cron.daily /etc/cron.hourly /etc/cron.monthly /etc/cron.weekly /var/spool/cron 2&gt;/dev/null</fix>
+    <fix rule="file_permissions_extended_etc_samba_smb_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/samba/smb.conf</fix>
+    <fix rule="ssh_protocol_2" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ssh/ssh_config | grep -c "^Protocol") != "0" ]; then
+	sed -i 's/^Protocol.*/Protocol 2/' /etc/ssh/ssh_config
+else
+	echo "Protocol 2"&gt;&gt;/etc/ssh/ssh_config
+fi
+
+</fix>
+    <fix rule="audit_rules_dac_modification_chmod" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S chmod '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S chmod ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S chmod ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="audit_rules_unsuccessful_file_openat" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	if [ "`grep " -S openat " /etc/audit/audit.rules | grep -v '#' | grep -c '\-F exit=-EACCES'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S openat -F exit=-EACCES -k access" &gt;&gt;/etc/audit/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S openat -F exit=-EACCES -k access" &gt;&gt;/etc/audit/audit.rules
+		fi
+	fi
+	if [ "`grep " -S openat " /etc/audit/audit.rules | grep -v '#' | grep -c '\-F exit=-EPERM'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S openat -F exit=-EPERM -k access" &gt;&gt;/etc/audit/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S openat -F exit=-EPERM -k access" &gt;&gt;/etc/audit/audit.rules
+		fi
+	fi
+elif [ -e /etc/audit.rules ]; then
+	if [ "`grep " -S openat " /etc/audit.rules | grep -v '#' | grep -c '\success=0'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S openat -F success=0" &gt;&gt;/etc/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S openat -F success=0" &gt;&gt;/etc/audit.rules
+		fi
+	fi
+else
+	exit
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_groupowner_aliases" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/postfix/aliases /etc/postfix/aliases.db /etc/aliases /etc/aliases.db 2&gt;/dev/null</fix>
+    <fix rule="file_owner_etc_ntp_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/ntp.conf</fix>
+    <fix rule="file_groupowner_audit_tools" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /sbin/auditctl /sbin/auditd /sbin/ausearch /sbin/aureport /sbin/autrace /sbin/audispd</fix>
+    <fix rule="file_groupowner_etc_nsswitch_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/nsswitch.conf</fix>
+    <fix rule="restricted_accounts_games" complexity="low" disruption="low" reboot="false" strategy="configure">/usr/bin/id games &amp;&gt;/dev/null &amp;&amp; /usr/sbin/userdel games
+</fix>
+    <fix rule="audit_rules_unsuccessful_file_open" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	if [ "`grep " -S open " /etc/audit/audit.rules | grep -v '#' | grep -c '\-F exit=-EACCES'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S open -F exit=-EACCES -k access" &gt;&gt;/etc/audit/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S open -F exit=-EACCES -k access" &gt;&gt;/etc/audit/audit.rules
+		fi
+	fi
+	if [ "`grep " -S open " /etc/audit/audit.rules | grep -v '#' | grep -c '\-F exit=-EPERM'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S open -F exit=-EPERM -k access" &gt;&gt;/etc/audit/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S open -F exit=-EPERM -k access" &gt;&gt;/etc/audit/audit.rules
+		fi
+	fi
+elif [ -e /etc/audit.rules ]; then
+	if [ "`grep " -S open " /etc/audit.rules | grep -v '#' | grep -c '\success=0'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S open -F success=0" &gt;&gt;/etc/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S open -F success=0" &gt;&gt;/etc/audit.rules
+		fi
+	fi
+else
+	exit
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_owner_etc_skel" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/skel/*</fix>
+    <fix rule="sshd_privilegeseparation" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ssh/sshd_config | grep -ic "^UsePrivilegeSeparation") = "0" ]; then
+	echo "UsePrivilegeSeparation yes" | tee -a /etc/ssh/sshd_config &amp;&gt;/dev/null
+else
+	sed -i 's/^UsePrivilegeSeparation.*/UsePrivilegeSeparation yes/' /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="file_permissions_global_initialization_files" complexity="low" disruption="low" reboot="false" strategy="configure">chmod -R 0644 /etc/bashrc /etc/csh.cshrc /etc/csh.login /etc/csh.logout /etc/environment /etc/ksh.kshrc /etc/profile /etc/suid_profile /etc/profile.d 2&gt;/dev/null</fix>
+    <fix rule="file_groupowner_etc_at_deny" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/at.deny</fix>
+    <fix rule="ftp_ftpusers_file_exists" complexity="low" disruption="low" reboot="false" strategy="configure">SYS_USER=$(cat /etc/passwd | while read entry; do if [ "$(echo ${entry} | cut -d: -f3)" -lt "500" ]; then echo ${entry} | cut -d: -f1 ; fi; done)
+if [ "$(rpm -q krb5-workstation &amp;&gt;/dev/null; echo $?)" = "0" ]; then
+	if [ ! -e /etc/ftpusers ]; then
+		&gt;/etc/ftpusers
+		chmod 0640 /etc/ftpusers
+		chown root:root /etc/ftpusers
+	fi
+	for USER in `echo $SYS_USER`; do
+		if [ $(grep -c "^${USER}$" /etc/ftpusers) = 0 ]; then
+			echo ${USER} | tee -a /etc/ftpusers &amp;&gt;/dev/null
+		fi
+	done
+fi
+if [ "$(rpm -q vsftpd &amp;&gt;/dev/null; echo $?)" = "0" ]; then
+	if [ ! -e /etc/vsftpd/ftpusers ]; then
+		&gt;/etc/vsftpd/ftpusers
+		chmod 0640 /etc/vsftpd/ftpusers
+		chown root:root /etc/vsftpd/ftpusers
+	fi
+	for USER in `echo $SYS_USER`; do
+		if [ $(grep -c "^${USER}$" /etc/vsftpd/ftpusers) = 0 ]; then
+			echo ${USER} | tee -a /etc/vsftpd/ftpusers &amp;&gt;/dev/null
+		fi
+	done
+fi
+</fix>
+    <fix rule="file_permissions_extended_etc_services" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/services</fix>
+    <fix rule="file_owner_aliases_files" complexity="low" disruption="low" reboot="false" strategy="configure">grep "/" /etc/aliases /etc/aliases.db | grep -v "#" | grep ^/ | sed 's/.*[\s|\t]\//\//' | xargs chown root</fix>
+    <fix rule="mail_help_command" complexity="low" disruption="low" reboot="false" strategy="configure">&gt;/etc/mail/helpfile
+</fix>
+    <fix rule="ldap_client_start_tls" complexity="low" disruption="low" reboot="false" strategy="configure">if [ "$(cat /etc/ldap.conf | grep -c '^ssl ')" = "0" ]; then
+	echo "ssl start_tls" | tee -a /etc/ldap.conf &amp;&gt;/dev/null
+else
+	sed -i 's/^ssl .*/ssl start_tls/' /etc/ldap.conf
+fi
+if [ "$(cat /etc/ldap.conf | grep -c '^tls_ciphers ')" = "0" ]; then
+	echo "tls_ciphers TLSv1" | tee -a /etc/ldap.conf &amp;&gt;/dev/null
+else
+	sed -i 's/^tls_ciphers .*/tls_ciphers TLSv1/' /etc/ldap.conf
+fi
+</fix>
+    <fix rule="sshd_gssapiauthentication" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ssh/sshd_config | grep -c "^GSSAPIAuthentication") = "0" ]; then
+	echo "GSSAPIAuthentication no" | tee -a /etc/ssh/sshd_config &amp;&gt;/dev/null
+else
+	sed -i 's/^GSSAPIAuthentication.*/GSSAPIAuthentication no/' /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="file_groupowner_etc_securetty" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/securetty</fix>
+    <fix rule="samba_hosts_option" complexity="low" disruption="low" reboot="false" strategy="configure">sed -i 's/\(^\[global\]$\)/\1\n\n\thosts allow = 127./' /etc/samba/smb.conf</fix>
+    <fix rule="ssh_use_approved_ciphers" complexity="low" disruption="low" reboot="false" strategy="configure">grep -q ^Ciphers /etc/ssh/ssh_config &amp;&amp; \
+  sed -i "s/Ciphers.*/Ciphers aes128-ctr,aes192-ctr,aes256-ctr/g" /etc/ssh/ssh_config
+if ! [ $? -eq 0 ]; then
+    echo "Ciphers aes128-ctr,aes192-ctr,aes256-ctr" &gt;&gt; /etc/ssh/ssh_config
+fi
+
+</fix>
+    <fix rule="file_permissions_audit_tools" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 750 /sbin/auditctl /sbin/auditd /sbin/ausearch /sbin/aureport /sbin/autrace /sbin/audispd</fix>
+    <fix rule="sudo_wheel" complexity="low" disruption="low" reboot="false" strategy="configure">if [ "$(grep -c '#.*auth.*required.*pam_wheel.so' /etc/pam.d/su)" != "0" ]; then
+	sed -i '/auth.*required.*pam_wheel.so/s/#//g' /etc/pam.d/su
+else
+	sed -i '/auth.*include/iauth\t\trequired\tpam_wheel.so use_uid' /etc/pam.d/su
+fi
+</fix>
+    <fix rule="file_permissions_unauthorized_world_writable" complexity="low" disruption="low" reboot="false" strategy="configure">find / /var /home -xdev -follow -type f -perm -002 2&gt;/dev/null | xargs chmod o-w
+</fix>
+    <fix rule="sysctl_net_ipv6_conf_all_accept_redirects" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Set runtime for net.ipv6.conf.all.accept_redirects
+#
+if [ -e /proc/sys/net/ipv6/ ]; then
+	/sbin/sysctl -q -n -w net.ipv6.conf.all.accept_redirects=0
+fi
+
+#
+# If net.ipv6.conf.all.accept_redirects present in /etc/sysctl.conf, change value to "0"
+#	else, add "net.ipv6.conf.all.accept_redirects = 0" to /etc/sysctl.conf
+#
+if grep --silent ^net.ipv6.conf.all.accept_redirects /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv6.conf.all.accept_redirects.*/net.ipv6.conf.all.accept_redirects = 0/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv6.conf.all.accept_redirects to 0 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv6.conf.all.accept_redirects = 0" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="file_permissions_snmpd_conf" complexity="low" disruption="low" reboot="false" strategy="configure">find / -name snmpd.conf 2&gt;/dev/null | xargs chmod ugo-x,go-wr</fix>
+    <fix rule="ssh_gssapiauthentication" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ssh/ssh_config | grep -c "^GSSAPIAuthentication") = "0" ]; then
+	echo "GSSAPIAuthentication no" | tee -a /etc/ssh/ssh_config &amp;&gt;/dev/null
+else
+	sed -i 's/^GSSAPIAuthentication.*/GSSAPIAuthentication no/' /etc/ssh/ssh_config
+fi
+</fix>
+    <fix rule="file_permissions_audio_devices" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 660 /dev/audio* /dev/snd/*
+sed -i '/[audio|snd]/s/MODE="[0-9]*"/MODE="660"/' /etc/udev/rules.d/50-udev.rules</fix>
+    <fix rule="file_groupowner_etc_exports" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/exports</fix>
+    <fix rule="disable_ctrlaltdel_reboot" complexity="low" disruption="low" reboot="false" strategy="configure">sed -i 's/^.*:ctrlaltdel:.*\(shutdown\|reboot\).*/ca:nil:ctrlaltdel:\/usr\/bin\/logger -p security.info "Ctrl-Alt-Del was pressed"/' /etc/inittab
+	</fix>
+    <fix rule="gconf_gnome_screensaver_idle_delay" complexity="low" disruption="low" reboot="false" strategy="configure">gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory --type int --set /apps/gnome-screensaver/idle_delay 15 &amp;&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_etc_xinetd_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0640 /etc/xinetd.conf /etc/xinetd.d/*</fix>
+    <fix rule="banner_etc_issue" complexity="low" disruption="low" reboot="false" strategy="configure">
+system_login_banner_text="<sub idref="system_login_banner_text"/>"
+
+echo $system_login_banner_text | sed -e 's/\[\\s\\n\][+|*]/ /g' -e 's/\&amp;amp;/\&amp;/g' -e 's/\\//g' -e 's/ - /\n- /g' &gt;/etc/issue
+</fix>
+    <fix rule="ip_teredo" complexity="low" disruption="low" reboot="false" strategy="configure">ps ax | grep -i miredo | grep -v grep | awk ' { print $1 }' | xargs kill
+</fix>
+    <fix rule="file_permissions_etc_skel" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/skel/*</fix>
+    <fix rule="bootloader_password" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /tmp/GRUB.TMP ]; then
+	/sbin/grub-md5-crypt &lt; /tmp/GRUB.TMP &amp;&gt; /tmp/GRUB.TMP.out
+	md5crypt=`tail -n1 /tmp/GRUB.TMP.out`
+	if [ -f /boot/grub/grub.conf ] &amp;&amp; [ ! -h /boot/grub/grub.conf ]; then
+		if [ "$(grep -c '^password' /boot/grub/grub.conf)" = "0" ]; then
+			sed -i "/timeout/apassword --md5 ${md5crypt}" /boot/grub/grub.conf
+		else
+			sed -i "s/^password .*/password --md5 ${md5crypt}/" /boot/grub/grub.conf
+		fi
+	fi
+	if [ -f /etc/grub.conf ] &amp;&amp; [ ! -h /etc/grub.conf ]; then
+		if [ "$(grep -c '^password' /etc/grub.conf)" = "0" ]; then
+			sed -i "/timeout/apassword --md5 ${md5crypt}" /etc/grub.conf
+		else
+			sed -i "s/^password .*/password --md5 ${md5crypt}/" /etc/grub.conf
+		fi
+	fi
+	rm -f /tmp/GRUB.TMP /tmp/GRUB.TMP.out
+fi
+</fix>
+    <fix rule="accounts_password_pam_cracklib_dcredit" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_password_pam_cracklib_dcredit="<sub idref="var_password_pam_cracklib_dcredit"/>"
+
+if [ $(grep -c "dcredit=" /etc/pam.d/system-auth) != 0 ]; then
+	sed -i "s/dcredit=[0-9]*/dcredit=$var_password_pam_cracklib_dcredit/" /etc/pam.d/system-auth
+else
+	sed -i "/password.*pam_cracklib.so/s/$/ dcredit=$var_password_pam_cracklib_dcredit/" /etc/pam.d/system-auth
+fi
+if [ -e /etc/pam.d/system-auth-ac ]; then
+	if [ $(grep -c "dcredit=" /etc/pam.d/system-auth-ac) != 0 ]; then
+		sed -i "s/dcredit=[0-9]*/dcredit=$var_password_pam_cracklib_dcredit/" /etc/pam.d/system-auth-ac
+	else
+		sed -i "/password.*pam_cracklib.so/s/$/ dcredit=$var_password_pam_cracklib_dcredit/" /etc/pam.d/system-auth-ac
+	fi
+fi
+</fix>
+    <fix rule="audit_rules_file_deletion_events_rmdir" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k delete"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S rmdir '`" = "0" ]; then
+	if [ "`uname -p`" != "x86_64" ]; then
+		echo "-a exit,always -F arch=b32 -S rmdir ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b64 -S rmdir ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="sysctl_net_ipv4_conf_log_martians" complexity="low" disruption="low" reboot="false" strategy="configure">/sbin/sysctl -q -n -w net.ipv4.conf.all.log_martians=1
+/sbin/sysctl -q -n -w net.ipv4.conf.default.log_martians=1
+
+if grep --silent ^net.ipv4.conf.all.log_martians /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.conf.all.log_martians.*/net.ipv4.conf.all.log_martians = 1/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv4.conf.all.log_martians to 1 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.conf.all.log_martians = 1" &gt;&gt; /etc/sysctl.conf
+fi
+
+if grep --silent ^net.ipv4.conf.default.log_martians /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.conf.default.log_martians.*/net.ipv4.conf.default.log_martians = 1/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv4.conf.default.log_martians to 1 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.conf.default.log_martians = 1" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="file_group_owner_grub_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chgrp root /etc/grub.conf /boot/grub/grub.conf</fix>
+    <fix rule="file_owner_etc_cron_allow" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/cron.allow</fix>
+    <fix rule="file_permissions_library_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">find /lib /usr/lib -follow -perm -20 -o -perm -2 2&gt;/dev/null | xargs chmod go-w
+</fix>
+    <fix rule="file_owner_etc_exports" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/exports</fix>
+    <fix rule="file_owner_bin_traceroute" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /bin/traceroute</fix>
+    <fix rule="file_groupowner_core_dump_dir" complexity="low" disruption="low" reboot="false" strategy="configure">grep path.*/ /etc/kdump.conf | awk '{ print $2 }' | xargs chown :root</fix>
+    <fix rule="ftp_ftpusers_file_empty" complexity="low" disruption="low" reboot="false" strategy="configure">SYS_USER=$(cat /etc/passwd | while read entry; do if [ "$(echo ${entry} | cut -d: -f3)" -lt "500" ]; then echo ${entry} | cut -d: -f1 ; fi; done)
+if [ "$(rpm -q krb5-workstation &amp;&gt;/dev/null; echo $?)" = "0" ]; then
+	if [ ! -e /etc/ftpusers ]; then
+		&gt;/etc/ftpusers
+		chmod 0640 /etc/ftpusers
+		chown root:root /etc/ftpusers
+	fi
+	for USER in `echo $SYS_USER`; do
+		if [ $(grep -c "^${USER}$" /etc/ftpusers) = 0 ]; then
+			echo ${USER} | tee -a /etc/ftpusers &amp;&gt;/dev/null
+		fi
+	done
+fi
+if [ "$(rpm -q vsftpd &amp;&gt;/dev/null; echo $?)" = "0" ]; then
+	if [ ! -e /etc/vsftpd/ftpusers ]; then
+		&gt;/etc/vsftpd/ftpusers
+		chmod 0640 /etc/vsftpd/ftpusers
+		chown root:root /etc/vsftpd/ftpusers
+	fi
+	for USER in `echo $SYS_USER`; do
+		if [ $(grep -c "^${USER}$" /etc/vsftpd/ftpusers) = 0 ]; then
+			echo ${USER} | tee -a /etc/vsftpd/ftpusers &amp;&gt;/dev/null
+		fi
+	done
+fi
+</fix>
+    <fix rule="accounts_no_uid_except_zero" complexity="low" disruption="low" reboot="false" strategy="configure">for UID0_USER in `cat /etc/passwd | cut -d: -f1,3 | grep :0$ | grep -v ^root: | cut -d: -f1`; do
+	userdel -rf ${UID0_USER}
+done
+</fix>
+    <fix rule="sshd_strictmodes" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ssh/sshd_config | grep -c "^StrictModes") = "0" ]; then
+	echo "StrictModes yes" | tee -a /etc/ssh/sshd_config &amp;&gt;/dev/null
+else
+	sed -i 's/^StrictModes.*/StrictModes yes/' /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="file_groupowner_etc_cron_deny" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/cron.deny</fix>
+    <fix rule="system_access_control" complexity="low" disruption="low" reboot="false" strategy="configure">if [ ! -e /etc/hosts.allow ]; then
+	&gt;/etc/hosts.allow
+	chmod 644 /etc/hosts.allow
+	chown root:root /etc/hosts.allow
+fi
+if [ ! -e /etc/hosts.deny ]; then
+	&gt;/etc/hosts.deny
+	chmod 644 /etc/hosts.deny
+	chown root:root /etc/hosts.deny
+fi
+if [ ! -e /var/log/host.access ]; then
+	&gt;/var/log/host.access
+	chmod 640 /var/log/host.access
+	chown root:root /var/log/host.access
+fi
+if [ $(grep -c "ALL: ALL" /etc/hosts.deny) = 0 ]; then
+	echo 'ALL: ALL: spawn /bin/echo Access denied on $(/bin/date) from %a for access to %d \(pid %p\)&gt;&gt;/var/log/host.access' | tee -a /etc/hosts.deny &amp;&gt;/dev/null
+fi
+</fix>
+    <fix rule="file_permissions_extended_local_initialization_files" complexity="low" disruption="low" reboot="false" strategy="configure">cut -d: -f6 /etc/passwd | sort -u | xargs -n1 -IDIR find DIR -maxdepth 1 -name .bashrc -o -name .bash_login -o -name .bash_logout -o -name .bash_profile -o -name .cshrc -o -name .kshrc -o -name .login -o -name .logout -o -name .profile -o -name .env -o -name .dtprofile -o -name .dispatch -o -name .emacs -o -name .exrc 2&gt;/dev/null | xargs setfacl --remove-all</fix>
+    <fix rule="baseline_sgid_files" complexity="low" disruption="low" reboot="false" strategy="configure"># Generate a sgid file baseline
+find / -perm -2000 -type f  2&gt;/dev/null | sort &gt; /var/log/sgid-file-list
+chmod 640 /var/log/sgid-file-list
+chown root:root /var/log/sgid-file-list
+
+# Generate a weekly cron job to check the sgid file baseline and report differences
+cat &gt; /etc/cron.weekly/baseline_checker.sh &lt;&lt;'STOP_HERE'
+#!/bin/sh
+echo "Baseline check started on $(date +"%m-%d-%Y") at $(date +"%H:%M:%S")" | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+echo "Gathering current baseline." | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+rm -f /tmp/*BASELINE.tmp /tmp/*list.tmp
+find / -perm -4000 2&gt;/dev/null | sort &gt; /tmp/suid-file-list.tmp
+find / -perm -2000 2&gt;/dev/null | sort &gt; /tmp/sgid-file-list.tmp
+find / -type b -o -type c 2&gt;/dev/null | sort  &gt; /tmp/device-file-list.tmp
+echo "Comparing the current baseline with the last known good configuration." | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+diff /var/log/suid-file-list /tmp/suid-file-list.tmp &gt; /tmp/SUID_BASELINE.tmp
+diff /var/log/sgid-file-list /tmp/sgid-file-list.tmp &gt; /tmp/SGID_BASELINE.tmp
+diff /var/log/device-file-list /tmp/device-file-list.tmp &gt; /tmp/DEVICE_BASELINE.tmp
+if [ -s /tmp/SUID_BASELINE.tmp ]; then
+   if [ $(grep -c "^&gt;" /tmp/SUID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the suid bit added:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&gt;" /tmp/SUID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+	if [ $(grep -c "^&lt;" /tmp/SUID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the suid bit removed:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&lt;" /tmp/SUID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+fi
+if [ -s /tmp/SGID_BASELINE.tmp ]; then
+   if [ $(grep -c "^&gt;" /tmp/SGID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the sgid bit added:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&gt;" /tmp/SGID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+	if [ $(grep -c "^&lt;" /tmp/SGID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the sgid bit removed:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&lt;" /tmp/SGID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+fi
+if [ -s /tmp/DEVICE_BASELINE.tmp ]; then
+   if [ $(grep -c "^&gt;" /tmp/DEVICE_BASELINE.tmp) != 0 ]; then
+		echo "The following device files were detected to have been added:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&gt;" /tmp/DEVICE_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+	if [ $(grep -c "^&lt;" /tmp/DEVICE_BASELINE.tmp) != 0 ]; then
+		echo "The following device files were detected to have removed:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&lt;" /tmp/DEVICE_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+fi
+rm -f /tmp/*BASELINE.tmp /tmp/*list.tmp
+echo "Baseline check completed on $(date +"%m-%d-%Y") at $(date +"%H:%M:%S")" | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+echo "####################################################################" | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+chmod 640 /var/log/baseline.log
+chown root:root /var/log/baseline.log
+STOP_HERE
+chmod 700 /etc/cron.weekly/baseline_checker.sh
+chown root:root /etc/cron.weekly/baseline_checker.sh
+</fix>
+    <fix rule="sshd_no_cbc" complexity="low" disruption="low" reboot="false" strategy="configure">grep -q ^Ciphers /etc/ssh/sshd_config &amp;&amp; \
+  sed -i "s/Ciphers.*/Ciphers aes128-ctr,aes192-ctr,aes256-ctr/g" /etc/ssh/sshd_config
+if ! [ $? -eq 0 ]; then
+    echo "Ciphers aes128-ctr,aes192-ctr,aes256-ctr" &gt;&gt; /etc/ssh/sshd_config
+fi
+/sbin/service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="mail_forward_files" complexity="low" disruption="low" reboot="false" strategy="configure">SENDMAIL_CONFIG=$(rpm -ql sendmail | grep sendmail.cf)
+SENDMAIL_MAINCONF=$(rpm -ql sendmail | grep sendmail.mc)
+if [ "$(rpm -q sendmail-cf &amp;&gt;/dev/null; echo $?)" = "0" ]; then
+	if [ -e "${SENDMAIL_MAINCONF}" ]; then
+		if [ "$(grep -c 'confFORWARD_PATH' "${SENDMAIL_MAINCONF}")" = "0" ]; then
+			sed -i "0,/^define/s/\(^define\)/define(\`confFORWARD_PATH',\`')dnl\n\1/" "${SENDMAIL_MAINCONF}"
+		elif [ "$(grep -c "define(\`confFORWARD_PATH',\`')dnl" "${SENDMAIL_MAINCONF}")" = "0" ]; then
+			sed -i "s/define(\`confFORWARD.*/define(\`confFORWARD_PATH',\`')dnl/" "${SENDMAIL_MAINCONF}"
+		fi
+		m4 "${SENDMAIL_MAINCONF}" &gt; "${SENDMAIL_CONFIG}"
+	fi
+else
+	sed -i 's/O ForwardPath.*/O ForwardPath/' "${SENDMAIL_CONFIG}"
+fi
+service sendmail restart 1&gt;/dev/null
+for FILE in $(find /etc -name .forward -type f 2&gt;/dev/null); do
+	rm -f ${FILE}
+done
+</fix>
+    <fix rule="audit_rules_dac_modification_chown" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S chown '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S chown ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S chown ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S chown32 '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S chown32 ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S chown32 ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="ip_tunnels" complexity="low" disruption="low" reboot="false" strategy="configure">ip tunnel list | cut -d: -f1 | while read TUNNEL_INTERFACE; do ip tunnel del $TUNNEL_INTERFACE 2&gt;/dev/null; done
+</fix>
+    <fix rule="file_owner_crontab_files" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/crontab /etc/cron.d/* /var/spool/cron/* 2&gt;/dev/null</fix>
+    <fix rule="sysctl_net_ipv6_conf_forwarding" complexity="low" disruption="low" reboot="false" strategy="configure">#
+# Set runtime for net.ipv6.conf.all.forwarding
+#
+if [ -e /proc/sys/net/ipv6/ ]; then
+	/sbin/sysctl -q -n -w net.ipv6.conf.all.forwarding=0
+fi
+
+#
+# If net.ipv6.conf.all.forwarding present in /etc/sysctl.conf, change value to "0"
+#	else, add "net.ipv6.conf.all.forwarding = 0" to /etc/sysctl.conf
+#
+if grep --silent ^net.ipv6.conf.all.forwarding /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv6.conf.all.forwarding.*/net.ipv6.conf.all.forwarding = 0/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv6.conf.all.forwarding to 0 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv6.conf.all.forwarding = 0" &gt;&gt; /etc/sysctl.conf
+fi
+
+#
+# Set runtime for net.ipv6.conf.default.forwarding
+#
+if [ -e /proc/sys/net/ipv6/ ]; then
+	/sbin/sysctl -q -n -w net.ipv6.conf.default.forwarding=0
+fi
+#
+# If net.ipv6.conf.default.forwarding present in /etc/sysctl.conf, change value to "0"
+#	else, add "net.ipv6.conf.default.forwarding = 0" to /etc/sysctl.conf
+#
+if grep --silent ^net.ipv6.conf.default.forwarding /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv6.conf.default.forwarding.*/net.ipv6.conf.default.forwarding = 0/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv6.conf.default.forwarding to 0 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv6.conf.default.forwarding = 0" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="file_permissions_extended_global_initialization_files" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/bashrc /etc/csh.cshrc /etc/csh.login /etc/csh.logout /etc/environment /etc/ksh.kshrc /etc/profile /etc/suid_profile /etc/profile.d/*</fix>
+    <fix rule="audit_rules_setdomainname" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k set_domainname"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`uname -p`" != "x86_64" ]; then
+	echo "-a exit,always -F arch=b32 -S setdomainname ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+else
+	echo "-a exit,always -F arch=b64 -S setdomainname ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="audit_rules_time_stime" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k audit_time_rules"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S stime '`" = "0" ]; then
+	if [ "`uname -p`" != "x86_64" ]; then
+		echo "-a exit,always -F arch=b32 -S stime ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+		# stime is not supported on 64-bit.
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_ungroupowned" complexity="low" disruption="low" reboot="false" strategy="configure">find / /home /var /var/log /var/log/audit -xdev -nogroup 2&gt;/dev/null | xargs chown :root
+</fix>
+    <fix rule="network_ipv6_disable_interfaces" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(grep -c "^NETWORKING_IPV6" /etc/sysconfig/network) = 0 ]; then
+	echo "NETWORKING_IPV6=no" | tee -a /etc/sysconfig/network &amp;&gt;/dev/null
+else
+	sed -i 's/NETWORKING_IPV6.*/NETWORKING_IPV6=no/' /etc/sysconfig/network
+fi
+chkconfig ip6tables off
+</fix>
+    <fix rule="file_owner_etc_xinetd_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/xinetd.conf</fix>
+    <fix rule="file_permissions_extended_mib_files" complexity="low" disruption="low" reboot="false" strategy="configure">find / -name *.mib 2&gt;/dev/null | xargs setfacl --remove-all</fix>
+    <fix rule="file_owner_etc_security_access_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/security/access.conf</fix>
+    <fix rule="ldap_client_tls_cert" complexity="low" disruption="low" reboot="false" strategy="configure">sed -i 's/ ldap//g' /etc/nsswitch.conf</fix>
+    <fix rule="cron_access_controlled" complexity="low" disruption="low" reboot="false" strategy="configure">if [ ! -e [/etc/cron.allow ]; then
+	&gt; /etc/cron.allow
+	chown root:root /etc/cron.allow
+	chmod 0600 /etc/cron.allow
+fi
+if [ ! -e [/etc/cron.deny ]; then
+	SYS_USER=$(cat /etc/passwd | while read entry; do if [ "$(echo ${entry} | cut -d: -f3)" -lt "500" ]; then echo ${entry} | cut -d: -f1 ; fi; done)
+	for USER in `echo $SYS_USER`; do
+		if [ $(grep -c "^${USER}$" /etc/cron.deny) = 0 ]; then
+			echo ${USER} | tee -a /etc/cron.deny &amp;&gt;/dev/null
+		fi
+	done
+	chown root:root /etc/cron.deny
+	chmod 0600 /etc/cron.deny
+fi
+</fix>
+    <fix rule="no_root_webbrowsing" complexity="low" disruption="low" reboot="false" strategy="configure">rm -rf `grep ^root: /etc/passwd | awk -F: '{ print $6 }'`/.mozilla</fix>
+    <fix rule="file_permissions_extended_etc_exports" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/exports</fix>
+    <fix rule="file_permissions_extended_etc_samba_tdb" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/samba/passdb.tdb /etc/samba/secrets.tdb</fix>
+    <fix rule="restricted_accounts_gopher" complexity="low" disruption="low" reboot="false" strategy="configure">/usr/bin/id gopher &amp;&gt;/dev/null &amp;&amp; /usr/sbin/userdel gopher
+</fix>
+    <fix rule="sshd_use_approved_ciphers" complexity="low" disruption="low" reboot="false" strategy="configure">grep -q ^Ciphers /etc/ssh/sshd_config &amp;&amp; \
+  sed -i "s/Ciphers.*/Ciphers aes128-ctr,aes192-ctr,aes256-ctr/g" /etc/ssh/sshd_config
+if ! [ $? -eq 0 ]; then
+    echo "Ciphers aes128-ctr,aes192-ctr,aes256-ctr" &gt;&gt; /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_owner_etc_cups_printers_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/cups/printers.conf</fix>
+    <fix rule="file_permissions_extended_library_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl -RLb --remove-all /usr/lib/* /lib/*
+</fix>
+    <fix rule="file_groupowner_etc_sysctl_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/sysctl.conf</fix>
+    <fix rule="accounts_password_reuse_limit" complexity="low" disruption="low" reboot="false" strategy="configure">
+password_history_retain_number="<sub idref="password_history_retain_number"/>"
+
+if [ $(egrep -c "password\s*(sufficient|required)\s*(pam_unix.so|pam_pwhistory).*remember" /etc/pam.d/system-auth) != 0 ]; then
+	sed -i "s/remember=[0-9]*/remember=${password_history_retain_number}/" /etc/pam.d/system-auth
+else
+	if [ $(egrep -c "password.*(pam_unix.so|pam_pwhistory)" /etc/pam.d/system-auth) != 0 ]; then
+		sed -i "/password.*\(pam_unix.so\|pam_pwhistory.so\)/s/$/ remember=${password_history_retain_number}/" /etc/pam.d/system-auth
+	else
+		sed -i "/password.*pam_cracklib.so/ipassword    sufficient   pam_unix.so remember=${password_history_retain_number} sha512" /etc/pam.d/system-auth
+	fi
+fi
+if [ -e /etc/pam.d/system-auth-ac ]; then
+	if [ $(egrep -c "password\s*(sufficient|required)\s*(pam_unix.so|pam_pwhistory).*remember" /etc/pam.d/system-auth-ac) != 0 ]; then
+		sed -i "s/remember=[0-9]*/remember=${password_history_retain_number}/" /etc/pam.d/system-auth-ac
+	else
+		sed -i "/password.*\(pam_unix.so\|pam_pwhistory.so\)/s/$/ remember=${password_history_retain_number}/" /etc/pam.d/system-auth-ac
+	fi
+fi
+</fix>
+    <fix rule="file_owner_grub_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/grub.conf /boot/grub/grub.conf</fix>
+    <fix rule="file_permissions_extended_etc_skel" complexity="low" disruption="low" reboot="false" strategy="configure">find /etc/skel 2&gt;/dev/null | xargs setfacl --remove-all</fix>
+    <fix rule="file_permissions_extended_aliases_files" complexity="low" disruption="low" reboot="false" strategy="configure">grep / /etc/aliases | grep -v "#" | sed s/^[^\/]*// | xargs setfacl --remove-all</fix>
+    <fix rule="file_permissions_extended_etc_news_infeed_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/news/infeed.conf</fix>
+    <fix rule="restricted_accounts" complexity="low" disruption="low" reboot="false" strategy="configure">/usr/bin/id shutdown &amp;&gt;/dev/null &amp;&amp; /usr/sbin/userdel shutdown
+/usr/bin/id halt &amp;&gt;/dev/null &amp;&amp; /usr/sbin/userdel halt
+/usr/bin/id reboot &amp;&gt;/dev/null &amp;&amp; /usr/sbin/userdel reboot
+</fix>
+    <fix rule="ssh_use_approved_macs" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ssh/ssh_config | grep -c "^MACs") = "0" ]; then
+	echo "MACs hmac-sha1" | tee -a /etc/ssh/ssh_config &amp;&gt;/dev/null
+else
+	sed -i 's/^MACs.*/MACs hmac-sha1/' /etc/ssh/ssh_config
+fi
+</fix>
+    <fix rule="file_owner_etc_at_allow" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/at.allow</fix>
+    <fix rule="sshd_users_groups" complexity="low" disruption="low" reboot="false" strategy="configure">echo "AllowGroups wheel" | tee -a /etc/ssh/sshd_config &amp;&gt;/dev/null
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="ldap_client_bindpw" complexity="low" disruption="low" reboot="false" strategy="configure">sed -i '/bindpw/d' /etc/ldap.conf</fix>
+    <fix rule="file_permissions_extended_var_yp" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl -RLb /var/yp/*
+</fix>
+    <fix rule="file_groupowner_grub_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/grub.conf</fix>
+    <fix rule="dhcp_client_disable_ddns" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/dhclient.conf ]; then
+	if [ $(grep -c "do-forward-updates false;" /etc/dhclient.conf) = 0 ]; then
+		echo "do-forward-updates false;" | tee -a /etc/dhclient.conf &amp;&gt;/dev/null
+	fi
+else
+	echo "do-forward-updates false;" | tee /etc/dhclient.conf &amp;&gt;/dev/null
+fi
+</fix>
+    <fix rule="file_owner_exports_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">cat /etc/exports | awk '{ print $1 }' | xargs chown root</fix>
+    <fix rule="sshd_printlastlog" complexity="low" disruption="low" reboot="false" strategy="configure">if [ "$(grep -c '^session.*required.*pam_lastlog.so$' /etc/pam.d/sshd)" = "0" ]; then
+	echo -e "session    required\tpam_lastlog.so" | tee -a /etc/pam.d/sshd &amp;&gt;/dev/null
+elif [ "$(grep pam_lastlog /etc/pam.d/sshd | grep -c silent)" != "0" ]; then
+	sed -i '/pam_lastlog/s/silent//' /etc/pam.d/sshd
+fi
+if [ $(cat /etc/ssh/sshd_config | grep -ic "^PrintLastLog") = "0" ]; then
+	echo "PrintLastLog yes" | tee -a /etc/ssh/sshd_config &amp;&gt;/dev/null
+else
+	sed -i 's/^PrintLastLog.*/PrintLastLog yes/' /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="file_permissions_audit_log" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/auditd.conf ]; then
+	grep ^log_file /etc/audit/auditd.conf | awk '{ print $3 }' | xargs chmod 640
+elif [ -e /etc/auditd.conf ]; then
+	grep ^log_file /etc/auditd.conf | awk '{ print $3 }' | xargs chmod 640
+fi
+</fix>
+    <fix rule="file_groupowner_etc_ldap_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/ldap.conf</fix>
+    <fix rule="at_deny_nonempty" complexity="low" disruption="low" reboot="false" strategy="configure">SYS_USER=$(cat /etc/passwd | while read entry; do if [ "$(echo ${entry} | cut -d: -f3)" -lt "500" ]; then echo ${entry} | cut -d: -f1 ; fi; done)
+for USER in `echo $SYS_USER`; do
+	if [ $(grep -c "^${USER}$" /etc/at.deny) = 0 ]; then
+		echo ${USER} | tee -a /etc/at.deny &amp;&gt;/dev/null
+	fi
+done
+sed -i '/^$/d' /etc/at.deny
+</fix>
+    <fix rule="file_permissions_extended_etc_news_hosts_nntp_nolimit" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/news/hosts.nntp.nolimit</fix>
+    <fix rule="accounts_cracklib_present" complexity="low" disruption="low" reboot="false" strategy="configure">authconfig --updateall
+if [ -e /etc/pam.d/system-auth-ac ]; then
+	sed -i '/password.*include.*system-auth-ac/ipassword    required     pam_cracklib.so' /etc/pam.d/system-auth
+else
+	sed -i '/password.*unix.so/ipassword    required     pam_cracklib.so' /etc/pam.d/system-auth
+fi
+</fix>
+    <fix rule="file_permissions_aliases" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 644 /etc/postfix/aliases /etc/postfix/aliases.db /etc/aliases /etc/aliases.db 2&gt;/dev/null</fix>
+    <fix rule="file_permissions_var_log" complexity="low" disruption="low" reboot="false" strategy="configure">find /var/log -follow -type f ! -name wtmp 2&gt;/dev/null | xargs chmod o-rwx,g-wx,u-x
+
+# The following corrects the permission mask set for /var/log/rpmpkgs.
+if [ -e /etc/cron.daily/rpm ]; then
+	sed -i '/rpmpkgs/s/0644/0640/' /etc/cron.daily/rpm
+fi
+</fix>
+    <fix rule="audit_rules_time_settimeofday" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k audit_time_rules"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S settimeofday '`" = "0" ]; then
+	if [ "`uname -p`" != "x86_64" ]; then
+		echo "-a exit,always -F arch=b32 -S settimeofday ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b64 -S settimeofday ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_groupowner_binary_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">find /etc /bin /usr/bin /usr/lbin /usr/usb /sbin /usr/sbin -follow -gid +499 2&gt;/dev/null | xargs chown :root
+</fix>
+    <fix rule="file_permissions_etc_sysctl_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/sysctl.conf
+</fix>
+    <fix rule="accounts_disable_expired" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_account_disable_post_pw_expiration="<sub idref="var_account_disable_post_pw_expiration"/>"
+
+sed -i "/:\(!!\|*\):/!s/:[0-9]*/:${var_account_disable_post_pw_expiration}/6" /etc/shadow
+</fix>
+    <fix rule="sshd_compression" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ssh/sshd_config | grep -ic "^Compression") = "0" ]; then
+	echo "Compression delayed" | tee -a /etc/ssh/sshd_config &amp;&gt;/dev/null
+else
+	sed -i 's/^Compression.*/Compression delayed/' /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="file_permissions_extended_audit_tools" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /sbin/auditctl /sbin/auditd /sbin/ausearch /sbin/aureport /sbin/autrace /sbin/audispd</fix>
+    <fix rule="kernel_module_dccp_disabled" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -d /etc/modprobe.d/ ]; then
+	echo "install dccp /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+	echo "install dccp_ipv4 /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+	echo "install dccp_ipv6 /bin/true" &gt;&gt; /etc/modprobe.d/disabled_modules.conf
+else
+	echo "install dccp /bin/true" &gt;&gt; /etc/modprobe.conf
+	echo "install dccp_ipv4 /bin/true" &gt;&gt; /etc/modprobe.conf
+	echo "install dccp_ipv6 /bin/true" &gt;&gt; /etc/modprobe.conf
+fi
+</fix>
+    <fix rule="file_groupowner_etc_xinetd_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/xinetd.conf</fix>
+    <fix rule="file_permissions_extended_binary_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl -RLb /etc /bin /usr/bin /usr/lbin /usr/usb /sbin /usr/sbin 2&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_extended_etc_cups_printers_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/cups/printers.conf</fix>
+    <fix rule="file_permissions_extended_etc_shadow" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/shadow</fix>
+    <fix rule="file_groupowner_etc_samba_tdb" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/samba/passdb.tdb /etc/samba/secrets.tdb</fix>
+    <fix rule="file_permissions_etc_xinetd_dir" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0755 /etc/xinet.d/*</fix>
+    <fix rule="accounts_password_pam_cracklib_maxrepeat" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_password_pam_cracklib_maxrepeat="<sub idref="var_password_pam_cracklib_maxrepeat"/>"
+
+if [ $(grep -c "maxrepeat=" /etc/pam.d/system-auth) != 0 ]; then
+	sed -i "s/maxrepeat=[0-9]*/maxrepeat=$var_password_pam_cracklib_maxrepeat/" /etc/pam.d/system-auth
+else
+	sed -i "/password.*pam_cracklib.so/s/$/ maxrepeat=$var_password_pam_cracklib_maxrepeat/" /etc/pam.d/system-auth
+fi
+if [ -e /etc/pam.d/system-auth-ac ]; then
+	if [ $(grep -c "maxrepeat=" /etc/pam.d/system-auth-ac) != 0 ]; then
+		sed -i "s/maxrepeat=[0-9]*/maxrepeat=$var_password_pam_cracklib_maxrepeat/" /etc/pam.d/system-auth-ac
+	else
+		sed -i "/password.*pam_cracklib.so/s/$/ maxrepeat=$var_password_pam_cracklib_maxrepeat/" /etc/pam.d/system-auth-ac
+	fi
+fi</fix>
+    <fix rule="audit_rules_usergroup_disabling" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w /usr/bin/passwd"`" = "0" ]; then
+	echo "-w /usr/bin/passwd -p x -k audit_account_changes" &gt;&gt;${AUDIT_RULES_FILE}
+elif [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w /usr/bin/passwd -p [wa]*x"`" = "0" ]; then
+	if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w /usr/bin/passwd -p "`" = "0" ]; then
+		sed -i "s/\(-w \/usr\/bin\/passwd\)/\1 -p x/" ${AUDIT_RULES_FILE}
+	else
+		sed -i "s/\(-w \/usr\/bin\/passwd -p \)/\1x/" ${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_grub_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0600 /etc/grub.conf /boot/grub/grub.conf</fix>
+    <fix rule="file_groupowner_etc_services" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/services</fix>
+    <fix rule="cron_system_accounts" complexity="low" disruption="low" reboot="false" strategy="configure">SYS_USER=$(cat /etc/passwd | while read entry; do if [ "$(echo ${entry} | cut -d: -f3)" -lt "500" ]; then echo ${entry} | cut -d: -f1 ; fi; done)
+for USER in `echo $SYS_USER`; do
+	if [ $(grep -c "^${USER}$" /etc/cron.deny) = 0 ]; then
+		echo ${USER} | tee -a /etc/cron.deny &amp;&gt;/dev/null
+	fi
+done
+</fix>
+    <fix rule="file_permissions_extended_etc_passwd" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/passwd</fix>
+    <fix rule="sysctl_net_ipv4_conf_accept_source_route" complexity="low" disruption="low" reboot="false" strategy="configure">/sbin/sysctl -q -n -w net.ipv4.conf.all.accept_source_route=0
+/sbin/sysctl -q -n -w net.ipv4.conf.default.accept_source_route=0
+
+if grep --silent ^net.ipv4.conf.all.accept_source_route /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.conf.all.accept_source_route.*/net.ipv4.conf.all.accept_source_route = 0/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv4.conf.all.accept_source_route to 0 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.conf.all.accept_source_route = 0" &gt;&gt; /etc/sysctl.conf
+fi
+
+if grep --silent ^net.ipv4.conf.default.accept_source_route /etc/sysctl.conf ; then
+	sed -i 's/^net.ipv4.conf.default.accept_source_route.*/net.ipv4.conf.default.accept_source_route = 0/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set net.ipv4.conf.default.accept_source_route to 0 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "net.ipv4.conf.default.accept_source_route = 0" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="sshd_protocol_2" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ssh/sshd_config | grep -c "^Protocol") != "0" ]; then
+	sed -i 's/^Protocol.*/Protocol 2/' /etc/ssh/sshd_config
+else
+	echo "Protocol 2"&gt;&gt;/etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="audit_rules_dac_modification_lchown" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S lchown '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S lchown ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S lchown ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S lchown32 '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S lchown32 ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S lchown32 ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="bootloader_audit_argument" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(grep -v '#' /boot/grub/grub.conf | grep kernel | grep -c audit=) = 0 ]; then
+	sed -i '/^[ |\t]*kernel/s/$/ audit=1/' /boot/grub/grub.conf
+else
+	sed -i '/^[ |\t]*kernel/s/audit=./audit=1/' /boot/grub/grub.conf
+fi
+</fix>
+    <fix rule="ldap_client_tls_crlcheck" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ldap.conf | grep -c "^tls_crlcheck") = "0" ]; then
+	echo "tls_crlcheck all" | tee -a /etc/ldap.conf &amp;&gt;/dev/null
+else
+	sed -i 's/^tls_crlcheck.*/tls_crlcheck all/' /etc/ldap.conf
+fi
+</fix>
+    <fix rule="accounts_password_pam_cracklib_difok" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_password_pam_cracklib_difok="<sub idref="var_password_pam_cracklib_difok"/>"
+
+if [ $(grep -c "difok=" /etc/pam.d/system-auth) != 0 ]; then
+	sed -i "s/difok=[0-9]*/difok=$var_password_pam_cracklib_difok/" /etc/pam.d/system-auth
+else
+	sed -i "/password.*pam_cracklib.so/s/$/ difok=$var_password_pam_cracklib_difok/" /etc/pam.d/system-auth
+fi
+if [ -e /etc/pam.d/system-auth-ac ]; then
+	if [ $(grep -c "difok=" /etc/pam.d/system-auth-ac) != 0 ]; then
+		sed -i "s/difok=[0-9]*/difok=$var_password_pam_cracklib_difok/" /etc/pam.d/system-auth-ac
+	else
+		sed -i "/password.*pam_cracklib.so/s/$/ difok=$var_password_pam_cracklib_difok/" /etc/pam.d/system-auth-ac
+	fi
+fi
+</fix>
+    <fix rule="file_owner_audio_devices" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /dev/audio* /dev/snd/*</fix>
+    <fix rule="at_system_accounts" complexity="low" disruption="low" reboot="false" strategy="configure">SYS_USER=$(cat /etc/passwd | while read entry; do if [ "$(echo ${entry} | cut -d: -f3)" -lt "500" ]; then echo ${entry} | cut -d: -f1 ; fi; done)
+for USER in `echo $SYS_USER`; do
+	if [ $(grep -c "^${USER}$" /etc/at.deny) = 0 ]; then
+		echo ${USER} | tee -a /etc/at.deny &amp;&gt;/dev/null
+	fi
+done
+</fix>
+    <fix rule="file_owner_etc_at_deny" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/at.deny</fix>
+    <fix rule="file_owner_core_dump_dir" complexity="low" disruption="low" reboot="false" strategy="configure">grep path.*/ /etc/kdump.conf | awk '{ print $2 }' | chown root</fix>
+    <fix rule="file_permissions_extended_cron_log_files" complexity="low" disruption="low" reboot="false" strategy="configure">grep cron /etc/syslog.conf | grep -v "#" | awk '{ print $2 }' | xargs setfacl --remove-all</fix>
+    <fix rule="file_owner_etc_securetty" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/securetty</fix>
+    <fix rule="no_files_unowned_by_user" complexity="low" disruption="low" reboot="false" strategy="configure">find / /home /var /var/log /var/log/audit -xdev -nouser 2&gt;/dev/null | xargs chown root
+</fix>
+    <fix rule="sysctl_kernel_nonexec_stack" complexity="low" disruption="low" reboot="false" strategy="configure">if [[ "`uname -r`" != "2.6.9"* ]]; then
+	/sbin/sysctl -q -n -w kernel.randomize_va_space=1
+	if grep --silent ^kernel.randomize_va_space /etc/sysctl.conf ; then
+		sed -i 's/^kernel.randomize_va_space.*/kernel.randomize_va_space = 1/g' /etc/sysctl.conf
+	else
+		echo "" &gt;&gt; /etc/sysctl.conf
+		echo "# Set kernel.randomize_va_space to 1 per security requirements" &gt;&gt; /etc/sysctl.conf
+		echo "kernel.randomize_va_space = 1" &gt;&gt; /etc/sysctl.conf
+	fi
+fi
+
+/sbin/sysctl -q -n -w kernel.exec-shield=1
+if grep --silent ^kernel.exec-shield /etc/sysctl.conf ; then
+	sed -i 's/^kernel.exec-shield.*/kernel.exec-shield = 1/g' /etc/sysctl.conf
+else
+	echo "" &gt;&gt; /etc/sysctl.conf
+	echo "# Set kernel.exec-shield to 1 per security requirements" &gt;&gt; /etc/sysctl.conf
+	echo "kernel.exec-shield = 1" &gt;&gt; /etc/sysctl.conf
+fi
+</fix>
+    <fix rule="xwindows_runlevel_setting" complexity="low" disruption="low" reboot="false" strategy="configure">sed -i 's/.*:initdefault:.*/id:3:initdefault:/' /etc/inittab</fix>
+    <fix rule="package_rpc_removed" complexity="low" disruption="low" reboot="false" strategy="configure">yum -y remove portmap rpcbind --disablerepo=* 1&gt;/dev/null
+</fix>
+    <fix rule="accounts_password_pam_cracklib_ocredit" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_password_pam_cracklib_ocredit="<sub idref="var_password_pam_cracklib_ocredit"/>"
+
+if [ $(grep -c "ocredit=" /etc/pam.d/system-auth) != 0 ]; then
+	sed -i "s/ocredit=[0-9]*/ucredit=$var_password_pam_cracklib_ocredit/" /etc/pam.d/system-auth
+else
+	sed -i "/password.*pam_cracklib.so/s/$/ ocredit=$var_password_pam_cracklib_ocredit/" /etc/pam.d/system-auth
+fi
+if [ -e /etc/pam.d/system-auth-ac ]; then
+	if [ $(grep -c "ocredit=" /etc/pam.d/system-auth-ac) != 0 ]; then
+		sed -i "s/ocredit=[0-9]*/ucredit=$var_password_pam_cracklib_ocredit/" /etc/pam.d/system-auth-ac
+	else
+		sed -i "/password.*pam_cracklib.so/s/$/ ocredit=$var_password_pam_cracklib_ocredit/" /etc/pam.d/system-auth-ac
+	fi
+fi
+</fix>
+    <fix rule="mail_version_info" complexity="low" disruption="low" reboot="false" strategy="configure">SENDMAIL_CONFIG=$(rpm -ql sendmail | grep sendmail.cf)
+SENDMAIL_MAINCONF=$(rpm -ql sendmail | grep sendmail.mc)
+if [ "$(rpm -q sendmail-cf &amp;&gt;/dev/null; echo $?)" = "0" ]; then
+	if [ -e "${SENDMAIL_MAINCONF}" ]; then
+		if [ "$(grep -c "^define(\`confSMTP_LOGIN_MSG" "${SENDMAIL_MAINCONF}")" = "0" ]; then
+			sed -i "0,/^define/s/\(^define\)/define(\`confSMTP_LOGIN_MSG', \` Mail Server Ready ; $b')dnl\n\1/" "${SENDMAIL_MAINCONF}"
+		elif [ "$(grep -c "^define(\`confSMTP_LOGIN_MSG', \` Mail Server Ready ; \$b')dnl" "${SENDMAIL_MAINCONF}")" = "0" ]; then
+			sed -i "s/^define(\`confSMTP_LOGIN_MSG.*/define(\`confSMTP_LOGIN_MSG', \`Mail Server Ready ; \$b')dnl/" "${SENDMAIL_MAINCONF}"
+		fi
+		m4 "${SENDMAIL_MAINCONF}" &gt; "${SENDMAIL_CONFIG}"
+	fi
+else
+	sed -i 's/O SmtpGreetingMessage=.*/O SmtpGreetingMessage= Mail Server Ready ; $b/' "${SENDMAIL_CONFIG}"
+fi
+service sendmail restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_groupowner_etc_syslog_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/syslog.conf</fix>
+    <fix rule="file_groupowner_etc_cups_printers_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/cups/printers.conf</fix>
+    <fix rule="restricted_accounts_news" complexity="low" disruption="low" reboot="false" strategy="configure">/usr/bin/id news &amp;&gt;/dev/null &amp;&amp; /usr/sbin/userdel news
+</fix>
+    <fix rule="file_groupowner_etc_at_allow" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/at.allow</fix>
+    <fix rule="file_permissions_ldap_cacerts" complexity="low" disruption="low" reboot="false" strategy="configure">KEY_PATH="`grep -i '^tls_cacert' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }'`"
+if [ -d "${KEY_PATH}" ]; then
+	chmod 755 "${KEY_PATH}"
+	chmod 644 "${KEY_PATH}"/*
+elif [ -e "${KEY_PATH}" ]; then
+	chmod 644 "${KEY_PATH}"
+fi
+</fix>
+    <fix rule="file_groupowner_ldap_cacerts" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_cacert' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs chown -R :root</fix>
+    <fix rule="audit_rules_unsuccessful_file_ftruncate" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	if [ "`grep " -S ftruncate " /etc/audit/audit.rules | grep -v '#' | grep -c '\-F exit=-EACCES'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S ftruncate -F exit=-EACCES -k access" &gt;&gt;/etc/audit/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S ftruncate -F exit=-EACCES -k access" &gt;&gt;/etc/audit/audit.rules
+		fi
+	fi
+	if [ "`grep " -S ftruncate " /etc/audit/audit.rules | grep -v '#' | grep -c '\-F exit=-EPERM'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S ftruncate -F exit=-EPERM -k access" &gt;&gt;/etc/audit/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S ftruncate -F exit=-EPERM -k access" &gt;&gt;/etc/audit/audit.rules
+		fi
+	fi
+elif [ -e /etc/audit.rules ]; then
+	if [ "`grep " -S ftruncate " /etc/audit.rules | grep -v '#' | grep -c '\success=0'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S ftruncate -F success=0" &gt;&gt;/etc/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S ftruncate -F success=0" &gt;&gt;/etc/audit.rules
+		fi
+	fi
+else
+	exit
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="audit_rules_usergroup_modification" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+else
+	exit
+fi
+
+for FILE in /usr/sbin/usermod /usr/sbin/groupmod; do
+	if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE}"`" = "0" ]; then
+		echo "-w ${FILE} -p x -k audit_account_changes" &gt;&gt;${AUDIT_RULES_FILE}
+	elif [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p [wa]*x"`" = "0" ]; then
+		SED_FILE="$(echo ${FILE} | sed 's/\//\\\//g')"
+		if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p "`" = "0" ]; then
+			sed -i "s/\(-w ${SED_FILE}\)/\1 -p x/" ${AUDIT_RULES_FILE}
+		else
+			sed -i "s/\(-w ${SED_FILE} -p \)/\1x/" ${AUDIT_RULES_FILE}
+		fi
+	fi
+done
+for FILE in /etc/group /etc/passwd /etc/gshadow /etc/shadow; do
+	if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE}"`" = "0" ]; then
+		echo "-w ${FILE} -p w -k audit_account_changes" &gt;&gt;${AUDIT_RULES_FILE}
+	elif [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p [xa]*w"`" = "0" ]; then
+		SED_FILE="$(echo ${FILE} | sed 's/\//\\\//g')"
+		if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p "`" = "0" ]; then
+			sed -i "s/\(-w ${SED_FILE}\)/\1 -p w/" ${AUDIT_RULES_FILE}
+		else
+			sed -i "s/\(-w ${SED_FILE} -p \)/\1w/" ${AUDIT_RULES_FILE}
+		fi
+	fi
+done
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="audit_rules_dac_modification_fchown" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S fchown '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S fchown ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S fchown ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S fchown32 '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S fchown32 ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S fchown32 ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="sshd_kerberosauthentication" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ssh/sshd_config | grep -ic "^KerberosAuthentication") = "0" ]; then
+	echo "KerberosAuthentication no" | tee -a /etc/ssh/sshd_config &amp;&gt;/dev/null
+else
+	sed -i 's/^KerberosAuthentication.*/KerberosAuthentication no/' /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="sshd_rhostsrsaauthentication" complexity="low" disruption="low" reboot="false" strategy="configure">if [ $(cat /etc/ssh/sshd_config | grep -ic "^RhostsRSAAuthentication") = "0" ]; then
+	echo "RhostsRSAAuthentication no" | tee -a /etc/ssh/sshd_config &amp;&gt;/dev/null
+else
+	sed -i 's/^RhostsRSAAuthentication.*/RhostsRSAAuthentication no/' /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="file_owner_etc_sysctl_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/sysctl.conf</fix>
+    <fix rule="accounts_password_pam_tally_deny" complexity="low" disruption="low" reboot="false" strategy="configure">
+var_accounts_password_pam_tally_deny="<sub idref="var_accounts_password_pam_tally_deny"/>"
+
+if [ $(grep auth.*required.*pam_tally2 /etc/pam.d/system-auth | grep -c "deny=") != 0 ]; then
+	sed -i "/account.*required.*pam_tally/s/deny=[0-9]*/deny=${var_accounts_password_pam_tally_deny}/" /etc/pam.d/system-auth
+elif [ $(grep -c "auth.*required.*pam_tally2" /etc/pam.d/system-auth) = 0 ]; then
+	if [ $(grep -c "pam_tally.so" /etc/pam.d/system-auth) != 0 ]; then
+		sed -i "s/pam_tally.so/pam_tally2.so/g" /etc/pam.d/system-auth
+	elif [ $(grep -c "auth.*include.*system-auth-ac" /etc/pam.d/system-auth) != 0 ]; then
+		sed -i 's/\(auth\s*include\s*system-auth-ac\)/auth        required     pam_tally2.so\n\1/' /etc/pam.d/system-auth
+	elif [ $(grep -c "auth.*pam_unix.so" /etc/pam.d/system-auth) != 0 ]; then
+		sed -i 's/\(auth.*pam_unix.so\)/auth        required     pam_tally2.so\n\1/' /etc/pam.d/system-auth
+	elif [ $(grep -c "auth.*pam_deny.so" /etc/pam.d/system-auth) != 0 ]; then
+		sed -i 's/\(auth.*pam_deny.so\)/auth        required     pam_tally2.so\n\1/' /etc/pam.d/system-auth
+	else
+		sed -i ':a;N;$!ba;s/\([\n]*[#]*[\s]*account\)/\nauth        required     pam_tally2.so\n\1/' /etc/pam.d/system-auth
+	fi
+	sed -i "/auth.*pam_tally/s/$/ deny=${var_accounts_password_pam_tally_deny}/" /etc/pam.d/system-auth
+else
+	sed -i "/auth.*pam_tally/s/$/ deny=${var_accounts_password_pam_tally_deny}/" /etc/pam.d/system-auth
+fi
+if [ ! -e /var/log/tallylog ]; then
+	&gt;/var/log/tallylog
+fi
+chmod 640 /var/log/tallylog
+chown root:root /var/log/tallylog
+</fix>
+    <fix rule="file_permissions_etc_samba_smb_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 0644 /etc/samba/smb.conf</fix>
+    <fix rule="audit_rules_dac_modification_fchmodat" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S fchmodat '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S fchmodat ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S fchmodat ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_extended_etc_cron_deny" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/cron.deny</fix>
+    <fix rule="file_permissions_extended_etc_ldap_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/ldap.conf</fix>
+    <fix rule="file_permissions_extended_etc_news_incoming_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/news/incoming.conf</fix>
+    <fix rule="file_permissions_extended_usr_sbin_dir" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl -RLb /usr/sbin/*
+</fix>
+    <fix rule="samba_security_option" complexity="low" disruption="low" reboot="false" strategy="configure">sed -i '/^[#|;]/!s/\([ |\t]*security =\).*/\1 user/' /etc/samba/smb.conf</fix>
+    <fix rule="file_permissions_extended_ldap_certs" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_cert' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs setfacl --remove-all</fix>
+    <fix rule="bootloader_nousb_argument" complexity="low" disruption="low" reboot="false" strategy="configure">USB_KEYBOARD=$(grep 'Product=' /proc/bus/usb/devices 2&gt;/dev/null| egrep -ic '(ps2 to usb adapter|keyboard|kvm|sc reader)')
+if [ "${USB_KEYBOARD}" = "0" ]; then
+	sed -i '/^[ |\t]*kernel/s/$/ nousb/' /boot/grub/grub.conf
+# else
+	# A USB keyboard was detected so this fix has been skipped.
+fi
+</fix>
+    <fix rule="file_permissions_crontab_dirs" complexity="low" disruption="low" reboot="false" strategy="configure">chmod 755 /etc/cron.d /etc/cron.daily /etc/cron.hourly /etc/cron.monthly /etc/cron.weekly /var/spool/cron 2&gt;/dev/null
+</fix>
+    <fix rule="file_groupowner_etc_samba_smb_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/samba/smb.conf</fix>
+    <fix rule="rpm_nosignature" complexity="low" disruption="low" reboot="false" strategy="configure">grep nosignature /etc/rpmrc /usr/lib/rpm/rpmrc /usr/lib/rpm/redhat/rpmrc ~root/.rpmrc 2&gt;/dev/null | cut -d: -f1 | sort -u | while read RPM_FILE; do
+	sed -i 's/nosignature//g' ${RPM_FILE}
+done
+</fix>
+    <fix rule="file_groupowner_ldap_keys" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_key' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs chown -R :root</fix>
+    <fix rule="file_permissions_home_files" complexity="low" disruption="low" reboot="false" strategy="configure">find /root /home/* -perm -1 -o -perm -2 -o -perm -4 -o -perm -20 2&gt;/dev/null | xargs -I entry chmod o-rwx,g-w "entry"
+</fix>
+    <fix rule="file_permissions_extended_shell_files" complexity="low" disruption="low" reboot="false" strategy="configure">cat /etc/shells | xargs setfacl --remove-all</fix>
+    <fix rule="file_permissions_extended_etc_group" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/group</fix>
+    <fix rule="sysctl_kernel_execshield" complexity="low" disruption="low" reboot="false" strategy="configure">/sbin/sysctl -q -n -w kernel.exec-shield=1&#13;
+if grep --silent ^kernel.exec-shield /etc/sysctl.conf ; then&#13;
+	sed -i 's/^kernel.exec-shield.*/kernel.exec-shield = 1/g' /etc/sysctl.conf&#13;
+else&#13;
+	echo "" &gt;&gt; /etc/sysctl.conf&#13;
+	echo "# Set kernel.exec-shield to 1 per security requirements" &gt;&gt; /etc/sysctl.conf&#13;
+	echo "kernel.exec-shield = 1" &gt;&gt; /etc/sysctl.conf&#13;
+fi&#13;
+</fix>
+    <fix rule="audit_rules_dac_modification_setxattr" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S setxattr '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S setxattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S setxattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_groupowner_etc_ntp_conf" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/ntp.conf</fix>
+    <fix rule="require_singleuser_auth" complexity="low" disruption="low" reboot="false" strategy="configure">grep -q :S: /etc/inittab &amp;&amp; \
+  sed -i "s/.*:S:.*/~:S:wait:\/sbin\/sulogin/g" /etc/inittab
+if ! [ $? -eq 0 ]; then
+    echo "~:S:wait:/sbin/sulogin" &gt;&gt; /etc/inittab
+fi
+</fix>
+    <fix rule="audit_rules_dac_modification_lsetxattr" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S lsetxattr '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S lsetxattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S lsetxattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="sshd_listen_addresses" complexity="low" disruption="low" reboot="false" strategy="configure">MANAGEMENT_IP=$(/sbin/ifconfig | grep inet | grep -v 127.0.0.1 | cut -d: -f2 | awk '{ print $1}' | head -1)
+if [ $(cat /etc/ssh/sshd_config | grep -ic "^ListenAddress") = "0" ]; then
+	echo "ListenAddress ${MANAGEMENT_IP}" | tee -a /etc/ssh/sshd_config &amp;&gt;/dev/null
+else
+	sed -i "s/^ListenAddress.*/ListenAddress ${MANAGEMENT_IP}/" /etc/ssh/sshd_config
+fi
+service sshd restart 1&gt;/dev/null</fix>
+    <fix rule="ssh_no_cbc" complexity="low" disruption="low" reboot="false" strategy="configure">grep -q ^Ciphers /etc/ssh/ssh_config &amp;&amp; \
+  sed -i "s/Ciphers.*/Ciphers aes128-ctr,aes192-ctr,aes256-ctr/g" /etc/ssh/ssh_config
+if ! [ $? -eq 0 ]; then
+    echo "Ciphers aes128-ctr,aes192-ctr,aes256-ctr" &gt;&gt; /etc/ssh/ssh_config
+fi
+</fix>
+    <fix rule="file_groupowner_audit_log" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/auditd.conf ]; then
+	grep ^log_file /etc/audit/auditd.conf | awk '{ print $3 }' | xargs chown :root
+if [ -e /etc/auditd.conf ]; then
+	grep ^log_file /etc/auditd.conf | awk '{ print $3 }' | xargs chown :root
+fi
+</fix>
+    <fix rule="file_permissions_extended_audit_log" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/auditd.conf ]; then
+	grep "^log_file" /etc/audit/auditd.conf | sed s/^[^\/]*// | xargs setfacl --remove-all
+elif [ -e /etc/auditd.conf ]; then
+	grep "^log_file" /etc/auditd.conf | sed s/^[^\/]*// | xargs setfacl --remove-all
+fi
+</fix>
+    <fix rule="file_permissions_extended_etc_xinetd_dir" complexity="low" disruption="low" reboot="false" strategy="configure">find /etc/xinetd.d -type f 2&gt;/dev/null | xargs setfacl --remove-all</fix>
+    <fix rule="file_groupowner_etc_hosts" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/hosts</fix>
+    <fix rule="audit_rules_dac_modification_fchownat" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S fchownat '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S fchownat ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S fchownat ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_owner_ldap_keys" complexity="low" disruption="low" reboot="false" strategy="configure">grep -i '^tls_key' /etc/ldap.conf | grep -v "#" | awk '{ print $2 }' | xargs chown -R root</fix>
+    <fix rule="auditd_data_retention_audit_storage_failure" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/auditd.conf ]; then
+	AUDITD_CONF_FILE="/etc/audit/auditd.conf"
+elif [ -e /etc/auditd.conf ]; then
+	AUDITD_CONF_FILE="/etc/auditd.conf"
+else
+	exit
+fi
+
+if [ "$(grep -v "#" ${AUDITD_CONF_FILE} | grep -c space_left_action)" != "0" ]; then
+	sed -i 's/space_left_action.*/space_left_action = syslog/' ${AUDITD_CONF_FILE}
+else
+	echo "space_left_action = syslog"&gt;&gt;${AUDITD_CONF_FILE}
+fi
+</fix>
+    <fix rule="file_permissions_extended_audio_devices" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /dev/audio* /dev/snd/* 2&gt;/dev/null</fix>
+    <fix rule="baseline_device_files" complexity="low" disruption="low" reboot="false" strategy="configure"># Generate a device file baseline
+find / -type b -o -type c 2&gt;/dev/null | sort  &gt; /var/log/device-file-list
+chmod 640 /var/log/device-file-list
+chown root:root /var/log/device-file-list
+
+# Generate a weekly cron job to check the device file baseline and report differences
+cat &gt; /etc/cron.weekly/baseline_checker.sh &lt;&lt;'STOP_HERE'
+#!/bin/sh
+echo "Baseline check started on $(date +"%m-%d-%Y") at $(date +"%H:%M:%S")" | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+echo "Gathering current baseline." | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+rm -f /tmp/*BASELINE.tmp /tmp/*list.tmp
+find / -perm -4000 2&gt;/dev/null | sort &gt; /tmp/suid-file-list.tmp
+find / -perm -2000 2&gt;/dev/null | sort &gt; /tmp/sgid-file-list.tmp
+find / -type b -o -type c 2&gt;/dev/null | sort  &gt; /tmp/device-file-list.tmp
+echo "Comparing the current baseline with the last known good configuration." | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+diff /var/log/suid-file-list /tmp/suid-file-list.tmp &gt; /tmp/SUID_BASELINE.tmp
+diff /var/log/sgid-file-list /tmp/sgid-file-list.tmp &gt; /tmp/SGID_BASELINE.tmp
+diff /var/log/device-file-list /tmp/device-file-list.tmp &gt; /tmp/DEVICE_BASELINE.tmp
+if [ -s /tmp/SUID_BASELINE.tmp ]; then
+   if [ $(grep -c "^&gt;" /tmp/SUID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the suid bit added:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&gt;" /tmp/SUID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+	if [ $(grep -c "^&lt;" /tmp/SUID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the suid bit removed:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&lt;" /tmp/SUID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+fi
+if [ -s /tmp/SGID_BASELINE.tmp ]; then
+   if [ $(grep -c "^&gt;" /tmp/SGID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the sgid bit added:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&gt;" /tmp/SGID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+	if [ $(grep -c "^&lt;" /tmp/SGID_BASELINE.tmp) != 0 ]; then
+		echo "The following files were detected to have the sgid bit removed:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&lt;" /tmp/SGID_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+fi
+if [ -s /tmp/DEVICE_BASELINE.tmp ]; then
+   if [ $(grep -c "^&gt;" /tmp/DEVICE_BASELINE.tmp) != 0 ]; then
+		echo "The following device files were detected to have been added:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&gt;" /tmp/DEVICE_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+	if [ $(grep -c "^&lt;" /tmp/DEVICE_BASELINE.tmp) != 0 ]; then
+		echo "The following device files were detected to have removed:" | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+		grep "^&lt;" /tmp/DEVICE_BASELINE.tmp | awk '{ print $2 }' | tee -a /var/log/baseline.log
+		echo -e \\n | tee -a /var/log/baseline.log
+	fi
+fi
+rm -f /tmp/*BASELINE.tmp /tmp/*list.tmp
+echo "Baseline check completed on $(date +"%m-%d-%Y") at $(date +"%H:%M:%S")" | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+echo "####################################################################" | tee -a /var/log/baseline.log
+echo -e \\n | tee -a /var/log/baseline.log
+chmod 640 /var/log/baseline.log
+chown root:root /var/log/baseline.log
+STOP_HERE
+chmod 700 /etc/cron.weekly/baseline_checker.sh
+chown root:root /etc/cron.weekly/baseline_checker.sh
+</fix>
+    <fix rule="file_permissions_extended_etc_news_nnrp_access" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/news/nnrp.access</fix>
+    <fix rule="file_owner_etc_cron_deny" complexity="low" disruption="low" reboot="false" strategy="configure">chown root /etc/cron.deny</fix>
+    <fix rule="audit_rules_dac_modification_removexattr" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S removexattr '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S removexattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S removexattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_groupowner_etc_skel" complexity="low" disruption="low" reboot="false" strategy="configure">chown :root /etc/skel/*</fix>
+    <fix rule="gconf_gnome_screensaver_idle_activation_enabled" complexity="low" disruption="low" reboot="false" strategy="configure">gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory --type bool --set /apps/gnome-screensaver/idle_activation_enabled true &amp;&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_extended_ftpusers" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/ftpusers /etc/vsftpd.ftpusers /etc/vsftpd/ftpusers</fix>
+    <fix rule="audit_rules_dac_modification_fremovexattr" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+	AUDIT_TAG="-k perm_mod"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+	AUDIT_TAG=""
+else
+	exit
+fi
+
+if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c ' -S fremovexattr '`" = "0" ]; then
+	if [ "`uname -p`" = "x86_64" ]; then
+		echo "-a exit,always -F arch=b64 -S fremovexattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	else
+		echo "-a exit,always -F arch=b32 -S fremovexattr ${AUDIT_TAG}" &gt;&gt;${AUDIT_RULES_FILE}
+	fi
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="audit_rules_usergroup_creation" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit/audit.rules"
+elif [ -e /etc/audit.rules ]; then
+	AUDIT_RULES_FILE="/etc/audit.rules"
+else
+	exit
+fi
+
+for FILE in /usr/sbin/useradd /usr/sbin/groupadd; do
+	if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE}"`" = "0" ]; then
+		echo "-w ${FILE} -p x -k audit_account_creation" &gt;&gt;${AUDIT_RULES_FILE}
+	elif [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p [wa]*x"`" = "0" ]; then
+		SED_FILE="$(echo ${FILE} | sed 's/\//\\\//g')"
+		if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p "`" = "0" ]; then
+			sed -i "s/\(-w ${SED_FILE}\)/\1 -p x/" ${AUDIT_RULES_FILE}
+		else
+			sed -i "s/\(-w ${SED_FILE} -p \)/\1x/" ${AUDIT_RULES_FILE}
+		fi
+	fi
+done
+for FILE in /etc/group /etc/passwd /etc/gshadow /etc/shadow; do
+	if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE}"`" = "0" ]; then
+		echo "-w ${FILE} -p a -k audit_account_creation" &gt;&gt;${AUDIT_RULES_FILE}
+	elif [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p [wx]*a"`" = "0" ]; then
+		SED_FILE="$(echo ${FILE} | sed 's/\//\\\//g')"
+		if [ "`grep -v '#' ${AUDIT_RULES_FILE} | grep -c "\-w ${FILE} -p "`" = "0" ]; then
+			sed -i "s/\(-w ${SED_FILE}\)/\1 -p a/" ${AUDIT_RULES_FILE}
+		else
+			sed -i "s/\(-w ${SED_FILE} -p \)/\1a/" ${AUDIT_RULES_FILE}
+		fi
+	fi
+done
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="file_permissions_extended_man_pages" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl -RLb /usr/share/man/* /usr/share/info/* /usr/share/infopage/*
+</fix>
+    <fix rule="file_permissions_extended_etc_resolv_conf" complexity="low" disruption="low" reboot="false" strategy="configure">setfacl --remove-all /etc/resolv.conf</fix>
+    <fix rule="audit_rules_unsuccessful_file_truncate" complexity="low" disruption="low" reboot="false" strategy="configure">if [ -e /etc/audit/audit.rules ]; then
+	if [ "`grep " -S truncate " /etc/audit/audit.rules | grep -v '#' | grep -c '\-F exit=-EACCES'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S truncate -F exit=-EACCES -k access" &gt;&gt;/etc/audit/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S truncate -F exit=-EACCES -k access" &gt;&gt;/etc/audit/audit.rules
+		fi
+	fi
+	if [ "`grep " -S truncate " /etc/audit/audit.rules | grep -v '#' | grep -c '\-F exit=-EPERM'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S truncate -F exit=-EPERM -k access" &gt;&gt;/etc/audit/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S truncate -F exit=-EPERM -k access" &gt;&gt;/etc/audit/audit.rules
+		fi
+	fi
+elif [ -e /etc/audit.rules ]; then
+	if [ "`grep " -S truncate " /etc/audit.rules | grep -v '#' | grep -c '\success=0'`" = "0" ]; then
+		if [ "`uname -p`" != "x86_64" ]; then
+			echo "-a exit,always -F arch=b32 -S truncate -F success=0" &gt;&gt;/etc/audit.rules
+		else
+			echo "-a exit,always -F arch=b64 -S truncate -F success=0" &gt;&gt;/etc/audit.rules
+		fi
+	fi
+else
+	exit
+fi
+service auditd restart 1&gt;/dev/null
+</fix>
+    <fix rule="ftp_default_umask" complexity="low" disruption="low" reboot="false" strategy="configure">if [ "$(rpm -q krb5-workstation &amp;&gt;/dev/null; echo $?)" = "0" ]; then
+	if [ "$(grep server_args /etc/xinetd.d/gssftp | grep -v "#" | grep -c "\-u 077")" = "0" ]; then
+		sed -i '/server_args/s/$/ -u 077/' /etc/xinetd.d/gssftp
+	fi
+fi
+if [ "$(rpm -q vsftpd &amp;&gt;/dev/null; echo $?)" = "0" ]; then
+	if [ "$(grep -c local_umask /etc/vsftpd/vsftpd.conf)" = "0" ]; then
+		echo "local_umask=077" &gt;&gt; /etc/vsftpd/vsftpd.conf
+	else
+		sed -i '/local_umask/s/=.*/=077/' /etc/vsftpd/vsftpd.conf
+	fi
+	if [ "$(grep -c anon_umask /etc/vsftpd/vsftpd.conf)" = "0" ]; then
+		echo "anon_umask=077" &gt;&gt; /etc/vsftpd/vsftpd.conf
+	else
+		sed -i '/anon_umask/s/=.*/=077/' /etc/vsftpd/vsftpd.conf
+	fi
+fi
+</fix>
+    <fix rule="file_permissions_extended_smtp_logs" complexity="low" disruption="low" reboot="false" strategy="configure">egrep "(\*.crit|mail\.[^n][^/]*)" /etc/syslog.conf | sed 's/^[^/]*//' | xargs setfacl --remove-all</fix>
+    <fix rule="file_groupowner_etc_shadow" complexity="low" disruption="low" reboot="false" strategy="configure">chgrp root /etc/shadow</fix>
+    <fix rule="file_permissions_extended_home_files" complexity="low" disruption="low" reboot="false" strategy="configure">find /home -type f 2&gt;/dev/null | xargs setfacl --remove-all</fix>
+  </fix-group>
+</fix-content>

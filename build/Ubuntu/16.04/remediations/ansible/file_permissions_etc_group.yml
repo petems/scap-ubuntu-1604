@@ -1,0 +1,11 @@
+# platform = Red Hat Enterprise Linux 6, Red Hat Enterprise Linux 7, multi_platform_fedora, Debian 8
+# reboot = false
+# strategy = configure
+# complexity = low
+# disruption = low
+- name: Ensure permission 0644 on /etc/group
+  file:
+    path="{{item}}"
+    mode=0644
+  with_items:
+    - /etc/group

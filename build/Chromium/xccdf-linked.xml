@@ -1,0 +1,2952 @@
+<Benchmark xmlns="http://checklists.nist.gov/xccdf/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="CHROMIUM" resolved="1" xml:lang="en-US" style="SCAP_1.1">
+  <status date="2017-03-07">draft</status>
+  <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Guide to the Secure Configuration of Google Chromium</title>
+  <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">This guide presents a catalog of security-relevant
+configuration settings for Google Chromium. It is a rendering of
+content structured in the eXtensible Configuration Checklist Description Format (XCCDF)
+in order to support security automation.  The SCAP content is
+is available in the <xhtml:code>scap-security-guide</xhtml:code> package which is developed at
+<a xmlns="http://www.w3.org/1999/xhtml" href="https://www.open-scap.org/security-policies/scap-security-guide">https://www.open-scap.org/security-policies/scap-security-guide</a>.
+<br xmlns="http://www.w3.org/1999/xhtml"/>
+<br xmlns="http://www.w3.org/1999/xhtml"/>
+Providing system administrators with such guidance informs them how to securely
+configure systems under their control in a variety of network roles. Policy
+makers and baseline creators can use this catalog of settings, with its
+associated references to higher-level security control catalogs, in order to
+assist them in security baseline creation. This guide is a <i xmlns="http://www.w3.org/1999/xhtml">catalog, not a
+checklist,</i> and satisfaction of every item is not likely to be possible or
+sensible in many operational scenarios. However, the XCCDF format enables
+granular selection and adjustment of settings, and their association with OVAL
+and OCIL content provides an automated checking capability. Transformations of
+this document, and its associated automated checking content, are capable of
+providing baselines that meet a diverse set of policy objectives. Some example
+XCCDF <i xmlns="http://www.w3.org/1999/xhtml">Profiles</i>, which are selections of items that form checklists and
+can be used as baselines, are available with this guide. They can be
+processed, in an automated fashion, with tools that support the Security
+Content Automation Protocol (SCAP). The DISA STIG for Google Chromium,
+which provides required settings for US Department of Defense systems, is
+one example of a baseline created from this guidance.
+</description>
+  <notice xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US" id="terms_of_use">Do not attempt to implement any of the settings in
+this guide without first testing them in a non-operational environment. The
+creators of this guidance assume no responsibility whatsoever for its use by
+other parties, and makes no guarantees, expressed or implied, about its
+quality, reliability, or any other characteristic.</notice>
+  <front-matter xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+    <p xmlns="http://www.w3.org/1999/xhtml">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Layer_1" xml:space="preserve" height="140px" viewBox="30 100 330 150" width="350px" version="1.1" y="0px" x="0px" enable-background="new 30 100 330 150">
+        <g fill="#3A3B3B">
+          <path d="m197.1 150.3s-10.1-1.2-14.4-1.2c-7.2 0-11.0 2.6-11.0 8.3 0 6.6 3.5 7.7 12.3 9.6 10.1 2.3 14.5 4.7 14.5 13.6 0 11.2-6.1 15.6-16.1 15.6-6.0 0-16.0-1.6-16.0-1.6l0.6-4.7s9.9 1.3 15.1 1.3c7.2 0 10.8-3.1 10.8-10.2 0-5.7-3.0-7.3-11.2-8.9-10.4-2.3-15.7-4.7-15.7-14.4 0-9.8 6.4-13.6 16.3-13.6 6.0 0 15.3 1.5 15.3 1.5l-0.5 4.8z"/>
+          <path d="m238.7 194.6c-3.6 0.7-9.1 1.5-13.9 1.5-15.1 0-18.5-9.2-18.5-25.9 0-17.1 3.3-26.1 18.5-26.1 5.2 0 10.7 1.0 13.9 1.6l-0.2 4.7c-3.3-0.6-9.2-1.3-13.1-1.3-11.2 0-13.2 6.7-13.2 21.1 0 14.1 1.8 20.8 13.4 20.8 4.1 0 9.5-0.7 13.0-1.3l0.2 4.8z"/>
+          <path d="m257.5 144.9h12.3l13.9 50.5h-5.6l-3.7-13.0h-21.6l-3.7 13.0h-5.5l13.9-50.5zm-3.4 32.5h19.1l-7.7-27.7h-3.8l-7.7 27.7z"/>
+          <path d="m297.2 178.4v17.0h-5.6v-50.5h18.5c11.0 0 16.1 5.3 16.1 16.3 0 11.0-5.1 17.2-16.1 17.2h-12.9zm12.8-5.0c7.4 0 10.4-4.5 10.4-12.3 0-7.7-3.1-11.3-10.4-11.3h-12.8v23.6h12.8z"/>
+        </g>
+        <g fill="#676767">
+          <path d="m176.8 211.2s-2.8-0.3-4.0-0.3c-1.5 0-2.2 0.5-2.2 1.4 0 0.9 0.5 1.2 2.8 1.9 2.9 0.9 3.8 1.8 3.8 4.0 0 3.0-2.0 4.3-4.7 4.3-1.9 0-4.5-0.6-4.5-0.6l0.3-2.1s2.7 0.4 4.1 0.4c1.5 0 2.1-0.7 2.1-1.8 0-0.8-0.5-1.2-2.4-1.8-3.1-0.9-4.2-1.9-4.2-4.1 0-2.8 1.9-4.0 4.6-4.0 1.8 0 4.5 0.5 4.5 0.5l-0.2 2.2z"/>
+          <path d="m180.6 208.7h8.8v2.4h-6.0v3.2h4.8v2.4h-4.9v3.3h6.0v2.4h-8.8v-13.6z"/>
+          <path d="m201.2 222.1c-0.9 0.2-2.7 0.5-4.0 0.5-4.2 0-5.2-2.3-5.2-7.0 0-5.2 1.2-7.0 5.2-7.0 1.4 0 3.1 0.3 4.0 0.5l-0.1 2.2c-0.9-0.1-2.6-0.3-3.5-0.3-2.1 0-2.8 0.7-2.8 4.6 0 3.7 0.5 4.6 2.8 4.6 0.9 0 2.6-0.2 3.4-0.3l0.1 2.3z"/>
+          <path d="m209.5 220.2c1.6 0 2.4-0.8 2.4-2.4v-9.1h2.8v9.0c0 3.4-1.8 4.8-5.2 4.8-3.4 0-5.2-1.4-5.2-4.8v-9.0h2.8v9.1c0 1.6 0.8 2.4 2.4 2.4z"/>
+          <path d="m221.3 217.8v4.6h-2.8v-13.6h5.3c3.1 0 4.8 1.4 4.8 4.5 0 1.9-0.8 3.1-2.0 3.9l1.9 5.2h-3.0l-1.6-4.6h-2.7zm2.5-6.7h-2.5v4.3h2.6c1.4 0 1.9-1.0 1.9-2.2 0-1.3-0.7-2.2-2.0-2.2z"/>
+          <path d="m231.9 208.7h2.8v13.6h-2.8v-13.6z"/>
+          <path d="m237.4 208.7h10.0v2.4h-3.6v11.2h-2.8v-11.2h-3.6v-2.4z"/>
+          <path d="m255.7 222.3h-2.8v-5.5l-4.2-8.1h3.1l2.5 5.4 2.5-5.4h3.1l-4.2 8.1v5.5z"/>
+          <path d="m273.4 215.1h4.0v7.1s-2.9 0.5-4.6 0.5c-4.4 0-5.6-2.5-5.6-7.0 0-5.0 1.4-7.0 5.5-7.0 2.1 0 4.7 0.6 4.7 0.6l-0.1 2.1s-2.4-0.3-4.2-0.3c-2.4 0-3.1 0.8-3.1 4.6 0 3.6 0.5 4.6 3.0 4.6 0.8 0 1.7-0.1 1.7-0.1v-2.6h-1.2v-2.4z"/>
+          <path d="m286 220.2c1.6 0 2.4-0.8 2.4-2.4v-9.1h2.8v9.0c0 3.4-1.8 4.8-5.2 4.8s-5.2-1.4-5.2-4.8v-9.0h2.8v9.1c0 1.6 0.8 2.4 2.4 2.4z"/>
+          <path d="m295.0 208.7h2.8v13.6h-2.8v-13.6z"/>
+          <path d="m301.8 222.3v-13.6h4.6c4.7 0 5.8 2.0 5.6 6.5 0 4.6-0.9 7.1-5.8 7.1h-4.6zm4.6-11.2h-1.8v8.8h1.8c2.7 0 2.9-1.6 2.9-4.7 0-3.0-0.3-4.1-3.0-4.1z"/>
+          <path d="m315.5 208.7h8.8v2.4h-6.0v3.2h4.8v2.4h-4.8v3.3h6.0v2.4h-8.8v-13.6z"/>
+        </g>
+        <path d="m116.0 204.9h-2.8c-1.5 0-2.8 1.2-2.8 2.7v19.2c0 1.5 1.3 2.7 2.8 2.7h27.9c1.5 0 2.8-1.2 2.8-2.7v-19.2c0-1.5-1.3-2.7-2.8-2.7h-2.8v-8.2c0-6.1-5.0-11.0-11.2-11.0-6.2 0-11.2 4.9-11.2 11.0v8.2zm5.6-8.2c0-3.0 2.5-5.5 5.6-5.4 3.1 0 5.6 2.4 5.6 5.5v8.2h-11.2v-8.2z" fill="#6D0B2B"/>
+        <g fill="#AD1D3F">
+          <path d="m106.4 214.7c-16.4 11.4-37.5 7.8-50.0-3.4l11.9-11.7c2.3-1.9 3.4-5.4 1.2-8.8-0.1-0.1-6.7-11.0 2.3-19.8 7.3-7.2 17.8-5.8 23.3-0.3 3.2 3.1 4.9 7.1 4.9 11.4v0.1c0 4.3-1.8 8.5-5.1 11.7-4.0 3.9-9.6 5.4-15.4 4.1-2.1-0.5-4.3 0.8-4.8 2.9-0.5 2.1 0.8 4.2 2.9 4.7 8.4 2.0 16.9-0.3 22.8-6.1 4.9-4.8 7.5-10.9 7.4-17.4-0.0-6.3-2.6-12.3-7.3-16.8-8.2-8.1-23.8-10.3-34.5 0.3-10.7 10.5-6.6 23.8-3.7 28.8l-12.8 12.6c-2.9 2.9-2.3 6.6-0.2 8.7 15.4 15.2 38.7 17.9 56.9 8.2l-0.0-9.1z"/>
+          <path d="m43.9 188.4c-1.1-7.5-1.1-21.8 11.2-33.9 8.0-7.9 18.5-12.0 29.5-11.7 10.2 0.3 20.1 4.5 27.1 11.4 7.6 7.4 11.8 17.3 11.9 27.8v0.1c1.16-0.3 2.4-0.4 3.6-0.4 1.5 0 2.9 0.2 4.3 0.6 0-0.1 0.0-0.2 0.0-0.3-0.1-12.5-5.2-24.3-14.2-33.2-8.4-8.3-20.2-13.3-32.4-13.7-13.2-0.5-25.8 4.5-35.4 14.0-9.1 8.9-14.0 20.8-14.0 33.3 0 2.4 0.2 4.8 0.5 7.2 0.6 4.0 1.8 8.1 3.7 12.2 0.9 2.0 3.2 2.8 5.2 1.9 2.0-0.9 2.9-3.1 2.0-5.1-1.5-3.3-2.6-6.8-3.1-10.1z"/>
+        </g>
+        <circle cy="218.49" cx="127.26" r="3.233" fill="#fff"/>
+      </svg>
+    </p>
+  </front-matter>
+  <rear-matter xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Red Hat and Red Hat Enterprise Linux are either registered
+trademarks or trademarks of Red Hat, Inc. in the United States and other
+countries. All other names are registered trademarks or trademarks of their
+respective companies.</rear-matter>
+  <platform idref="cpe:/a:google:chromium-browser"/>
+  <version update="https://github.com/OpenSCAP/scap-security-guide/releases/latest">0.1.31</version>
+  <metadata xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <dc:publisher xmlns:dc="http://purl.org/dc/elements/1.1/">SCAP Security Guide Project</dc:publisher>
+    <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">SCAP Security Guide Project</dc:creator>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Gabe Alford &lt;redhatrises@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Christopher Anderson &lt;cba@fedoraproject.org&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Chuck Atkins &lt;chuck.atkins@kitware.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Molly Jo Bault &lt;Molly.Jo.Bault@ballardtech.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Joseph Bisch &lt;joseph.bisch@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Jeffrey Blank &lt;blank@eclipse.ncsc.mil&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Blake Burkhart &lt;blake.burkhart@us.af.mil&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Patrick Callahan &lt;pmc@patrickcallahan.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Carboni &lt;ncarboni@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Frank Caviggia &lt;fcaviggi@ra.iad.redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Eric Christensen &lt;echriste@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Caleb Cooper &lt;coopercd@ornl.gov&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Maura Dailey &lt;maura@eclipse.ncsc.mil&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Klaas Demter &lt;demter@atix.de&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Jean-Baptiste Donnette &lt;jean-baptiste.donnette@epita.fr&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">drax &lt;applezip@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Greg Elin &lt;gregelin@gitmachines.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Andrew Gilmore &lt;agilmore2@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Joshua Glemza &lt;jglemza@nasa.gov&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Steve Grubb &lt;sgrubb@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Trey Henefield &lt;thenefield@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Robin Price II &lt;robin@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Jeremiah Jahn &lt;jeremiah@goodinassociates.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Stephan Joerrens &lt;Stephan.Joerrens@fiduciagad.de&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Yuli Khodorkovskiy &lt;ykhodorkovskiy@tresys.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Luke Kordell &lt;luke.t.kordell@lmco.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">kspargur &lt;kspargur@kspargur.csb&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Fen Labalme &lt;fen@civicactions.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Jan Lieskovsky &lt;jlieskov@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">&#352;imon Luka&#353;&#237;k &lt;slukasik@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Jamie Lorwey Martin &lt;jlmartin@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Michael McConachie &lt;michael@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Rodney Mercer &lt;rmercer@harris.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Brian Millett &lt;bmillett@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">mmosel &lt;mmosel@kde.example.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Zbynek Moravec &lt;zmoravec@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Kazuo Moriwaka &lt;moriwaka@users.noreply.github.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Michael Moseley &lt;michael@eclipse.ncsc.mil&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Joe Nall &lt;joe@nall.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Michele Newman &lt;mnewman@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Kaustubh Padegaonkar &lt;theTuxRacer@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Michael Palmiotto &lt;mpalmiotto@tresys.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">pcactr &lt;paul.c.arnold4.ctr@mail.mil&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Kenneth Peeples &lt;kennethwpeeples@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Frank Lin PIAT &lt;fpiat@klabs.be&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Preisler &lt;mpreisle@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">T.O. Radzy Radzykewycz &lt;radzy@windriver.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Rick Renshaw &lt;Richard_Renshaw@xtoenergy.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Chris Reynolds &lt;c.reynolds82@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Pat Riehecky &lt;riehecky@fnal.gov&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Joshua Roys &lt;roysjosh@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">rrenshaw &lt;bofh69@yahoo.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Ray Shaw (Cont ARL/CISD) rvshaw &lt;rvshaw@esme.arl.army.mil&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Willy Santos &lt;wsantos@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Gautam Satish &lt;gautams@hpe.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Watson Sato &lt;wsato@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Satoru SATOH &lt;satoru.satoh@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Spencer Shimko &lt;sshimko@tresys.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Francisco Slavin &lt;fslavin@tresys.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">David Smith &lt;dsmith@eclipse.ncsc.mil&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Kevin Spargur &lt;kspargur@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Kenneth Stailey &lt;kstailey.lists@gmail.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Leland Steinke &lt;leland.j.steinke.ctr@mail.mil&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Philippe Thierry &lt;phil@reseau-libre.net&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Paul Tittle &lt;ptittle@cmf.nrl.navy.mil&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Jeb Trayer &lt;jeb.d.trayer@uscg.mil&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Shawn Wells &lt;shawn@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Rob Wilmoth &lt;rwilmoth@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Lucas Yamanishi &lt;lucas.yamanishi@onyxpoint.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Kevin Zimmerman &lt;kevin.zimmerman@kitware.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Jan &#268;ern&#253; &lt;jcerny@redhat.com&gt;</dc:contributor>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/">Michal &#352;ruba&#345; &lt;msrubar@redhat.com&gt;</dc:contributor>
+    <dc:source xmlns:dc="http://purl.org/dc/elements/1.1/">https://github.com/OpenSCAP/scap-security-guide/releases/latest</dc:source>
+  </metadata>
+  <model system="urn:xccdf:scoring:default"/>
+  <Profile id="stig-chromium-upstream">
+    <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Upstream STIG for Google Chromium</title>
+    <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">This profile is developed under the DoD consensus model and DISA FSO Vendor STIG process,
+serving as the upstream development environment for the Google Chromium STIG.
+
+As a result of the upstream/downstream relationship between the SCAP Security Guide project
+and the official DISA FSO STIG baseline, users should expect variance between SSG and DISA FSO content.
+For official DISA FSO STIG content, refer to http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx.
+
+While this profile is packaged by Red Hat as part of the SCAP Security Guide package, please note
+that commercial support of this SCAP content is NOT available. This profile is provided as example
+SCAP content with no endorsement for suitability or production readiness. Support for this
+profile is provided by the upstream SCAP Security Guide community on a best-effort basis. The
+upstream project homepage is https://www.open-scap.org/security-policies/scap-security-guide/.
+</description>
+    <select idref="chromium_policy_file" selected="true"/>
+    <select idref="chromium_disable_firewall_traversal" selected="true"/>
+    <select idref="chromium_block_desktop_notifications" selected="true"/>
+    <select idref="chromium_disable_popups" selected="true"/>
+    <select idref="chromium_disallow_location_tracking" selected="true"/>
+    <select idref="chromium_blacklist_extension_installation" selected="true"/>
+    <select idref="chromium_extension_whitelist" selected="true"/>
+    <select idref="chromium_default_search_provider_name" selected="true"/>
+    <select idref="chromium_enable_encrypted_searching" selected="true"/>
+    <select idref="chromium_default_search_provider" selected="true"/>
+    <select idref="chromium_disable_cleartext_passwords" selected="true"/>
+    <select idref="chromium_disable_password_manager" selected="true"/>
+    <select idref="chromium_http_authentication" selected="true"/>
+    <select idref="chromium_disable_outdated_plugins" selected="true"/>
+    <select idref="chromium_plugins_require_authorization" selected="true"/>
+    <select idref="chromium_disable_thirdparty_cookies" selected="true"/>
+    <select idref="chromium_disable_background_processing" selected="true"/>
+    <select idref="chromium_disable_3d_graphics_api" selected="true"/>
+    <select idref="chromium_disable_google_sync" selected="true"/>
+    <select idref="chromium_disable_protocol_schemas" selected="true"/>
+    <select idref="chromium_disable_autocomplete" selected="true"/>
+    <select idref="chromium_disable_cloud_print_sharing" selected="true"/>
+    <select idref="chromium_disable_network_prediction" selected="true"/>
+    <select idref="chromium_disable_metrics_reporting" selected="true"/>
+    <select idref="chromium_disable_search_suggestions" selected="true"/>
+    <select idref="chromium_disable_saved_passwords" selected="true"/>
+    <select idref="chromium_disable_incognito_mode" selected="true"/>
+    <select idref="chromium_disable_plugin_blacklist" selected="true"/>
+    <select idref="chromium_enable_approved_plugins" selected="true"/>
+    <select idref="chromium_disable_automatic_installation" selected="true"/>
+    <select idref="chromium_check_cert_revocation" selected="true"/>
+    <select idref="chromium_enable_safe_browsing" selected="true"/>
+    <select idref="chromium_enable_browser_history" selected="true"/>
+    <select idref="chromium_default_block_plugins" selected="true"/>
+    <select idref="chromium_disable_session_cookies" selected="true"/>
+    <select idref="chromium_trusted_home_page" selected="true"/>
+    <select idref="chromium_whitelist_plugin_urls" selected="true"/>
+    <refine-value idref="var_default_search_provider_name" selector="google"/>
+    <refine-value idref="var_url_blacklist" selector="javascript"/>
+    <refine-value idref="var_enable_encrypted_searching" selector="google"/>
+    <refine-value idref="var_extension_whitelist" selector="none"/>
+    <refine-value idref="var_auth_schema" selector="negotiate"/>
+    <refine-value idref="var_trusted_home_page" selector="blank"/>
+  </Profile>
+  <Group id="remediation_functions">
+    <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation functions used by the SCAP Security Guide Project</title>
+    <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">XCCDF form of the various remediation functions as used by
+remediation scripts from the SCAP Security Guide Project</description>
+    <Value id="function_fix_audit_syscall_rule" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function to fix syscall audit rule for given system call</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Function to fix syscall audit rule for given system call. It is
+based on example audit syscall rule definitions as outlined in
+/usr/share/doc/audit-2.3.7/stig.rules file provided with the audit package. It
+will combine multiple system calls belonging to the same syscall group into one
+audit rule (rather than to create audit rule per different system call) to
+avoid audit infrastructure performance penalty in the case of
+'one-audit-rule-definition-per-one-system-call'. See:
+
+	https://www.redhat.com/archives/linux-audit/2014-November/msg00009.html
+
+for further details.
+
+Expects five arguments (each of them is required) in the form of:
+  * audit tool                          tool used to load audit rules,
+                                        either 'auditctl', or 'augenrules
+  * audit rules' pattern                audit rule skeleton for same syscall
+  * syscall group                       greatest common string this rule shares
+                                        with other rules from the same group
+  * architecture                        architecture this rule is intended for
+  * full form of new rule to add        expected full form of audit rule as to
+                                        be added into audit.rules file
+
+Note: The 2-th up to 4-th arguments are used to determine how many existing
+audit rules will be inspected for resemblance with the new audit rule
+(5-th argument) the function is going to add. The rule's similarity check
+is performed to optimize audit.rules definition (merge syscalls of the same
+group into one rule) to avoid the "single-syscall-per-audit-rule" performance
+penalty.
+
+Example call:
+
+  PATTERN="-a always,exit -F arch=$ARCH -S .* -F auid&gt;=500 -F auid!=4294967295 -k delete"
+  # Use escaped BRE regex to specify rule group
+  GROUP="\(rmdir\|unlink\|rename\)"
+  FULL_RULE="-a always,exit -F arch=$ARCH -S rmdir -S unlink -S unlinkat -S rename -S renameat -F auid&gt;=500 -F auid!=4294967295 -k delete"
+  fix_audit_syscall_rule "auditctl" "$PATTERN" "$GROUP" "$ARCH" "$FULL_RULE"
+</description>
+      <value>
+function fix_audit_syscall_rule {
+
+# Load function arguments into local variables
+local tool="$1"
+local pattern="$2"
+local group="$3"
+local arch="$4"
+local full_rule="$5"
+
+# Check sanity of the input
+if [ $# -ne "5" ]
+then
+        echo "Usage: fix_audit_syscall_rule 'tool' 'pattern' 'group' 'arch' 'full rule'"
+        echo "Aborting."
+        exit 1
+fi
+
+# Create a list of audit *.rules files that should be inspected for presence and correctness
+# of a particular audit rule. The scheme is as follows:
+#
+# -----------------------------------------------------------------------------------------
+#  Tool used to load audit rules | Rule already defined  |  Audit rules file to inspect    |
+# -----------------------------------------------------------------------------------------
+#        auditctl                |     Doesn't matter    |  /etc/audit/audit.rules         |
+# -----------------------------------------------------------------------------------------
+#        augenrules              |          Yes          |  /etc/audit/rules.d/*.rules     |
+#        augenrules              |          No           |  /etc/audit/rules.d/$key.rules  |
+# -----------------------------------------------------------------------------------------
+#
+declare -a files_to_inspect
+
+# First check sanity of the specified audit tool
+if [ "$tool" != 'auditctl' ] &amp;&amp; [ "$tool" != 'augenrules' ]
+then
+        echo "Unknown audit rules loading tool: $1. Aborting."
+        echo "Use either 'auditctl' or 'augenrules'!"
+        exit 1
+# If audit tool is 'auditctl', then add '/etc/audit/audit.rules'
+# file to the list of files to be inspected
+elif [ "$tool" == 'auditctl' ]
+then
+        files_to_inspect=("${files_to_inspect[@]}" '/etc/audit/audit.rules' )
+# If audit tool is 'augenrules', then check if the audit rule is defined
+# If rule is defined, add '/etc/audit/rules.d/*.rules' to the list for inspection
+# If rule isn't defined yet, add '/etc/audit/rules.d/$key.rules' to the list for inspection
+elif [ "$tool" == 'augenrules' ]
+then
+        # Extract audit $key from audit rule so we can use it later
+        key=$(expr "$full_rule" : '.*-k[[:space:]]\([^[:space:]]\+\)')
+        # Check if particular audit rule is already defined
+        IFS=$'\n' matches=($(sed -s -n -e "/${pattern}/!d" -e "/${arch}/!d" -e "/${group}/!d;F" /etc/audit/rules.d/*.rules))
+        # Reset IFS back to default
+        unset $IFS
+        for match in "${matches[@]}"
+        do
+                files_to_inspect=("${files_to_inspect[@]}" "${match}")
+        done
+        # Case when particular rule isn't defined in /etc/audit/rules.d/*.rules yet
+        if [ ${#files_to_inspect[@]} -eq "0" ]
+        then
+                files_to_inspect="/etc/audit/rules.d/$key.rules"
+                if [ ! -e "$files_to_inspect" ]
+                then
+                        touch "$files_to_inspect"
+                        chmod 0640 "$files_to_inspect"
+                fi
+        fi
+fi
+
+#
+# Indicator that we want to append $full_rule into $audit_file by default
+local append_expected_rule=0
+
+for audit_file in "${files_to_inspect[@]}"
+do
+
+        # Filter existing $audit_file rules' definitions to select those that:
+        # * follow the rule pattern, and
+        # * meet the hardware architecture requirement, and
+        # * are current syscall group specific
+        IFS=$'\n' existing_rules=($(sed -e "/${pattern}/!d" -e "/${arch}/!d" -e "/${group}/!d"  "$audit_file"))
+        # Reset IFS back to default
+        unset $IFS
+
+        # Process rules found case-by-case
+        for rule in "${existing_rules[@]}"
+        do
+                # Found rule is for same arch &amp; key, but differs (e.g. in count of -S arguments)
+                if [ "${rule}" != "${full_rule}" ]
+                then
+                        # If so, isolate just '(-S \w)+' substring of that rule
+                        rule_syscalls=$(echo $rule | grep -o -P '(-S \w+ )+')
+                        # Check if list of '-S syscall' arguments of that rule is subset
+                        # of '-S syscall' list of expected $full_rule
+                        if grep -q -- "$rule_syscalls" &lt;&lt;&lt; "$full_rule"
+                        then
+                                # Rule is covered (i.e. the list of -S syscalls for this rule is
+                                # subset of -S syscalls of $full_rule =&gt; existing rule can be deleted
+                                # Thus delete the rule from audit.rules &amp; our array
+                                sed -i -e "/$rule/d" "$audit_file"
+                                existing_rules=("${existing_rules[@]//$rule/}")
+                        else
+                                # Rule isn't covered by $full_rule - it besides -S syscall arguments
+                                # for this group contains also -S syscall arguments for other syscall
+                                # group. Example: '-S lchown -S fchmod -S fchownat' =&gt; group='chown'
+                                # since 'lchown' &amp; 'fchownat' share 'chown' substring
+                                # Therefore:
+                                # * 1) delete the original rule from audit.rules
+                                # (original '-S lchown -S fchmod -S fchownat' rule would be deleted)
+                                # * 2) delete the -S syscall arguments for this syscall group, but
+                                # keep those not belonging to this syscall group
+                                # (original '-S lchown -S fchmod -S fchownat' would become '-S fchmod'
+                                # * 3) append the modified (filtered) rule again into audit.rules
+                                # if the same rule not already present
+                                #
+                                # 1) Delete the original rule
+                                sed -i -e "/$rule/d" "$audit_file"
+                                # 2) Delete syscalls for this group, but keep those from other groups
+                                # Convert current rule syscall's string into array splitting by '-S' delimiter
+                                IFS=$'-S' read -a rule_syscalls_as_array &lt;&lt;&lt; "$rule_syscalls"
+                                # Reset IFS back to default
+                                unset $IFS
+                                # Declare new empty string to hold '-S syscall' arguments from other groups
+                                new_syscalls_for_rule=''
+                                # Walk through existing '-S syscall' arguments
+                                for syscall_arg in "${rule_syscalls_as_array[@]}"
+                                do
+                                        # Skip empty $syscall_arg values
+                                        if [ "$syscall_arg" == '' ]
+                                        then
+                                                continue
+                                        fi
+                                        # If the '-S syscall' doesn't belong to current group add it to the new list
+                                        # (together with adding '-S' delimiter back for each of such item found)
+                                        if grep -q -v -- "$group" &lt;&lt;&lt; "$syscall_arg"
+                                        then
+                                                new_syscalls_for_rule="$new_syscalls_for_rule -S $syscall_arg"
+                                        fi
+                                done
+                                # Replace original '-S syscall' list with the new one for this rule
+                                updated_rule=${rule//$rule_syscalls/$new_syscalls_for_rule}
+                                # Squeeze repeated whitespace characters in rule definition (if any) into one
+                                updated_rule=$(echo "$updated_rule" | tr -s '[:space:]')
+                                # 3) Append the modified / filtered rule again into audit.rules
+                                #    (but only in case it's not present yet to prevent duplicate definitions)
+                                if ! grep -q -- "$updated_rule" "$audit_file"
+                                then
+                                        echo "$updated_rule" &gt;&gt; "$audit_file"
+                                fi
+                        fi
+                else
+                        # $audit_file already contains the expected rule form for this
+                        # architecture &amp; key =&gt; don't insert it second time
+                        append_expected_rule=1
+                fi
+        done
+
+        # We deleted all rules that were subset of the expected one for this arch &amp; key.
+        # Also isolated rules containing system calls not from this system calls group.
+        # Now append the expected rule if it's not present in $audit_file yet
+        if [[ ${append_expected_rule} -eq "0" ]]
+        then
+                echo "$full_rule" &gt;&gt; "$audit_file"
+        fi
+done
+
+}
+</value>
+    </Value>
+    <Value id="function_fix_audit_watch_rule" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function to fix audit file system object watch rule for given path</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Function to fix audit file system object watch rule for given path:
+  * if rule exists, also verifies the -w bits match the requirements
+  * if rule doesn't exist yet, appends expected rule form to $files_to_inspect
+    audit rules file, depending on the tool which was used to load audit rules
+
+Expects four arguments (each of them is required) in the form of:
+  * audit tool                          tool used to load audit rules,
+                                        either 'auditctl', or 'augenrules'
+  * path                                value of -w audit rule's argument
+  * required access bits                value of -p audit rule's argument
+  * key                                 value of -k audit rule's argument
+
+Example call:
+
+  fix_audit_watch_rule "auditctl" "/etc/localtime" "wa" "audit_time_rules"
+</description>
+      <value>
+function fix_audit_watch_rule {
+
+# Load function arguments into local variables
+local tool="$1"
+local path="$2"
+local required_access_bits="$3"
+local key="$4"
+
+# Check sanity of the input
+if [ $# -ne "4" ]
+then
+        echo "Usage: fix_audit_watch_rule 'tool' 'path' 'bits' 'key'"
+        echo "Aborting."
+        exit 1
+fi
+
+# Create a list of audit *.rules files that should be inspected for presence and correctness
+# of a particular audit rule. The scheme is as follows:
+#
+# -----------------------------------------------------------------------------------------
+# Tool used to load audit rules | Rule already defined  |  Audit rules file to inspect    |
+# -----------------------------------------------------------------------------------------
+#       auditctl                |     Doesn't matter    |  /etc/audit/audit.rules         |
+# -----------------------------------------------------------------------------------------
+#       augenrules              |          Yes          |  /etc/audit/rules.d/*.rules     |
+#       augenrules              |          No           |  /etc/audit/rules.d/$key.rules  |
+# -----------------------------------------------------------------------------------------
+declare -a files_to_inspect
+
+# Check sanity of the specified audit tool
+if [ "$tool" != 'auditctl' ] &amp;&amp; [ "$tool" != 'augenrules' ]
+then
+        echo "Unknown audit rules loading tool: $1. Aborting."
+        echo "Use either 'auditctl' or 'augenrules'!"
+        exit 1
+# If the audit tool is 'auditctl', then add '/etc/audit/audit.rules'
+# into the list of files to be inspected
+elif [ "$tool" == 'auditctl' ]
+then
+        files_to_inspect=("${files_to_inspect[@]}" '/etc/audit/audit.rules')
+# If the audit is 'augenrules', then check if rule is already defined
+# If rule is defined, add '/etc/audit/rules.d/*.rules' to list of files for inspection.
+# If rule isn't defined, add '/etc/audit/rules.d/$key.rules' to list of files for inspection.
+elif [ "$tool" == 'augenrules' ]
+then
+        # Case when particular audit rule is already defined in some of /etc/audit/rules.d/*.rules file
+        # Get pair -- filepath : matching_row into @matches array
+        IFS=$'\n' matches=($(grep -P "[\s]*-w[\s]+$path" /etc/audit/rules.d/*.rules))
+        # Reset IFS back to default
+        unset $IFS
+        # For each of the matched entries
+        for match in "${matches[@]}"
+        do
+                # Extract filepath from the match
+                rulesd_audit_file=$(echo $match | cut -f1 -d ':')
+                # Append that path into list of files for inspection
+                files_to_inspect=("${files_to_inspect[@]}" "$rulesd_audit_file")
+        done
+        # Case when particular audit rule isn't defined yet
+        if [ ${#files_to_inspect[@]} -eq "0" ]
+        then
+                # Append '/etc/audit/rules.d/$key.rules' into list of files for inspection
+                files_to_inspect="/etc/audit/rules.d/$key.rules"
+                # If the $key.rules file doesn't exist yet, create it with correct permissions
+                if [ ! -e "$files_to_inspect" ]
+                then
+                        touch "$files_to_inspect"
+                        chmod 0640 "$files_to_inspect"
+                fi
+        fi
+fi
+
+# Finally perform the inspection and possible subsequent audit rule
+# correction for each of the files previously identified for inspection
+for audit_rules_file in "${files_to_inspect[@]}"
+do
+
+        # Check if audit watch file system object rule for given path already present
+        if grep -q -P -- "[\s]*-w[\s]+$path" "$audit_rules_file"
+        then
+                # Rule is found =&gt; verify yet if existing rule definition contains
+                # all of the required access type bits
+
+                # Escape slashes in path for use in sed pattern below
+                local esc_path=${path//$'/'/$'\/'}
+                # Define BRE whitespace class shortcut
+                local sp="[[:space:]]"
+                # Extract current permission access types (e.g. -p [r|w|x|a] values) from audit rule
+                current_access_bits=$(sed -ne "s/$sp*-w$sp\+$esc_path$sp\+-p$sp\+\([rxwa]\{1,4\}\).*/\1/p" "$audit_rules_file")
+                # Split required access bits string into characters array
+                # (to check bit's presence for one bit at a time)
+                for access_bit in $(echo "$required_access_bits" | grep -o .)
+                do
+                        # For each from the required access bits (e.g. 'w', 'a') check
+                        # if they are already present in current access bits for rule.
+                        # If not, append that bit at the end
+                        if ! grep -q "$access_bit" &lt;&lt;&lt; "$current_access_bits"
+                        then
+                                # Concatenate the existing mask with the missing bit
+                                current_access_bits="$current_access_bits$access_bit"
+                        fi
+                done
+                # Propagate the updated rule's access bits (original + the required
+                # ones) back into the /etc/audit/audit.rules file for that rule
+                sed -i "s/\($sp*-w$sp\+$esc_path$sp\+-p$sp\+\)\([rxwa]\{1,4\}\)\(.*\)/\1$current_access_bits\3/" "$audit_rules_file"
+        else
+                # Rule isn't present yet. Append it at the end of $audit_rules_file file
+                # with proper key
+
+                echo "-w $path -p $required_access_bits -k $key" &gt;&gt; "$audit_rules_file"
+        fi
+done
+}
+</value>
+    </Value>
+    <Value id="function_package_command" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function to to install or uninstall packages on RHEL and Fedora systems</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Function to install or uninstall packages on RHEL and Fedora systems.
+
+Example Call(s):
+
+  package_command install aide
+  package_command remove telnet-server
+</description>
+      <value>
+function package_command {
+
+# Load function arguments into local variables
+local package_operation=$1
+local package=$2
+
+# Check sanity of the input
+if [ $# -ne "2" ]
+then
+  echo "Usage: package_command 'install/uninstall' 'rpm_package_name"
+  echo "Aborting."
+  exit 1
+fi
+
+# If dnf is installed, use dnf; otherwise, use yum
+if [ -f "/usr/bin/dnf" ] ; then
+  install_util="/usr/bin/dnf"
+else
+  install_util="/usr/bin/yum"
+fi
+
+if [ "$package_operation" != 'remove' ] ; then
+  # If the rpm is not installed, install the rpm
+  if ! /bin/rpm -q --quiet $package; then
+    $install_util -y $package_operation $package
+  fi
+else
+  # If the rpm is installed, uninstall the rpm
+  if /bin/rpm -q --quiet $package; then
+    $install_util -y $package_operation $package
+  fi
+fi
+
+}
+</value>
+    </Value>
+    <Value id="function_service_command" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function to enable/disable and start/stop services on RHEL
+and Fedora systems</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Function to enable/disable and start/stop services on RHEL and
+Fedora systems.
+
+Example Call(s):
+
+  service_command enable bluetooth
+  service_command disable bluetooth.service
+
+  Using xinetd:
+  service_command disable rsh.socket xinetd=rsh
+</description>
+      <value>
+function service_command {
+
+# Load function arguments into local variables
+local service_state=$1
+local service=$2
+local xinetd=$(echo $3 | cut -d'=' -f2)
+
+# Check sanity of the input
+if [ $# -lt "2" ]
+then
+  echo "Usage: service_command 'enable/disable' 'service_name.service'"
+  echo
+  echo "To enable or disable xinetd services add \'xinetd=service_name\'"
+  echo "as the last argument"
+  echo "Aborting."
+  exit 1
+fi
+
+# If systemctl is installed, use systemctl command; otherwise, use the service/chkconfig commands
+if [ -f "/usr/bin/systemctl" ] ; then
+  service_util="/usr/bin/systemctl"
+else
+  service_util="/sbin/service"
+  chkconfig_util="/sbin/chkconfig"
+fi
+
+# If disable is not specified in arg1, set variables to enable services.
+# Otherwise, variables are to be set to disable services.
+if [ "$service_state" != 'disable' ] ; then
+  service_state="enable"
+  service_operation="start"
+  chkconfig_state="on"
+else
+  service_state="disable"
+  service_operation="stop"
+  chkconfig_state="off"
+fi
+
+# If chkconfig_util is not empty, use chkconfig/service commands.
+if ! [ "x$chkconfig_util" = x ] ; then
+  $service_util $service $service_operation
+  $chkconfig_util --level 0123456 $service $chkconfig_state
+else
+  $service_util $service_operation $service
+  $service_util $service_state $service
+fi
+
+# Test if local variable xinetd is empty using non-bashism.
+# If empty, then xinetd is not being used.
+if ! [ "x$xinetd" = x ] ; then
+  grep -qi disable /etc/xinetd.d/$xinetd &amp;&amp; \
+
+  if ! [ "$service_operation" != 'disable' ] ; then
+    sed -i "s/disable.*/disable         = no/gI" /etc/xinetd.d/$xinetd
+  else
+    sed -i "s/disable.*/disable         = yes/gI" /etc/xinetd.d/$xinetd
+  fi
+fi
+
+}
+</value>
+    </Value>
+    <Value id="function_perform_audit_rules_privileged_commands_remediation" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function to perform remediation for 'audit_rules_privileged_commands' rule</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Function to perform remediation for 'audit_rules_privileged_commands' rule
+
+Expects two arguments:
+
+  audit_tool            tool used to load audit rules
+                        One of 'auditctl' or 'augenrules'
+
+  min_auid              Minimum original ID the user logged in with
+                        '500' for RHEL-6 and before, '1000' for RHEL-7 and after.
+
+Example Call(s):
+
+  perform_audit_rules_privileged_commands_remediation "auditctl" "500"
+  perform_audit_rules_privileged_commands_remediation "augenrules" "1000"
+</description>
+      <value>
+function perform_audit_rules_privileged_commands_remediation {
+#
+# Load function arguments into local variables
+local tool="$1"
+local min_auid="$2"
+
+# Check sanity of the input
+if [ $# -ne "2" ]
+then
+        echo "Usage: perform_audit_rules_privileged_commands_remediation 'auditctl | augenrules' '500 | 1000'"
+        echo "Aborting."
+        exit 1
+fi
+
+declare -a files_to_inspect=()
+
+# Check sanity of the specified audit tool
+if [ "$tool" != 'auditctl' ] &amp;&amp; [ "$tool" != 'augenrules' ]
+then
+        echo "Unknown audit rules loading tool: $1. Aborting."
+        echo "Use either 'auditctl' or 'augenrules'!"
+        exit 1
+# If the audit tool is 'auditctl', then:
+# * add '/etc/audit/audit.rules'to the list of files to be inspected,
+# * specify '/etc/audit/audit.rules' as the output audit file, where
+#   missing rules should be inserted
+elif [ "$tool" == 'auditctl' ]
+then
+        files_to_inspect=("/etc/audit/audit.rules")
+        output_audit_file="/etc/audit/audit.rules"
+#
+# If the audit tool is 'augenrules', then:
+# * add '/etc/audit/rules.d/*.rules' to the list of files to be inspected
+#   (split by newline),
+# * specify /etc/audit/rules.d/privileged.rules' as the output file, where
+#   missing rules should be inserted
+elif [ "$tool" == 'augenrules' ]
+then
+        IFS=$'\n' files_to_inspect=($(find /etc/audit/rules.d -maxdepth 1 -type f -name *.rules -print))
+        output_audit_file="/etc/audit/rules.d/privileged.rules"
+fi
+
+# Obtain the list of SUID/SGID binaries on the particular system (split by newline)
+# into privileged_binaries array
+IFS=$'\n' privileged_binaries=($(find / -xdev -type f -perm -4000 -o -type f -perm -2000 2&gt;/dev/null))
+
+# Keep list of SUID/SGID binaries that have been already handled within some previous iteration
+declare -a sbinaries_to_skip=()
+
+# For each found sbinary in privileged_binaries list
+for sbinary in "${privileged_binaries[@]}"
+do
+
+        # Replace possible slash '/' character in sbinary definition so we could use it in sed expressions below
+        sbinary_esc=${sbinary//$'/'/$'\/'}
+        # Check if this sbinary wasn't already handled in some of the previous iterations
+        # Return match only if whole sbinary definition matched (not in the case just prefix matched!!!)
+        if [[ $(sed -ne "/${sbinary_esc}$/p" &lt;&lt;&lt; ${sbinaries_to_skip[@]}) ]]
+        then
+                # If so, don't process it second time &amp; go to process next sbinary
+                continue
+        fi
+
+        # Reset the counter of inspected files when starting to check
+        # presence of existing audit rule for new sbinary
+        local count_of_inspected_files=0
+
+        # For each audit rules file from the list of files to be inspected
+        for afile in "${files_to_inspect[@]}"
+        do
+
+                # Search current audit rules file's content for match. Match criteria:
+                # * existing rule is for the same SUID/SGID binary we are currently processing (but
+                #   can contain multiple -F path= elements covering multiple SUID/SGID binaries)
+                # * existing rule contains all arguments from expected rule form (though can contain
+                #   them in arbitrary order)
+
+                base_search=$(sed -e "/-a always,exit/!d" -e "/-F path=${sbinary_esc}$/!d"   \
+                                  -e "/-F path=[^[:space:]]\+/!d" -e "/-F perm=.*/!d"       \
+                                  -e "/-F auid&gt;=${min_auid}/!d" -e "/-F auid!=4294967295/!d"  \
+                                  -e "/-k privileged/!d" $afile)
+
+                # Increase the count of inspected files for this sbinary
+                count_of_inspected_files=$((count_of_inspected_files + 1))
+
+                # Define expected rule form for this binary
+                expected_rule="-a always,exit -F path=${sbinary} -F perm=x -F auid&gt;=${min_auid} -F auid!=4294967295 -k privileged"
+
+                # Require execute access type to be set for existing audit rule
+                exec_access='x'
+
+                # Search current audit rules file's content for presence of rule pattern for this sbinary
+                if [[ $base_search ]]
+                then
+
+                        # Current audit rules file already contains rule for this binary =&gt;
+                        # Store the exact form of found rule for this binary for further processing
+                        concrete_rule=$base_search
+
+                        # Select all other SUID/SGID binaries possibly also present in the found rule
+                        IFS=$'\n' handled_sbinaries=($(grep -o -e "-F path=[^[:space:]]\+" &lt;&lt;&lt; $concrete_rule))
+                        IFS=$' ' handled_sbinaries=(${handled_sbinaries[@]//-F path=/})
+
+                        # Merge the list of such SUID/SGID binaries found in this iteration with global list ignoring duplicates
+                        sbinaries_to_skip=($(for i in "${sbinaries_to_skip[@]}" "${handled_sbinaries[@]}"; do echo $i; done | sort -du))
+
+                        # Separate concrete_rule into three sections using hash '#'
+                        # sign as a delimiter around rule's permission section borders
+                        concrete_rule=$(echo $concrete_rule | sed -n "s/\(.*\)\+\(-F perm=[rwax]\+\)\+/\1#\2#/p")
+
+                        # Split concrete_rule into head, perm, and tail sections using hash '#' delimiter
+                        IFS=$'#' read rule_head rule_perm rule_tail &lt;&lt;&lt;  "$concrete_rule"
+
+                        # Extract already present exact access type [r|w|x|a] from rule's permission section
+                        access_type=${rule_perm//-F perm=/}
+
+                        # Verify current permission access type(s) for rule contain 'x' (execute) permission
+                        if ! grep -q "$exec_access" &lt;&lt;&lt; "$access_type"
+                        then
+
+                                # If not, append the 'x' (execute) permission to the existing access type bits
+                                access_type="$access_type$exec_access"
+                                # Reconstruct the permissions section for the rule
+                                new_rule_perm="-F perm=$access_type"
+                                # Update existing rule in current audit rules file with the new permission section
+                                sed -i "s#${rule_head}\(.*\)${rule_tail}#${rule_head}${new_rule_perm}${rule_tail}#" $afile
+
+                        fi
+
+                # If the required audit rule for particular sbinary wasn't found yet, insert it under following conditions:
+                #
+                # * in the "auditctl" mode of operation insert particular rule each time
+                #   (because in this mode there's only one file -- /etc/audit/audit.rules to be inspected for presence of this rule),
+                #
+                # * in the "augenrules" mode of operation insert particular rule only once and only in case we have already
+                #   searched all of the files from /etc/audit/rules.d/*.rules location (since that audit rule can be defined
+                #   in any of those files and if not, we want it to be inserted only once into /etc/audit/rules.d/privileged.rules file)
+                #
+                elif [ "$tool" == "auditctl" ] || [[ "$tool" == "augenrules" &amp;&amp; $count_of_inspected_files -eq "${#files_to_inspect[@]}" ]]
+                then
+
+                        # Current audit rules file's content doesn't contain expected rule for this
+                        # SUID/SGID binary yet =&gt; append it
+                        echo $expected_rule &gt;&gt; $output_audit_file
+                fi
+
+        done
+
+done
+
+}
+</value>
+    </Value>
+    <Value id="function_populate" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function to populate environment variables needed for unit testing</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">The populate function isn't directly used by SSG at the moment but it can
+ba used for testing purposes (to verify proper work of the remediation script directly
+from the shell).</description>
+      <value>
+function populate {
+# Code to populate environment variables needed (for unit testing)
+if [ -z "${!1}" ]; then
+	echo "$1 is not defined. Exiting."
+	exit
+fi
+}
+</value>
+    </Value>
+    <Value id="function_rhel6_perform_audit_adjtimex_settimeofday_stime_remediation" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function for the 'adjtimex', 'settimeofday', and 'stime'
+audit system calls on Red Hat Enterprise Linux 6</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Perform the remediation for the 'adjtimex', 'settimeofday', and 'stime' audit
+# system calls on Red Hat Enterprise Linux 6 OS</description>
+      <value>
+function fix_audit_syscall_rule {
+
+# Load function arguments into local variables
+local tool="$1"
+local pattern="$2"
+local group="$3"
+local arch="$4"
+local full_rule="$5"
+
+# Check sanity of the input
+if [ $# -ne "5" ]
+then
+        echo "Usage: fix_audit_syscall_rule 'tool' 'pattern' 'group' 'arch' 'full rule'"
+        echo "Aborting."
+        exit 1
+fi
+
+# Create a list of audit *.rules files that should be inspected for presence and correctness
+# of a particular audit rule. The scheme is as follows:
+# 
+# -----------------------------------------------------------------------------------------
+#  Tool used to load audit rules | Rule already defined  |  Audit rules file to inspect    |
+# -----------------------------------------------------------------------------------------
+#        auditctl                |     Doesn't matter    |  /etc/audit/audit.rules         |
+# -----------------------------------------------------------------------------------------
+#        augenrules              |          Yes          |  /etc/audit/rules.d/*.rules     |
+#        augenrules              |          No           |  /etc/audit/rules.d/$key.rules  |
+# -----------------------------------------------------------------------------------------
+#
+declare -a files_to_inspect
+
+# First check sanity of the specified audit tool
+if [ "$tool" != 'auditctl' ] &amp;&amp; [ "$tool" != 'augenrules' ]
+then
+        echo "Unknown audit rules loading tool: $1. Aborting."
+        echo "Use either 'auditctl' or 'augenrules'!"
+        exit 1
+# If audit tool is 'auditctl', then add '/etc/audit/audit.rules'
+# file to the list of files to be inspected
+elif [ "$tool" == 'auditctl' ]
+then
+        files_to_inspect=("${files_to_inspect[@]}" '/etc/audit/audit.rules' )
+# If audit tool is 'augenrules', then check if the audit rule is defined
+# If rule is defined, add '/etc/audit/rules.d/*.rules' to the list for inspection
+# If rule isn't defined yet, add '/etc/audit/rules.d/$key.rules' to the list for inspection
+elif [ "$tool" == 'augenrules' ]
+then
+        # Extract audit $key from audit rule so we can use it later
+        key=$(expr "$full_rule" : '.*-k[[:space:]]\([^[:space:]]\+\)')
+        # Check if particular audit rule is already defined
+        IFS=$'\n' matches=($(sed -s -n -e "/${pattern}/!d" -e "/${arch}/!d" -e "/${group}/!d;F" /etc/audit/rules.d/*.rules))
+        # Reset IFS back to default
+        unset $IFS
+        for match in "${matches[@]}"
+        do
+                files_to_inspect=("${files_to_inspect[@]}" "${match}")
+        done
+        # Case when particular rule isn't defined in /etc/audit/rules.d/*.rules yet
+        if [ ${#files_to_inspect[@]} -eq "0" ]
+        then
+                files_to_inspect="/etc/audit/rules.d/$key.rules"
+                if [ ! -e "$files_to_inspect" ]
+                then
+                        touch "$files_to_inspect"
+                        chmod 0640 "$files_to_inspect"
+                fi
+        fi
+fi
+
+#
+# Indicator that we want to append $full_rule into $audit_file by default
+local append_expected_rule=0
+
+for audit_file in "${files_to_inspect[@]}"
+do
+
+        # Filter existing $audit_file rules' definitions to select those that:
+        # * follow the rule pattern, and
+        # * meet the hardware architecture requirement, and
+        # * are current syscall group specific
+        IFS=$'\n' existing_rules=($(sed -e "/${pattern}/!d" -e "/${arch}/!d" -e "/${group}/!d"  "$audit_file"))
+        # Reset IFS back to default
+        unset $IFS
+
+        # Process rules found case-by-case
+        for rule in "${existing_rules[@]}"
+        do
+                # Found rule is for same arch &amp; key, but differs (e.g. in count of -S arguments)
+                if [ "${rule}" != "${full_rule}" ]
+                then
+                        # If so, isolate just '(-S \w)+' substring of that rule
+                        rule_syscalls=$(echo $rule | grep -o -P '(-S \w+ )+')
+                        # Check if list of '-S syscall' arguments of that rule is subset
+                        # of '-S syscall' list of expected $full_rule
+                        if grep -q -- "$rule_syscalls" &lt;&lt;&lt; "$full_rule"
+                        then
+                                # Rule is covered (i.e. the list of -S syscalls for this rule is
+                                # subset of -S syscalls of $full_rule =&gt; existing rule can be deleted
+                                # Thus delete the rule from audit.rules &amp; our array
+                                sed -i -e "/$rule/d" "$audit_file"
+                                existing_rules=("${existing_rules[@]//$rule/}")
+                        else
+                                # Rule isn't covered by $full_rule - it besides -S syscall arguments
+                                # for this group contains also -S syscall arguments for other syscall
+                                # group. Example: '-S lchown -S fchmod -S fchownat' =&gt; group='chown'
+                                # since 'lchown' &amp; 'fchownat' share 'chown' substring
+                                # Therefore:
+                                # * 1) delete the original rule from audit.rules
+                                # (original '-S lchown -S fchmod -S fchownat' rule would be deleted)
+                                # * 2) delete the -S syscall arguments for this syscall group, but
+                                # keep those not belonging to this syscall group
+                                # (original '-S lchown -S fchmod -S fchownat' would become '-S fchmod'
+                                # * 3) append the modified (filtered) rule again into audit.rules
+                                # if the same rule not already present
+                                #
+                                # 1) Delete the original rule
+                                sed -i -e "/$rule/d" "$audit_file"
+                                # 2) Delete syscalls for this group, but keep those from other groups
+                                # Convert current rule syscall's string into array splitting by '-S' delimiter
+                                IFS=$'-S' read -a rule_syscalls_as_array &lt;&lt;&lt; "$rule_syscalls"
+                                # Reset IFS back to default
+                                unset $IFS
+                                # Declare new empty string to hold '-S syscall' arguments from other groups
+                                new_syscalls_for_rule=''
+                                # Walk through existing '-S syscall' arguments
+                                for syscall_arg in "${rule_syscalls_as_array[@]}"
+                                do
+                                        # Skip empty $syscall_arg values
+                                        if [ "$syscall_arg" == '' ]
+                                        then
+                                                continue
+                                        fi
+                                        # If the '-S syscall' doesn't belong to current group add it to the new list
+                                        # (together with adding '-S' delimiter back for each of such item found)
+                                        if grep -q -v -- "$group" &lt;&lt;&lt; "$syscall_arg"
+                                        then
+                                                new_syscalls_for_rule="$new_syscalls_for_rule -S $syscall_arg"
+                                        fi
+                                done
+                                # Replace original '-S syscall' list with the new one for this rule
+                                updated_rule=${rule//$rule_syscalls/$new_syscalls_for_rule}
+                                # Squeeze repeated whitespace characters in rule definition (if any) into one
+                                updated_rule=$(echo "$updated_rule" | tr -s '[:space:]')
+                                # 3) Append the modified / filtered rule again into audit.rules
+                                #    (but only in case it's not present yet to prevent duplicate definitions)
+                                if ! grep -q -- "$updated_rule" "$audit_file"
+                                then
+                                        echo "$updated_rule" &gt;&gt; "$audit_file"
+                                fi
+                        fi
+                else
+                        # $audit_file already contains the expected rule form for this
+                        # architecture &amp; key =&gt; don't insert it second time
+                        append_expected_rule=1
+                fi
+        done
+
+        # We deleted all rules that were subset of the expected one for this arch &amp; key.
+        # Also isolated rules containing system calls not from this system calls group.
+        # Now append the expected rule if it's not present in $audit_file yet
+        if [[ ${append_expected_rule} -eq "0" ]]
+        then
+                echo "$full_rule" &gt;&gt; "$audit_file"
+        fi
+done
+
+}
+
+function rhel6_perform_audit_adjtimex_settimeofday_stime_remediation {
+
+# Perform the remediation for the 'adjtimex', 'settimeofday', and 'stime' audit
+# system calls on Red Hat Enterprise Linux 6 OS
+#
+# Retrieve hardware architecture of the underlying system
+[ $(getconf LONG_BIT) = "32" ] &amp;&amp; RULE_ARCHS=("b32") || RULE_ARCHS=("b32" "b64")
+
+for ARCH in "${RULE_ARCHS[@]}"
+do
+        PATTERN="-a always,exit -F arch=${ARCH} -S .* -k *"
+        # Create expected audit group and audit rule form for particular system call &amp; architecture
+        if [ ${ARCH} = "b32" ]
+        then
+                # stime system call is known at 32-bit arch (see e.g "$ ausyscall i386 stime" 's output)
+                # so append it to the list of time group system calls to be audited
+                GROUP="\(adjtimex\|settimeofday\|stime\)"
+                FULL_RULE="-a always,exit -F arch=${ARCH} -S adjtimex -S settimeofday -S stime -k audit_time_rules"
+        elif [ ${ARCH} = "b64" ]
+        then
+                # stime system call isn't known at 64-bit arch (see "$ ausyscall x86_64 stime" 's output)
+                # therefore don't add it to the list of time group system calls to be audited
+                GROUP="\(adjtimex\|settimeofday\)"
+                FULL_RULE="-a always,exit -F arch=${ARCH} -S adjtimex -S settimeofday -k audit_time_rules"
+        fi
+        # Perform the remediation itself
+        fix_audit_syscall_rule "auditctl" "$PATTERN" "$GROUP" "$ARCH" "$FULL_RULE"
+done
+
+}
+</value>
+    </Value>
+    <Value id="function_rhel7_fedora_perform_audit_adjtimex_settimeofday_stime_remediation" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function for the 'adjtimex', 'settimeofday', and 'stime'
+audit system calls on Red Hat Enterprise Linux 7 or Fedora</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Perform the remediation for the 'adjtimex', 'settimeofday', and
+'stime' audit system calls on Red Hat Enterprise Linux 7 or Fedora OSes</description>
+      <value>
+function fix_audit_syscall_rule {
+
+# Load function arguments into local variables
+local tool="$1"
+local pattern="$2"
+local group="$3"
+local arch="$4"
+local full_rule="$5"
+
+# Check sanity of the input
+if [ $# -ne "5" ]
+then
+        echo "Usage: fix_audit_syscall_rule 'tool' 'pattern' 'group' 'arch' 'full rule'"
+        echo "Aborting."
+        exit 1
+fi
+
+# Create a list of audit *.rules files that should be inspected for presence and correctness
+# of a particular audit rule. The scheme is as follows:
+# 
+# -----------------------------------------------------------------------------------------
+#  Tool used to load audit rules | Rule already defined  |  Audit rules file to inspect    |
+# -----------------------------------------------------------------------------------------
+#        auditctl                |     Doesn't matter    |  /etc/audit/audit.rules         |
+# -----------------------------------------------------------------------------------------
+#        augenrules              |          Yes          |  /etc/audit/rules.d/*.rules     |
+#        augenrules              |          No           |  /etc/audit/rules.d/$key.rules  |
+# -----------------------------------------------------------------------------------------
+#
+declare -a files_to_inspect
+
+# First check sanity of the specified audit tool
+if [ "$tool" != 'auditctl' ] &amp;&amp; [ "$tool" != 'augenrules' ]
+then
+        echo "Unknown audit rules loading tool: $1. Aborting."
+        echo "Use either 'auditctl' or 'augenrules'!"
+        exit 1
+# If audit tool is 'auditctl', then add '/etc/audit/audit.rules'
+# file to the list of files to be inspected
+elif [ "$tool" == 'auditctl' ]
+then
+        files_to_inspect=("${files_to_inspect[@]}" '/etc/audit/audit.rules' )
+# If audit tool is 'augenrules', then check if the audit rule is defined
+# If rule is defined, add '/etc/audit/rules.d/*.rules' to the list for inspection
+# If rule isn't defined yet, add '/etc/audit/rules.d/$key.rules' to the list for inspection
+elif [ "$tool" == 'augenrules' ]
+then
+        # Extract audit $key from audit rule so we can use it later
+        key=$(expr "$full_rule" : '.*-k[[:space:]]\([^[:space:]]\+\)')
+        # Check if particular audit rule is already defined
+        IFS=$'\n' matches=($(sed -s -n -e "/${pattern}/!d" -e "/${arch}/!d" -e "/${group}/!d;F" /etc/audit/rules.d/*.rules))
+        # Reset IFS back to default
+        unset $IFS
+        for match in "${matches[@]}"
+        do
+                files_to_inspect=("${files_to_inspect[@]}" "${match}")
+        done
+        # Case when particular rule isn't defined in /etc/audit/rules.d/*.rules yet
+        if [ ${#files_to_inspect[@]} -eq "0" ]
+        then
+                files_to_inspect="/etc/audit/rules.d/$key.rules"
+                if [ ! -e "$files_to_inspect" ]
+                then
+                        touch "$files_to_inspect"
+                        chmod 0640 "$files_to_inspect"
+                fi
+        fi
+fi
+
+#
+# Indicator that we want to append $full_rule into $audit_file by default
+local append_expected_rule=0
+
+for audit_file in "${files_to_inspect[@]}"
+do
+
+        # Filter existing $audit_file rules' definitions to select those that:
+        # * follow the rule pattern, and
+        # * meet the hardware architecture requirement, and
+        # * are current syscall group specific
+        IFS=$'\n' existing_rules=($(sed -e "/${pattern}/!d" -e "/${arch}/!d" -e "/${group}/!d"  "$audit_file"))
+        # Reset IFS back to default
+        unset $IFS
+
+        # Process rules found case-by-case
+        for rule in "${existing_rules[@]}"
+        do
+                # Found rule is for same arch &amp; key, but differs (e.g. in count of -S arguments)
+                if [ "${rule}" != "${full_rule}" ]
+                then
+                        # If so, isolate just '(-S \w)+' substring of that rule
+                        rule_syscalls=$(echo $rule | grep -o -P '(-S \w+ )+')
+                        # Check if list of '-S syscall' arguments of that rule is subset
+                        # of '-S syscall' list of expected $full_rule
+                        if grep -q -- "$rule_syscalls" &lt;&lt;&lt; "$full_rule"
+                        then
+                                # Rule is covered (i.e. the list of -S syscalls for this rule is
+                                # subset of -S syscalls of $full_rule =&gt; existing rule can be deleted
+                                # Thus delete the rule from audit.rules &amp; our array
+                                sed -i -e "/$rule/d" "$audit_file"
+                                existing_rules=("${existing_rules[@]//$rule/}")
+                        else
+                                # Rule isn't covered by $full_rule - it besides -S syscall arguments
+                                # for this group contains also -S syscall arguments for other syscall
+                                # group. Example: '-S lchown -S fchmod -S fchownat' =&gt; group='chown'
+                                # since 'lchown' &amp; 'fchownat' share 'chown' substring
+                                # Therefore:
+                                # * 1) delete the original rule from audit.rules
+                                # (original '-S lchown -S fchmod -S fchownat' rule would be deleted)
+                                # * 2) delete the -S syscall arguments for this syscall group, but
+                                # keep those not belonging to this syscall group
+                                # (original '-S lchown -S fchmod -S fchownat' would become '-S fchmod'
+                                # * 3) append the modified (filtered) rule again into audit.rules
+                                # if the same rule not already present
+                                #
+                                # 1) Delete the original rule
+                                sed -i -e "/$rule/d" "$audit_file"
+                                # 2) Delete syscalls for this group, but keep those from other groups
+                                # Convert current rule syscall's string into array splitting by '-S' delimiter
+                                IFS=$'-S' read -a rule_syscalls_as_array &lt;&lt;&lt; "$rule_syscalls"
+                                # Reset IFS back to default
+                                unset $IFS
+                                # Declare new empty string to hold '-S syscall' arguments from other groups
+                                new_syscalls_for_rule=''
+                                # Walk through existing '-S syscall' arguments
+                                for syscall_arg in "${rule_syscalls_as_array[@]}"
+                                do
+                                        # Skip empty $syscall_arg values
+                                        if [ "$syscall_arg" == '' ]
+                                        then
+                                                continue
+                                        fi
+                                        # If the '-S syscall' doesn't belong to current group add it to the new list
+                                        # (together with adding '-S' delimiter back for each of such item found)
+                                        if grep -q -v -- "$group" &lt;&lt;&lt; "$syscall_arg"
+                                        then
+                                                new_syscalls_for_rule="$new_syscalls_for_rule -S $syscall_arg"
+                                        fi
+                                done
+                                # Replace original '-S syscall' list with the new one for this rule
+                                updated_rule=${rule//$rule_syscalls/$new_syscalls_for_rule}
+                                # Squeeze repeated whitespace characters in rule definition (if any) into one
+                                updated_rule=$(echo "$updated_rule" | tr -s '[:space:]')
+                                # 3) Append the modified / filtered rule again into audit.rules
+                                #    (but only in case it's not present yet to prevent duplicate definitions)
+                                if ! grep -q -- "$updated_rule" "$audit_file"
+                                then
+                                        echo "$updated_rule" &gt;&gt; "$audit_file"
+                                fi
+                        fi
+                else
+                        # $audit_file already contains the expected rule form for this
+                        # architecture &amp; key =&gt; don't insert it second time
+                        append_expected_rule=1
+                fi
+        done
+
+        # We deleted all rules that were subset of the expected one for this arch &amp; key.
+        # Also isolated rules containing system calls not from this system calls group.
+        # Now append the expected rule if it's not present in $audit_file yet
+        if [[ ${append_expected_rule} -eq "0" ]]
+        then
+                echo "$full_rule" &gt;&gt; "$audit_file"
+        fi
+done
+
+}
+
+function rhel7_fedora_perform_audit_adjtimex_settimeofday_stime_remediation {
+
+# Perform the remediation for the 'adjtimex', 'settimeofday', and 'stime' audit
+# system calls on Red Hat Enterprise Linux 7 or Fedora OSes
+#
+# Retrieve hardware architecture of the underlying system
+[ $(getconf LONG_BIT) = "32" ] &amp;&amp; RULE_ARCHS=("b32") || RULE_ARCHS=("b32" "b64")
+
+for ARCH in "${RULE_ARCHS[@]}"
+do
+
+        PATTERN="-a always,exit -F arch=${ARCH} -S .* -k *"
+        # Create expected audit group and audit rule form for particular system call &amp; architecture
+        if [ ${ARCH} = "b32" ]
+        then
+                # stime system call is known at 32-bit arch (see e.g "$ ausyscall i386 stime" 's output)
+                # so append it to the list of time group system calls to be audited
+                GROUP="\(adjtimex\|settimeofday\|stime\)"
+                FULL_RULE="-a always,exit -F arch=${ARCH} -S adjtimex -S settimeofday -S stime -k audit_time_rules"
+        elif [ ${ARCH} = "b64" ]
+        then
+                # stime system call isn't known at 64-bit arch (see "$ ausyscall x86_64 stime" 's output)
+                # therefore don't add it to the list of time group system calls to be audited
+                GROUP="\(adjtimex\|settimeofday\)"
+                FULL_RULE="-a always,exit -F arch=${ARCH} -S adjtimex -S settimeofday -k audit_time_rules"
+        fi
+        # Perform the remediation for both possible tools: 'auditctl' and 'augenrules'
+        fix_audit_syscall_rule "auditctl" "$PATTERN" "$GROUP" "$ARCH" "$FULL_RULE"
+        fix_audit_syscall_rule "augenrules" "$PATTERN" "$GROUP" "$ARCH" "$FULL_RULE"
+done
+
+}
+</value>
+    </Value>
+    <Value id="function_replace_or_append" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function to replace configuration setting in config file or
+add the configuration setting if it does not exist yet</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Function to replace configuration setting in config file or add
+the configuration setting if it does not exist.
+
+Expects four arguments:
+
+  config_file:		Configuration file that will be modified
+  key:			Configuration option to change
+  value:		Value of the configuration option to change
+  cce:			The CCE identifier or '$CCENUM' if no CCE identifier exists
+
+Optional arguments:
+
+  format:		Optional argument to specify the format of how key/value should be
+			modified/appended in the configuration file. The default is key = value.
+
+Example Call(s):
+
+  With default format of 'key = value':
+  replace_or_append '/etc/sysctl.conf' '^kernel.randomize_va_space' '2' '$CCENUM'
+
+  With custom key/value format:
+  replace_or_append '/etc/sysconfig/selinux' '^SELINUX=' 'disabled' '$CCENUM' '%s=%s'
+
+  With a variable:
+  replace_or_append '/etc/sysconfig/selinux' '^SELINUX=' $var_selinux_state '$CCENUM' '%s=%s'
+</description>
+      <value>
+function replace_or_append {
+  local config_file=$1
+  local key=$2
+  local value=$3
+  local cce=$4
+  local format=$5
+
+  # Check sanity of the input
+  if [ $# -lt "3" ]
+  then
+        echo "Usage: replace_or_append 'config_file_location' 'key_to_search' 'new_value'"
+        echo
+        echo "If symlinks need to be taken into account, add yes/no to the last argument"
+        echo "to allow to 'follow_symlinks'."
+        echo "Aborting."
+        exit 1
+  fi
+
+  # Test if the config_file is a symbolic link. If so, use --follow-symlinks with sed.
+  # Otherwise, regular sed command will do.
+  if test -L $config_file; then
+    sed_command="sed -i --follow-symlinks"
+  else
+    sed_command="sed -i"
+  fi
+
+  # Test that the cce arg is not empty or does not equal $CCENUM.
+  # If $CCENUM exists, it means that there is no CCE assigned.
+  if ! [ "x$cce" = x ] &amp;&amp; [ "$cce" != '$CCENUM' ]; then
+    cce="CCE-${cce}"
+  else
+    cce="CCE"
+  fi
+
+  # Strip any search characters in the key arg so that the key can be replaced without
+  # adding any search characters to the config file.
+  stripped_key=$(sed "s/[\^=\$,;+]*//g" &lt;&lt;&lt; $key)
+
+  # If there is no print format specified in the last arg, use the default format.
+  if ! [ "x$format" = x ] ; then
+    printf -v formatted_output "$format" $stripped_key $value
+  else
+    formatted_output="$stripped_key = $value"
+  fi
+
+  # If the key exists, change it. Otherwise, add it to the config_file.
+  if `grep -qi $key $config_file` ; then
+    $sed_command "s/$key.*/$formatted_output/g" $config_file
+  else
+    # \n is precaution for case where file ends without trailing newline
+    echo -e "\n# Per $cce: Set $formatted_output in $config_file" &gt;&gt; $config_file
+    echo -e "$formatted_output" &gt;&gt; $config_file
+  fi
+
+}
+</value>
+    </Value>
+    <Value id="function_firefox_js_setting" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function to replace configuration setting(s) in the Firefox
+preferences JavaScript file or add the preference if it does not exist yet</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Function to replace configuration setting(s) in the Firefox
+preferences JavaScript file or add the preference if it does not exist.
+
+Expects three arguments:
+
+  config_file:          Configuration file that will be modified
+  key:                  Configuration option to change
+  value:                Value of the configuration option to change
+
+
+Example Call(s):
+
+  Without string or variable:
+  firefox_js_setting "stig_settings.js" "general.config.obscure_value" "0"
+
+  With string:
+  firefox_js_setting "stig_settings.js" "general.config.filename" "\"stig.cfg\""
+
+  With a string variable:
+  firefox_js_setting "stig_settings.js" "general.config.filename" "\"$var_config_file_name\""
+</description>
+      <value>
+function firefox_js_setting {
+  local firefox_js=$1
+  local key=$2
+  local value=$3
+  local firefox_dirs="/usr/lib/firefox /usr/lib64/firefox /usr/local/lib/firefox /usr/local/lib64/firefox"
+  local firefox_pref="/defaults/pref"
+  local firefox_preferences="/defaults/preferences"
+
+  # Check sanity of input
+  if [ $# -lt "3" ]
+  then
+        echo "Usage: firefox_js_setting 'config_javascript_file' 'key_to_search' 'new_value'"
+        echo
+        echo "Aborting."
+        exit 1
+  fi
+
+  # Check the possible Firefox install directories
+  for firefox_dir in ${firefox_dirs}; do
+    # If the Firefox directory exists, then Firefox is installed
+    if [ -d "${firefox_dir}" ]; then
+      # Different versions of Firefox have different preferences directories, check for them and set the right one
+      if [ -d "${firefox_dir}/${firefox_pref}" ] ; then
+        local firefox_pref_dir="${firefox_dir}/${firefox_pref}"
+      elif [ -d "${firefox_dir}/${firefox_preferences}" ] ; then
+        local firefox_pref_dir="${firefox_dir}/${firefox_preferences}"
+      else
+        mkdir -m 755 -p "${firefox_dir}/${firefox_preferences}"
+        local firefox_pref_dir="${firefox_dir}/${firefox_preferences}"
+      fi
+
+      # Make sure the Firefox .js file exists and has the appropriate permissions
+      if ! [ -f "${firefox_pref_dir}/${firefox_js}" ] ; then
+        touch "${firefox_pref_dir}/${firefox_js}"
+        chmod 644 "${firefox_pref_dir}/${firefox_js}"
+      fi
+
+      # If the key exists, change it. Otherwise, add it to the config_file.
+      if `grep -q "^pref(\"${key}\", " "${firefox_pref_dir}/${firefox_js}"` ; then
+        sed -i "s/pref(\"${key}\".*/pref(\"${key}\", ${value});/g" "${firefox_pref_dir}/${firefox_js}"
+      else
+        echo "pref(\"${key}\", ${value});" &gt;&gt; "${firefox_pref_dir}/${firefox_js}"
+      fi
+    fi
+  done
+
+}
+</value>
+    </Value>
+    <Value id="function_firefox_cfg_setting" hidden="true" prohibitChanges="true" operator="equals" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Remediation function to replace configuration setting(s) in the Firefox
+preferences configuration (.cfg) file or add the preference if it does not exist yet</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Function to replace configuration setting(s) in the Firefox
+preferences configuration (.cfg) file or add the preference if it does not exist.
+
+Expects three arguments:
+
+  config_file:          Configuration file that will be modified
+  key:                  Configuration option to change
+  value:                Value of the configuration option to change
+
+
+Example Call(s):
+
+  Without string or variable:
+  firefox_cfg_setting "stig.cfg" "extensions.update.enabled" "false"
+
+  With string:
+  firefox_cfg_setting "stig.cfg" "security.default_personal_cert" "\"Ask Every Time\""
+
+  With a string variable:
+  firefox_cfg_setting "stig.cfg" "browser.startup.homepage\" "\"${var_default_home_page}\""
+</description>
+      <value>
+function firefox_cfg_setting {
+  local firefox_cfg=$1
+  local key=$2
+  local value=$3
+  local firefox_dirs="/usr/lib/firefox /usr/lib64/firefox /usr/local/lib/firefox /usr/local/lib64/firefox"
+
+  # Check sanity of input
+  if [ $# -lt "3" ]
+  then
+        echo "Usage: firefox_cfg_setting 'config_cfg_file' 'key_to_search' 'new_value'"
+        echo
+        echo "Aborting."
+        exit 1
+  fi
+
+  # Check the possible Firefox install directories
+  for firefox_dir in ${firefox_dirs}; do
+    # If the Firefox directory exists, then Firefox is installed
+    if [ -d "${firefox_dir}" ]; then
+      # Make sure the Firefox .cfg file exists and has the appropriate permissions
+      if ! [ -f "${firefox_dir}/${firefox_cfg}" ] ; then
+        touch "${firefox_dir}/${firefox_cfg}"
+        chmod 644 "${firefox_dir}/${firefox_cfg}"
+      fi
+
+      # If the key exists, change it. Otherwise, add it to the config_file.
+      if `grep -q "^lockPref(\"${key}\", " "${firefox_dir}/${firefox_cfg}"` ; then
+        sed -i "s/lockPref(\"${key}\".*/lockPref(\"${key}\", ${value});/g" "${firefox_dir}/${firefox_cfg}"
+      else
+        echo "lockPref(\"${key}\", ${value});" &gt;&gt; "${firefox_dir}/${firefox_cfg}"
+      fi
+    fi
+  done
+}
+</value>
+    </Value>
+  </Group>
+  <Group id="intro">
+    <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Introduction</title>
+    <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US"><!-- purpose and scope of guidance -->
+The purpose of this guidance is to provide security configuration
+recommendations and baselines for the Google Chromium application.
+Recommended settings for the basic application are provided.
+<!-- audience -->The guide is intended for system administrators. Readers are assumed to
+possess basic system administration skills for Unix-like systems, as well
+as some familiarity with the product's documentation and administration
+conventions. Some instructions within this guide are complex.
+All directions should be followed completely and with understanding of
+their effects in order to avoid serious adverse effects on the system
+and its security.
+</description>
+    <Group id="how-to-use">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">How to Use This Guide</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Readers should heed the following points when using the guide.
+</description>
+      <Group id="intro-read-sections-completely">
+        <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Read Sections Completely and in Order</title>
+        <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Each section may build on information and recommendations discussed in
+prior sections. Each section should be read and understood completely;
+instructions should never be blindly applied. Relevant discussion may
+occur after instructions for an action. 
+</description>
+      </Group>
+      <Group id="intro-test-non-production">
+        <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Test in Non-Production Environment</title>
+        <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+This guidance should always be tested in a non-production environment
+before deployment. This test environment should simulate the setup in
+which the system will be deployed as closely as possible.
+</description>
+      </Group>
+      <Group id="intro-root-shell-assumed">
+        <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Root Shell Environment Assumed</title>
+        <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Most of the actions listed in this document are written with the
+assumption that they will be executed by the root user running the
+<xhtml:code>/bin/bash</xhtml:code> shell. Commands preceded with a hash mark (#)
+assume that the administrator will execute the commands as root, i.e.
+apply the command via <xhtml:code>sudo</xhtml:code> whenever possible, or use
+<xhtml:code>su</xhtml:code> to gain root privileges if <xhtml:code>sudo</xhtml:code> cannot be
+used. Commands which can be executed as a non-root user are are preceded
+by a dollar sign ($) prompt.
+</description>
+      </Group>
+      <Group id="intro-formatting-conventions">
+        <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Formatting Conventions</title>
+        <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Commands intended for shell execution, as well as configuration file text,
+are featured in a <xhtml:code>monospace font</xhtml:code>. <i xmlns="http://www.w3.org/1999/xhtml">Italics</i> are used
+to indicate instances where the system administrator must substitute
+the appropriate information into a command or configuration file.
+</description>
+      </Group>
+    </Group>
+  </Group>
+  <Group id="chromium">
+    <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Chromium</title>
+    <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Chromium is an open-source web browser, powered by WebKit (Blink),
+and developed by Google. Web browsers such as Chromium are used for a number of
+reasons. This section provides settings for configuring Chromium policies to 
+meet compliance settings for Chromium running on Red Hat Enterprise Linux 
+systems.
+
+Refer to <ul xmlns="http://www.w3.org/1999/xhtml"><li>https://www.chromium.org/administrators/policy-list-3</li></ul> for
+a list of currently supported Chromium policies.
+Refer to <ul xmlns="http://www.w3.org/1999/xhtml"><li>https://www.chromium.org/administrators/policy_templates</li></ul> for 
+pre-created Chromium <xhtml:code>JSON</xhtml:code> policy files.
+</description>
+    <Value id="var_default_search_provider_name" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">The Default Search provider in Chromium</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">The URL for the Default Search provider in Chromium</description>
+      <value>https://www.google.com</value>
+      <value selector="google">https://www.google.com</value>
+      <value selector="yahoo">https://www.yahoo.com</value>
+      <value selector="bing">https://www.bing.com</value>
+    </Value>
+    <Value id="var_url_blacklist" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Blacklisted Chromium Protocols</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Blacklisted Protocol Schemas in Chromium</description>
+      <value>javascript://*</value>
+      <value selector="javascript">javascript://*</value>
+    </Value>
+    <Value id="var_enable_encrypted_searching" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Encrypted Chromium Search URLs</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Encrypted search URL for the Default Search Provider</description>
+      <value>https://www.google.com/#q={searchTerms}</value>
+      <value selector="google">https://www.google.com/#q={searchTerms}</value>
+      <value selector="yahoo">https://www.yahoo.com/search?q={searchTerms}</value>
+      <value selector="bing">https://www.bing.com/search?q={searchTerms}</value>
+    </Value>
+    <Value id="var_extension_whitelist" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Whitelisted Chromium Extenstions</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Chromium extensions approved for use</description>
+      <value>oiigbmnaadbkfbmpbfijlflahbdbdgdf</value>
+      <value selector="none">oiigbmnaadbkfbmpbfijlflahbdbdgdf</value>
+    </Value>
+    <Value id="var_auth_schema" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Chromium HTTP Authentication Setting</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Chromium HTTP Authentication Types</description>
+      <value>negotiate</value>
+      <value selector="basic">basic</value>
+      <value selector="digest">digest</value>
+      <value selector="ntlm">ntlm</value>
+      <value selector="negotiate">negotiate</value>
+      <value selector="all">basic,digest,ntlm,negotiate</value>
+    </Value>
+    <Value id="var_trusted_home_page" type="string">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Default Chromium Homepage</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Default homepage for Chromium users</description>
+      <value>about:blank</value>
+      <value selector="blank">about:blank</value>
+    </Value>
+    <Rule id="chromium_policy_file" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Ensure the Chromium Policy Configuration File Exists</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium can be configured with numerous policies and settings. These
+settings can be set so that a user is unable to edit or change them.
+To prevent users from setting or changing Chromium settings, a 
+<xhtml:code>JavaScript Object Notation (JSON)</xhtml:code> file (contains the <xhtml:code>.json</xhtml:code>
+extension) must exist in <xhtml:code>/etc/chromium/policies/managed</xhtml:code>.
+<br xmlns="http://www.w3.org/1999/xhtml"/><br xmlns="http://www.w3.org/1999/xhtml"/>
+<ul xmlns="http://www.w3.org/1999/xhtml"><li>Refer to https://www.chromium.org/administrators/policy-list-3 for
+a list of currently supported Chromium policies.</li></ul>
+<ul xmlns="http://www.w3.org/1999/xhtml"><li>Refer to https://www.chromium.org/administrators/policy_templates for
+pre-created Chromium <xhtml:code>JSON</xhtml:code> policy files.</li></ul>
+<br xmlns="http://www.w3.org/1999/xhtml"/>
+</description>
+      <warning xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US" override="false" category="general">If the <xhtml:code>.json</xhtml:code> file in
+<xhtml:code>/etc/chromium/policies/managed</xhtml:code> is not formatted correctly,
+no policies will be configured or set correctly.</warning>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+The Chromium policy file must exist as this file contains configuration 
+settings set by the System's Administrator to meet organization and/or 
+security requirements.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO </ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_policy_file" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+
+if [ ! -d ${CHROME_POL_DIR} ] ; then
+   mkdir -p -m 755 ${CHROME_POL_DIR}
+fi
+
+if [ ! -f ${CHROME_POL_DIR}/${CHROME_POL_FILE} ] ; then
+   touch ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+   chmod 644 ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+
+grep -q -E '^\{' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+if ! [ $? -eq 0 ] ; then
+   if [ -s ${CHROME_POL_DIR}/${CHROME_POL_FILE} ] ; then
+      sed -i '1s/^/\{\n/' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+   else
+      echo -e "{" &gt;&gt; ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+   fi
+fi
+
+tail -1 ${CHROME_POL_DIR}/${CHROME_POL_FILE} | grep -q -E '^\}'
+if ! [ $? -eq 0 ] ; then
+   echo -e "}" &gt;&gt; ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi 
+
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_policy_file:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_policy_file_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_firewall_traversal" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Chromium's Ability to Traverse Firewalls</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium has the ability to bypass and ignore the system firewall. This
+ability should be disabled. To disable this setting, set 
+<xhtml:code>RemoteAccessHostFirewallTraversal</xhtml:code> to <xhtml:code>false</xhtml:code> in the 
+Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Remote connections should never be allowed to bypass the system firewall
+as there is no way to verify if they can be trusted.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0001</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_firewall_traversal" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="RemoteAccessHostFirewallTraversal"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_firewall_traversal:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_firewall_traversal_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_block_desktop_notifications" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Prevent Desktop Notifications</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium by default allows websites to display notifications on the desktop.
+To disable this setting, set <xhtml:code>DefaultNotificationsSetting</xhtml:code> to <xhtml:code>2</xhtml:code>
+in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Disabling Chromium's ability to display notifications on the desktop helps prevent 
+malicious websites from controlling desktop notifications or fooling users into
+clicking on a potentially compromised notification.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0003</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_block_desktop_notifications" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="DefaultNotificationsSetting"
+POL_SETTING_VAL="2"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_block_desktop_notifications:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_block_desktop_notifications_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_popups" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Popups</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium allows you to manage whether or not unwanted pop-up windows appear.
+To disable pop-ups, set <xhtml:code>DefaultPopupsSetting</xhtml:code> to <xhtml:code>2</xhtml:code> 
+in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Pop-up windows should be disabled to prevent malicious websites from controlling
+pop-up windows or fooling users into clicking on the wrong window.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0004</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_popups" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="DefaultPopupsSetting"
+POL_SETTING_VAL="2"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_popups:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_popups_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disallow_location_tracking" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Location Tracking</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Location tracking is enabled by default and can track user's browsing habits.
+Location tracking should be disabled by setting <xhtml:code>DefaultGeolocationSetting</xhtml:code> 
+to <xhtml:code>2</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Website tracking is the practice of gathering information as to which websites
+were accesses by a browser. The common method of doing this is to have a website
+create a tracking cookie on the browser. If the information of what sites are
+being accessed is made available to unauthorized persons, this violates 
+confidentiality requirements, and over time poses a significant OPSEC issue.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0002</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disallow_location_tracking" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="DefaultGeolocationSetting"
+POL_SETTING_VAL="2"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disallow_location_tracking:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disallow_location_tracking_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_blacklist_extension_installation" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable All Extensions by Default</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Extensions are developed by third party sources and are designed to extend 
+Google Chromium's functionality. As an extension can be made by anyone, all extensions
+should be blacklisted from installation by default. To blacklist all extensions, set the 
+<xhtml:code>ExtensionInstallBlacklist</xhtml:code> to <xhtml:code>*</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Extensions can access almost anything on a system. This means they pose a high risk
+to any system that would allow all extensions to be installed by default.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0006</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_blacklist_extension_installation" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="ExtensionInstallBlacklist"
+POL_SETTING_VAL="\[\"*\"\]"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_blacklist_extension_installation:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_blacklist_extension_installation_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_extension_whitelist" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Enable Only Approved Extensions</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+An organization might need to use an internal or third party developed extension. Any
+organizationally approved extenstion should be enabled. To enable approved extensions,
+set <xhtml:code>ExtensionInstallWhitelist</xhtml:code> to <xhtml:code><sub idref="var_extension_whitelist"/></xhtml:code>
+in the Chromium policy file.
+If there are no approved extensions, <xhtml:code>ExtensionInstallWhitelist</xhtml:code> should be set to
+<xhtml:code><sub idref="var_extension_whitelist" selector="default"/></xhtml:code>.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+The whitelist should only contain organizationally approved extensions. This is to prevent
+a user from accidently whitelisitng a malicious extension.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0003</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_extension_whitelist" complexity="high" disruption="medium" reboot="false" strategy="restrict">populate var_extension_whitelist
+
+CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="ExtensionInstallWhitelist"
+POL_SETTING_VAL=$(echo ${var_extension_whitelist} | sed 's/\//\\\/\\/')
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": "'${var_extension_whitelist}'",' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'\".*/\"'${POL_SETTING}'\": \"'${POL_SETTING_VAL}'\",/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-export export-name="oval:ssg-var_extension_whitelist:var:1" value-id="var_extension_whitelist"/>
+        <check-content-ref name="oval:ssg-chromium_extension_whitelist:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_extension_whitelist_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_default_search_provider_name" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Set the Default Search Provider's URL</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Specifies the URL of the default search provider that is to be used. To set the 
+URL of the default search provider, set <xhtml:code>DefaultSearchProviderName</xhtml:code> to 
+<xhtml:code><sub idref="var_default_search_provider"/></xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+When doing internet searches, it is important to set an organizationally approved search
+provider as well as use an encrypted connection via https.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0007</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_default_search_provider_name" complexity="high" disruption="medium" reboot="false" strategy="restrict">populate var_default_search_provider_name
+
+CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="DefaultSearchProviderName"
+POL_SETTING_VAL=$(echo ${var_default_search_provider_name} | sed 's/\//\\\/\\/')
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": "'${var_default_search_provider_name}'",' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'\".*/\"'${POL_SETTING}'\": \"'${POL_SETTING_VAL}'\",/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-export export-name="oval:ssg-var_default_search_provider_name:var:1" value-id="var_default_search_provider_name"/>
+        <check-content-ref name="oval:ssg-chromium_default_search_provider_name:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_default_search_provider_name_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_enable_encrypted_searching" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Enable Encrypted Searching</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Specifies the URL of the search engine used when doing a default search.
+The URL should contain the string <xhtml:code>{searchTerms}</xhtml:code>. To set the URL of the
+search engine, set <xhtml:code>DefaultSearchProviderSearchURL</xhtml:code> to
+<xhtml:code><sub idref="var_enable_encrypted_searching"/></xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+When doing internet searches, it is important to use an encrypted connection via https.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0008</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_enable_encrypted_searching" complexity="high" disruption="medium" reboot="false" strategy="restrict">populate var_enable_encrypted_searching
+
+CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="DefaultSearchProviderSearchURL"
+POL_SETTING_VAL=$(echo ${var_enable_encrypted_searching} | sed 's/\//\\\/\\/')
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": "'${var_enable_encrypted_searching}'",' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's;\"'${POL_SETTING}'\".*;\"'${POL_SETTING}'\": \"'${POL_SETTING_VAL}'\",;g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-export export-name="oval:ssg-var_enable_encrypted_searching:var:1" value-id="var_enable_encrypted_searching"/>
+        <check-content-ref name="oval:ssg-chromium_enable_encrypted_searching:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_enable_encrypted_searching_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_default_search_provider" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Enable the Default Search Provider</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+By default users, can change search provider settings. To disable this, set
+<xhtml:code>DefaultSearchProviderEnabled</xhtml:code> to <xhtml:code>true</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+A default search is performed when the user types text in the omnibox that is not a URL.
+This should be organizationally defined and not allowed to be changed by a user.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0009</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_default_search_provider" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="DefaultSearchProviderEnabled"
+POL_SETTING_VAL="true"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_default_search_provider:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_default_search_provider_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_cleartext_passwords" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Use of Cleartext Passwords</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium allows users to import and store passwords in cleartext. This should be 
+disabled by setting <xhtml:code>PasswordManagerAllowShowPasswords</xhtml:code> to <xhtml:code>false</xhtml:code>
+in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Cleartext passwords would allow another individual to see password via shoulder surfing.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0010</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_cleartext_passwords" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="PasswordManagerAllowShowPasswords"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_cleartext_passwords:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_cleartext_passwords_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_password_manager" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Chromium Password Manager</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium Password Manager allows the saving and using of passwords in Chromium. This
+should be disabled by setting <xhtml:code>PasswordManagerEnabled</xhtml:code> to <xhtml:code>false</xhtml:code> in 
+the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Enables saving passwords and using saved passwords in Google Chromium. Malicious
+sites may take advantage of this feature by using hidden fields gain access
+to the stored information.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0011</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_password_manager" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="PasswordManagerEnabled"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_password_manager:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_password_manager_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_http_authentication" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Set Chromium's HTTP Authentication Scheme</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+To set the default Chromium's HTTP Authentication Scheme, set 
+<xhtml:code>AuthSchemes</xhtml:code> to <xhtml:code><sub idref="var_auth_schemes"/></xhtml:code> in the 
+Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Specifies which HTTP Authentication schemes are supported by Google Chromium.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0012</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_http_authentication" complexity="high" disruption="medium" reboot="false" strategy="restrict">populate var_auth_schemes
+
+CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="AuthSchemes"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": "'${var_auth_schemes}'",' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": \"'${var_auth_schemes}'\",/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-export export-name="oval:ssg-var_trusted_home_page:var:1" value-id="var_trusted_home_page"/>
+        <check-content-ref name="oval:ssg-chromium_http_authentication:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_http_authentication_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_outdated_plugins" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Outdated Plugins</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Outdated plugins should be disabled by setting <xhtml:code>AllowOutdatedPlugins</xhtml:code>
+to <xhtml:code>false</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Running outdated plugins could lead to system compromise through the use
+of known exploits. Having plugins updated to the most current version
+ensures the smallest attack surfuce possible. 
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0013</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_outdated_plugins" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="AllowOutdatedPlugins"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_outdated_plugins:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_outdated_plugins_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_plugins_require_authorization" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Require Outdated Plugins to be Authorized</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium should prompt users for authorization to run outdated plugins. This
+can be enabled by setting <xhtml:code>AlwaysAuthorizePlugins</xhtml:code> to <xhtml:code>false</xhtml:code>
+in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Outdated plugins can compromise security and should request authorization from
+the user before running.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0014</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_plugins_require_authorization" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="AlwaysAuthorizePlugins"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_plugins_require_authorization:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_plugins_require_authorization_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_thirdparty_cookies" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable 3rd Party Cookies</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Third party cookies should be be enabled. To disable third party cookies,
+set <xhtml:code>BlockThirdPartyCookies</xhtml:code> to <xhtml:code>true</xhtml:code> in the Chromium policy
+file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Third party cookies are cookies which can be set by web page elements that
+are not from the domain that is in the browser's address bar. This prevents
+cookies from being set by web page elements that are not from the domain
+that is in the browser's address bar.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0015</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_thirdparty_cookies" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="BlockThirdPartyCookies"
+POL_SETTING_VAL="true"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_thirdparty_cookies:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_thirdparty_cookies_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_background_processing" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Background Processing</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium can be set to run at all times and process in the background. This
+should be disabled by setting <xhtml:code>BackgroundModeEnabled</xhtml:code> to <xhtml:code>false</xhtml:code>
+in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+There is two reasons that this is not wanted. First, it can tie up system
+resources that might otherwise be needed. Second, it does not make it
+obvious to the user that it is running and poorly written extensions could
+cause instability on the system.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0017</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_background_processing" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="BackgroundModeEnabled"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_background_processing:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_background_processing_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_3d_graphics_api" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable the 3D Graphics APIs</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium uses WebGL to render graphics using the GPU which allows website
+access to the GPU. This should be disabled by setting <xhtml:code>Disable3DAPIs</xhtml:code>
+to <xhtml:code>true</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+This setting prevents web pages from accessing the graphics processing unit
+(GPU). Specifically, web pages cannot access the WebGL API and plugins cannot
+use the Pepper 3D API in order to reduce the attack surface.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0019</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_3d_graphics_api" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="Disable3DAPIs"
+POL_SETTING_VAL="true"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_3d_graphics_api:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_3d_graphics_api_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_google_sync" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Data Synchronization to Google</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US"><xhtml:code>SyncDisabled</xhtml:code> to <xhtml:code>true</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Google Sync is used to sync information between different user devices,
+this data is then stored on Google owned servers. The synced data may consist
+of information such as email, calendars, viewing history, etc. This feature must
+be disabled because the organization does not have control over the servers the
+data is stored on.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0020</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_google_sync" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="SyncDisabled"
+POL_SETTING_VAL="true"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_google_sync:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_google_sync_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_protocol_schemas" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Insecure And Obsolete Protocol Schemas</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Each access to a URL is handled by the browser according to the URL's "scheme".
+The "scheme" of a URL is the section before the ":". The term "protocol" is often
+mistakenly used for a "scheme". The difference is that the scheme is how the browser
+handles a URL and the protocol is how the browser communicates with a service. To
+disable insecure and obsolete protocol schema, set <xhtml:code>URLBlacklist</xhtml:code> to
+<xhtml:code><sub idref="var_url_blacklist"/></xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+If a scheme or its associated protocol used by a browser is insecure or obsolete,
+vulnerabilities can be exploited resulting in exposed data or unrestricted access
+to the browser's system.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0021</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_protocol_schemas" complexity="high" disruption="medium" reboot="false" strategy="restrict">populate var_url_blacklist
+
+CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="URLBlacklist"
+POL_SETTING_VAL=$(echo ${var_url_blacklist}| sed 's/\//\\\/\\/')
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": \["'${var_url_blacklist}'"\],' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": \[\"'${POL_SETTING_VAL}'\"\],/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-export export-name="oval:ssg-var_url_blacklist:var:1" value-id="var_url_blacklist"/>
+        <check-content-ref name="oval:ssg-chromium_disable_protocol_schemas:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_protocol_schemas_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_autocomplete" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable the AutoFill Feature</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+The AutoFill feature suggests possible matches when users are filling in forms. To
+disable the AutoFill feature, set <xhtml:code>AutoFillEnabled</xhtml:code> to <xhtml:code>false</xhtml:code> in
+the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+It is possible with the AutoFill feature that it will cache sensitive data and store
+it in the user's profile, where it might not be protected as rigorously as required by
+organizational policy.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0022</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_autocomplete" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="AutoFillEnabled"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_autocomplete:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_autocomplete_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_cloud_print_sharing" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Cloud Print Sharing</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium has cloud sharing capabilities including sharing printers connected to the
+system. This is done via a proxy. To disable printer sharing, set <xhtml:code>CloudPrintProxyEnabled</xhtml:code>
+to <xhtml:code>false</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Google Chromium has the capability to act as a proxy between Google Cloud Print
+and legacy printers connected to the machine. Users can then enable the cloud
+print proxy by authentication with their Google account. 
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0023</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_cloud_print_sharing" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="CloudPringProxyEnabled"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_cloud_print_sharing:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_cloud_print_sharing_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_network_prediction" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Network Prediction</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+To disable the network prediction feature, set <xhtml:code>DnsPrefetchingEnabled</xhtml:code>
+to <xhtml:code>false</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+This controls not only DNS prefetching but also TCP and SSL preconnection
+and prerendering of web pages.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0025</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_network_prediction" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="DnsPrefetchingEnabled"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_network_prediction:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_network_prediction_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_metrics_reporting" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Metrics Reporting</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Whenever Chromium crashes, it sends its usage and crash-related data to Google.
+This should be disabled by setting <xhtml:code>MetricsReportingEnabled</xhtml:code> to 
+<xhtml:code>false</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Anonymous reporting of usage and crash-related data is sent to Google.
+A crash report could contain sensitive information from the computer's memory.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0026</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_metrics_reporting" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="MetricsReportingEnabled"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_metrics_reporting:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_metrics_reporting_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_search_suggestions" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Search Suggestion</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium tries to guess what users are searching for when users enter
+search data in the search Omnibox. This should be disabled by 
+setting <xhtml:code>SearchSuggestEnabled</xhtml:code> to <xhtml:code>false</xhtml:code> in the Chromium 
+policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Search suggestion should be disabled as it could lead to searches being conducted
+that were never intended to be made.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0027</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_search_suggestions" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="SearchSuggestEnabled"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_search_suggestions:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_search_suggestions_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_saved_passwords" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Saved Passwords</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Disable by setting <xhtml:code>ImportSavedPasswords</xhtml:code> to <xhtml:code>false</xhtml:code> in the Chromium
+policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Importing of saved passwords should be disabled as it could lead to
+unencrypted account passwords stored on the system from another browser
+to be viewed.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0029</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_saved_passwords" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="ImportSavedPasswords"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_saved_passwords:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_saved_passwords_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_incognito_mode" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Incognito Mode</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Incognito Mode allows users to browse in private which prevents monitoring
+and validating user browsing habits. This capability should be disabled by
+setting <xhtml:code>IncognitoModeAvailability</xhtml:code> to <xhtml:code>1</xhtml:code> in the Chromium
+policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Incognito mode allows the user to browse the Internet without recording their
+browsing history/activity. From a forensics perspective, this is unacceptable.
+Best practice requires that browser history is retained.   
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0030</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_incognito_mode" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="IncognitoModeAvailability"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_incognito_mode:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_incognito_mode_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_plugin_blacklist" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable All Plugins by Default</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Plugins are developed internally or by third party sources and are designed to extend
+Google Chromium's functionality. All plugins should be blacklisted from 
+installation by default. To blacklist all plugins set <xhtml:code>DisabledPlugins</xhtml:code>
+to <xhtml:code>*</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Plugins can access almost anything on a system and users can enable or install them
+at will. This means they pose a high risk to any system that would allow all plugins
+to be installed by default.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0034</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_plugin_blacklist" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="DisabledPlugins"
+POL_SETTING_VAL="\[\"*\"\]"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_plugin_blacklist:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_plugin_blacklist_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_enable_approved_plugins" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Enable Only Approved Plugins</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+An organization might need to use an internal or third party developed plugins. Any
+organizationally approved plugin should be enabled. To enable approved plugins,
+set <xhtml:code>EnabledPlugins</xhtml:code> to the list of organizationally approved plugins
+in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+The whitelist should only contain organizationally approved plugins. This is to prevent
+a user from accidently whitelisitng a malicious plugin.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0035</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_enable_approved_plugins" complexity="high" disruption="medium" reboot="false" strategy="restrict">populate var_enable_approved_plugins
+
+CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="EnabledPlugins"
+POL_SETTING_VAL=$(echo ${var_enable_approved_plugins} | sed 's/\//\\\/\\/')
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": \['${var_enable_approved_plugins}'\],' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'\".*/\"'${POL_SETTING}'\": \['${POL_SETTING_VAL}'\],/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_enable_approved_plugins:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_enable_approved_plugins_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_automatic_installation" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Automatic Search And Installation of Plugins</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium will automatically detect, search, and install plugins as required. This
+should be disabled by setting <xhtml:code>DisablePluginFinder</xhtml:code> to <xhtml:code>true</xhtml:code> in the
+Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+The automatic search and installation of missing or not installed plugins should be
+disabled as this can cause significant risk if a unapproved or vulnerable plugin were
+to be installed without proper permissions or authorization.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0036</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_automatic_installation" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="DisablePluginFinder"
+POL_SETTING_VAL="true"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_automatic_installation:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_automatic_installation_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_check_cert_revocation" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Enable Online OCSP/CRL Certificate Checks</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Certificates can become compromised, and Chromium should check that the
+certificates in its store are valid by setting <xhtml:code>EnableOnlineRevocationChecks</xhtml:code>
+to <xhtml:code>true</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Certificates are revoked when they have been compromised or are no longer valid,
+and this option protects users from submitting confidential data to a site that
+may be fraudulent or not secure.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0037</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_check_cert_revocation" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="EnableOnlineRevocationChecks"
+POL_SETTING_VAL="true"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_check_cert_revocation:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_check_cert_revocation_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_enable_safe_browsing" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Enable the Safe Browsing Feature</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Chromium has the capability to check URLs for known malware and phishing 
+associated with websites through the Safe Browsing Feature. This can be 
+enabled by setting <xhtml:code>SafeBrowsingEnabled</xhtml:code> to <xhtml:code>true</xhtml:code> in the Chromium
+policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Safe browsing uses a signature database to test sites when they are be loaded
+to ensure that sites do not contain any known malware.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0038</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_enable_safe_browsing" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="SafeBrowsingEnabled"
+POL_SETTING_VAL="true"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_enable_safe_browsing:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_enable_safe_browsing_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_enable_browser_history" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Enable Saving the Browser History</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Users can enable or disable the saving of browser history in Chromium. Browser
+history should be retained by setting <xhtml:code>SavingBrowserHistoryDisabled</xhtml:code> to
+<xhtml:code>false</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Best practice requires that browser history is retained.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0039</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_enable_browser_history" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="SavingBrowserHistoryDisabled"
+POL_SETTING_VAL="false"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_enable_browser_history:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_enable_browser_history_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_default_block_plugins" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Block Plugins by Default</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+By default, websites are allowed to automatically run plugins.
+Users should be prompted to allow plugins to execute plugins by setting
+<xhtml:code>DefaultPluginsSetting</xhtml:code> to <xhtml:code>3</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Websites should not be allowed to automatically run plugins as the plugins
+may be outdated or compromised.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0040</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_default_block_plugins" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="DefaultPluginsSetting"
+POL_SETTING_VAL="3"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": '${POL_SETTING_VAL}',' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": '${POL_SETTING_VAL}',/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_default_block_plugins:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_default_block_plugins_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_disable_session_cookies" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Disable Session Cookies</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+To disable session only cookies sites, set <xhtml:code>CookiesSessionOnlyForUrls</xhtml:code>
+to <xhtml:code>none</xhtml:code> in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Cookies should only be allowed per session and only for approved URLs as 
+permanently stored cookies can be used for malicious intent.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0045</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_disable_session_cookies" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="CookiesSessionOnlyForUrls"
+POL_SETTING_VAL="none"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": \["'${POL_SETTING_VAL}'"\],' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'.*/\"'${POL_SETTING}'\": \[\"'${POL_SETTING_VAL}'\"\],/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_disable_session_cookies:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_disable_session_cookies_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_trusted_home_page" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Set the Default Home Page</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+When a browser is started the first web page displayed is the "home page".
+While the home page can be selected by the user, the default home page needs
+to be defined to display an approved page. To set the default home page,
+set <xhtml:code>HomepageLocation</xhtml:code> to <xhtml:code><sub idref="var_trusted_home_page"/></xhtml:code>
+in the Chromium policy file.
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+If no home page is defined then there is a possibility that a URL to a malicious
+site may be used as a home page which could effectively cause a denial of service
+to the browser.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0048</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_trusted_home_page" complexity="high" disruption="medium" reboot="false" strategy="restrict">populate var_trusted_home_page
+
+CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="HomepageLocation"
+POL_SETTING_VAL=$(echo ${var_trusted_home_page} | sed 's/\//\\\/\\/')
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": "'${var_trusted_home_page}'",' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'\".*/\"'${POL_SETTING}'\": \"'${POL_SETTING_VAL}'\",/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_trusted_home_page:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_trusted_home_page_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+    <Rule id="chromium_whitelist_plugin_urls" selected="false" severity="low">
+      <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">Enable Plugins for Only Approved URLs</title>
+      <description xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+In some cases, plugins utilized by organizationally approved websites may be allowed
+to be used by those websites, configure the approved URLs allowed to run plugins by
+setting <xhtml:code>PluginsAllowedForUrls</xhtml:code> to organizationally approved URLs
+in the Chromium policy file. If there are no approved URLs, this should be set
+to <xhtml:code>none</xhtml:code>
+</description>
+      <reference href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf"/>
+      <reference href="http://iase.disa.mil/stigs/cci/Pages/index.aspx"/>
+      <rationale xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+Only approved plugins for approved sites should be allowed to be utilized.
+</rationale>
+      <ident system="http://iase.disa.mil/stigs/app-security/browser-guidance/Pages/index.aspx">DISA FSO DTBC0051</ident>
+      <fix system="urn:xccdf:fix:script:sh" id="chromium_whitelist_plugin_urls" complexity="high" disruption="medium" reboot="false" strategy="restrict">CHROME_POL_FILE="chrome_stig_policy.json"
+CHROME_POL_DIR="/etc/chromium/policies/managed/"
+POL_SETTING="PluginsAllowedForUrls"
+POL_SETTING_VAL="none"
+
+grep -q ${POL_SETTING} ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+
+if ! [ $? -eq 0 ] ; then
+   sed -i -e '/{/a \  "'${POL_SETTING}'": "'${POL_SETTING_VAL}'",' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+else
+   sed -i -e 's/\"'${POL_SETTING}'\".*/\"'${POL_SETTING}'\": \"'${POL_SETTING_VAL}'\",/g' ${CHROME_POL_DIR}/${CHROME_POL_FILE}
+fi
+</fix>
+      <check system="http://oval.mitre.org/XMLSchema/oval-definitions-5">
+        <check-content-ref name="oval:ssg-chromium_whitelist_plugin_urls:def:1" href="oval-linked.xml"/>
+      </check>
+      <check system="http://scap.nist.gov/schema/ocil/2">
+        <check-content-ref href="ocil-linked.xml" name="ocil:ssg-chromium_whitelist_plugin_urls_ocil:questionnaire:1"/>
+      </check>
+    </Rule>
+  </Group>
+</Benchmark>

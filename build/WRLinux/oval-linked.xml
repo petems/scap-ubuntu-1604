@@ -1,0 +1,2348 @@
+<oval_definitions xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5" xmlns:oval="http://oval.mitre.org/XMLSchema/oval-common-5" xmlns:ind="http://oval.mitre.org/XMLSchema/oval-definitions-5#independent" xmlns:unix="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix" xmlns:linux="http://oval.mitre.org/XMLSchema/oval-definitions-5#linux" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://oval.mitre.org/XMLSchema/oval-common-5 oval-common-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5 oval-definitions-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5#independent independent-definitions-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5#unix unix-definitions-schema.xsd         http://oval.mitre.org/XMLSchema/oval-definitions-5#linux linux-definitions-schema.xsd">
+  <generator>
+    <oval:product_name>python</oval:product_name>
+    <oval:product_version>2.7.5</oval:product_version>
+    <oval:schema_version>5.11</oval:schema_version>
+    <oval:timestamp>2017-03-07T15:01:13</oval:timestamp>
+  </generator>
+  <definitions>
+    <definition class="compliance" id="oval:ssg-accounts_logon_fail_delay:def:1" version="1">
+      <metadata>
+        <title>Ensure that FAIL_DELAY is Configured in /etc/login.defs</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+        </affected>
+        <description>
+      The delay between failed authentication attempts should be set for all users specified in /etc/login.defs
+      </description>
+      <reference ref_id="accounts_logon_fail_delay" source="ssg"/></metadata>
+      <criteria>
+        <criterion test_ref="oval:ssg-test_accounts_logon_fail_delay:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-file_permissions_unauthorized_sgid:def:1" version="2">
+      <metadata>
+        <title>Find setgid files system packages</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+        </affected>
+        <description>All files with setgid should be owned by a base system package</description>
+      <reference ref_id="file_permissions_unauthorized_sgid" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="Check all setgid files" test_ref="oval:ssg-check_setgid_files:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-file_permissions_unauthorized_suid:def:1" version="1">
+      <metadata>
+        <title>Find setuid files from system packages</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+        </affected>
+        <description>All files with setuid should be owned by a base system package</description>
+      <reference ref_id="file_permissions_unauthorized_suid" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="Check all setuid files" test_ref="oval:ssg-check_setuid_files:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-service_sshd_disabled:def:1" version="1">
+      <metadata>
+        <title>Service sshd Disabled</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+        </affected>
+        <description>The sshd service should be disabled.</description>
+      <reference ref_id="service_sshd_disabled" source="ssg"/></metadata>
+      <criteria comment="package openssh-server removed or service sshd is not configured to start" operator="OR">
+        <criterion comment="sshd disabled in multi-user.target" test_ref="oval:ssg-test_sshd_disabled_multi_user_target:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-account_unique_name:def:1" version="1">
+      <metadata>
+        <title>Set All Accounts To Have Unique Names</title>
+        <affected family="unix">
+        </affected>
+        <description>All accounts on the system should have unique names for proper accountability.</description>
+      <reference ref_id="account_unique_name" source="ssg"/></metadata>
+      <criteria comment="There should not exist duplicate user name entries in /etc/passwd">
+        <criterion test_ref="oval:ssg-test_etc_passwd_no_duplicate_user_names:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_max_concurrent_login_sessions:def:1" version="1">
+      <metadata>
+        <title>Set Maximum Number of Concurrent Login Sessions Per User</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+          <platform>Red Hat Enterprise Linux 7</platform>
+          <platform>Red Hat Enterprise Linux 6</platform>
+        </affected>
+        <description>The maximum number of concurrent login sessions per user should meet
+      minimum requirements.</description>
+      <reference ref_id="accounts_max_concurrent_login_sessions" source="ssg"/></metadata>
+      <criteria operator="OR">
+        <criterion comment="the value maxlogins should be set appropriately in /etc/security/limits.d/*.conf" test_ref="oval:ssg-test_limitsd_maxlogins:tst:1"/>
+        <criteria operator="AND">
+          <criterion comment="the value maxlogins should not be set at all in /etc/security/limits.d/*.conf" test_ref="oval:ssg-test_limitsd_maxlogins_exists:tst:1" negate="true"/>
+          <criterion comment="the value maxlogins should be set appropriately in /etc/security/limits.conf" test_ref="oval:ssg-test_maxlogins:tst:1"/>
+        </criteria>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_maximum_age_login_defs:def:1" version="3">
+      <metadata>
+        <title>Set Password Expiration Parameters</title>
+        <affected family="unix">
+        </affected>
+        <description>The maximum password age policy should meet minimum requirements.</description>
+      <reference ref_id="accounts_maximum_age_login_defs" source="ssg"/></metadata>
+      <criteria comment="The value PASS_MAX_DAYS should be set appropriately in /etc/login.defs">
+        <criterion test_ref="oval:ssg-test_pass_max_days:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_minimum_age_login_defs:def:1" version="3">
+      <metadata>
+        <title>Set Password Expiration Parameters</title>
+        <affected family="unix">
+        </affected>
+        <description>The minimum password age policy should be set appropriately.</description>
+      <reference ref_id="accounts_minimum_age_login_defs" source="ssg"/></metadata>
+      <criteria comment="The value of PASS_MIN_DAYS should be set appropriately in /etc/login.defs">
+        <criterion test_ref="oval:ssg-test_pass_min_days:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_no_uid_except_zero:def:1" version="1">
+      <metadata>
+        <title>UID 0 Belongs Only To Root</title>
+        <affected family="unix">
+        </affected>
+        <description>Only the root account should be assigned a user id of 0.</description>
+      <reference ref_id="accounts_no_uid_except_zero" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="tests that there are no accounts with UID 0 except root in the /etc/passwd file" test_ref="oval:ssg-test_accounts_no_uid_except_root:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_password_all_shadowed:def:1" version="1">
+      <metadata>
+        <title>All Password Hashes Shadowed</title>
+        <affected family="unix">
+        </affected>
+        <description>All password hashes should be shadowed.</description>
+      <reference ref_id="accounts_password_all_shadowed" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="password hashes are shadowed" test_ref="oval:ssg-test_accounts_password_all_shadowed:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_password_minlen_login_defs:def:1" version="3">
+      <metadata>
+        <title>Set Password Expiration Parameters</title>
+        <affected family="unix">
+        </affected>
+        <description>The password minimum length should be set appropriately.</description>
+      <reference ref_id="accounts_password_minlen_login_defs" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <criterion test_ref="oval:ssg-test_pass_min_len:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_password_warn_age_login_defs:def:1" version="3">
+      <metadata>
+        <title>Set Password Expiration Parameters</title>
+        <affected family="unix">
+        </affected>
+        <description>The password expiration warning age should be set appropriately.</description>
+      <reference ref_id="accounts_password_warn_age_login_defs" source="ssg"/></metadata>
+      <criteria>
+        <criterion test_ref="oval:ssg-test_pass_warn_age:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_passwords_pam_faillock_deny:def:1" version="4">
+      <metadata>
+        <title>Lock out account after failed login attempts</title>
+        <affected family="unix">
+        </affected>
+        <description>The number of allowed failed logins should be set correctly.</description>
+      <reference ref_id="accounts_passwords_pam_faillock_deny" source="ssg"/></metadata>
+      <criteria>
+        <criterion test_ref="oval:ssg-test_accounts_passwords_pam_faillock_preauth_silent_system-auth:tst:1" comment="pam_faillock.so preauth silent set in system-auth"/>
+        <criterion test_ref="oval:ssg-test_accounts_passwords_pam_faillock_authfail_deny_system-auth:tst:1" comment="pam_faillock.so authfail deny value set in system-auth"/>
+        <criterion test_ref="oval:ssg-test_accounts_passwords_pam_faillock_account_phase_system-auth:tst:1" comment="pam_faillock.so set in account phase of system-auth"/>
+        <criterion test_ref="oval:ssg-test_accounts_passwords_pam_faillock_preauth_silent_password-auth:tst:1" comment="pam_faillock.so preauth silent set in password-auth"/>
+        <criterion test_ref="oval:ssg-test_accounts_passwords_pam_faillock_authfail_deny_password-auth:tst:1" comment="pam_faillock.so authfail deny value set in password-auth"/>
+        <criterion test_ref="oval:ssg-test_accounts_passwords_pam_faillock_account_phase_password-auth:tst:1" comment="pam_faillock.so set in account phase of password-auth"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_root_path_dirs_no_write:def:1" version="2">
+      <metadata>
+        <title>Write permissions are disabled for group and other in all
+      directories in Root's Path</title>
+        <affected family="unix">
+        </affected>
+        <description>Check each directory in root's path and make use it does
+      not grant write permission to group and other</description>
+      <reference ref_id="accounts_root_path_dirs_no_write" source="ssg"/></metadata>
+      <criteria comment="Check that write permission to group and other in root's path is denied">
+        <criterion comment="Check for write permission to group and other in root's path" test_ref="oval:ssg-test_accounts_root_path_dirs_no_group_other_write:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_umask_etc_bashrc:def:1" version="2">
+      <metadata>
+        <title>Ensure that Users Have Sensible Umask Values set for bash</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+          <platform>Red Hat Enterprise Linux 7</platform>
+          <platform>Red Hat Enterprise Linux 6</platform>
+        </affected>
+        <description>The default umask for users of the bash shell</description>
+      <reference ref_id="accounts_umask_etc_bashrc" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <extend_definition comment="Get value of var_accounts_user_umask variable as octal number" definition_ref="oval:ssg-var_accounts_user_umask_as_number:def:1"/>
+        <criterion test_ref="oval:ssg-tst_accounts_umask_etc_bashrc:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_umask_etc_csh_cshrc:def:1" version="2">
+      <metadata>
+        <title>Ensure that Users Have Sensible Umask Values set for csh</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+          <platform>Red Hat Enterprise Linux 7</platform>
+          <platform>Red Hat Enterprise Linux 6</platform>
+        </affected>
+        <description>The default umask for users of the csh shell</description>
+      <reference ref_id="accounts_umask_etc_csh_cshrc" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <extend_definition comment="Get value of var_accounts_user_umask variable as octal number" definition_ref="oval:ssg-var_accounts_user_umask_as_number:def:1"/>
+        <criterion test_ref="oval:ssg-tst_accounts_umask_etc_csh_cshrc:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_umask_etc_login_defs:def:1" version="2">
+      <metadata>
+        <title>Ensure that Users Have Sensible Umask Values in /etc/login.defs</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+          <platform>Red Hat Enterprise Linux 7</platform>
+          <platform>Red Hat Enterprise Linux 6</platform>
+        </affected>
+        <description>The default umask for all users specified in /etc/login.defs</description>
+      <reference ref_id="accounts_umask_etc_login_defs" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <extend_definition comment="Get value of var_accounts_user_umask variable as octal number" definition_ref="oval:ssg-var_accounts_user_umask_as_number:def:1"/>
+        <criterion test_ref="oval:ssg-tst_accounts_umask_etc_login_defs:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-accounts_umask_etc_profile:def:1" version="2">
+      <metadata>
+        <title>Ensure that Users Have Sensible Umask Values in /etc/profile</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+          <platform>Red Hat Enterprise Linux 7</platform>
+          <platform>Red Hat Enterprise Linux 6</platform>
+        </affected>
+        <description>The default umask for all users should be set correctly</description>
+      <reference ref_id="accounts_umask_etc_profile" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <extend_definition comment="Get value of var_accounts_user_umask variable as octal number" definition_ref="oval:ssg-var_accounts_user_umask_as_number:def:1"/>
+        <criterion test_ref="oval:ssg-tst_accounts_umask_etc_profile:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-auditd_audispd_syslog_plugin_activated:def:1" version="1">
+      <metadata>
+        <title>The syslog Plugin Of the Audit Event Multiplexor (audispd) Is Activated</title>
+        <affected family="unix">
+        </affected>
+        <description>active setting in /etc/audisp/plugins.d/syslog.conf is set to 'yes'</description>
+      <reference ref_id="auditd_audispd_syslog_plugin_activated" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="active setting in syslog.conf" test_ref="oval:ssg-test_auditd_audispd_syslog_plugin_activated:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-auditd_conf_log_group_not_root:def:1" version="1">
+      <metadata>
+        <title>'log_group' Not Set To 'root' In /etc/audit/auditd.conf</title>
+        <affected family="unix">
+        </affected>
+        <description>Verify 'log_group' is not set to 'root' in
+      /etc/audit/auditd.conf.</description>
+      <reference ref_id="auditd_conf_log_group_not_root" source="ssg"/></metadata>
+      <criteria>
+        <criterion test_ref="oval:ssg-test_auditd_conf_log_group_not_root:tst:1" comment="Verify 'log_group' not set to 'root' in /etc/audit/auditd.conf"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-auditd_data_retention_action_mail_acct:def:1" version="2">
+      <metadata>
+        <title>Auditd Email Account to Notify Upon Action</title>
+        <affected family="unix">
+        </affected>
+        <description>action_mail_acct setting in /etc/audit/auditd.conf is set to a certain account</description>
+      <reference ref_id="auditd_data_retention_action_mail_acct" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="action_mail_acct setting in auditd.conf" test_ref="oval:ssg-test_auditd_data_retention_action_mail_acct:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-auditd_data_retention_admin_space_left_action:def:1" version="2">
+      <metadata>
+        <title>Auditd Action to Take When Disk is Low on Space</title>
+        <affected family="unix">
+        </affected>
+        <description>admin_space_left_action setting in /etc/audit/auditd.conf is set to a certain action</description>
+      <reference ref_id="auditd_data_retention_admin_space_left_action" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="admin_space_left_action setting in auditd.conf" test_ref="oval:ssg-test_auditd_data_retention_admin_space_left_action:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-auditd_data_retention_max_log_file:def:1" version="2">
+      <metadata>
+        <title>Auditd Maximum Log File Size</title>
+        <affected family="unix">
+        </affected>
+        <description>max_log_file setting in /etc/audit/auditd.conf is set to at least a certain value</description>
+      <reference ref_id="auditd_data_retention_max_log_file" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="max_log_file setting in auditd.conf" test_ref="oval:ssg-test_auditd_data_retention_max_log_file:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-auditd_data_retention_max_log_file_action:def:1" version="2">
+      <metadata>
+        <title>Auditd Action to Take When Maximum Log Size Reached</title>
+        <affected family="unix">
+        </affected>
+        <description>max_log_file_action setting in /etc/audit/auditd.conf is set to a certain action</description>
+      <reference ref_id="auditd_data_retention_max_log_file_action" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="max_log_file_action setting in auditd.conf" test_ref="oval:ssg-test_auditd_data_retention_max_log_file_action:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-auditd_data_retention_num_logs:def:1" version="2">
+      <metadata>
+        <title>Auditd Maximum Number of Logs to Retain</title>
+        <affected family="unix">
+        </affected>
+        <description>num_logs setting in /etc/audit/auditd.conf is set to at least a certain value</description>
+      <reference ref_id="auditd_data_retention_num_logs" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="num_logs setting in auditd.conf" test_ref="oval:ssg-test_auditd_data_retention_num_logs:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-auditd_data_retention_space_left_action:def:1" version="3">
+      <metadata>
+        <title>Auditd Action to Take When Disk Starting to Run Low on Space</title>
+        <affected family="unix">
+        </affected>
+        <description>space_left_action setting in /etc/audit/auditd.conf is set to a certain action</description>
+      <reference ref_id="auditd_data_retention_space_left_action" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="space_left_action setting in auditd.conf" test_ref="oval:ssg-test_auditd_data_retention_space_left_action:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-ensure_gpgcheck_globally_activated:def:1" version="1">
+      <metadata>
+        <title>Ensure Yum gpgcheck Globally Activated</title>
+        <affected family="unix">
+        </affected>
+        <description>The gpgcheck option should be used to ensure that checking
+      of an RPM package's signature always occurs prior to its
+      installation.</description>
+      <reference ref_id="ensure_gpgcheck_globally_activated" source="ssg"/></metadata>
+      <criteria operator="OR">
+        <criteria operator="AND">
+          <extend_definition comment="Fedora installed" definition_ref="oval:ssg-installed_OS_is_fedora:def:1"/>
+          <criterion comment="check value of gpgcheck in /etc/dnf/dnf.conf" test_ref="oval:ssg-test_dnf_ensure_gpgcheck_globally_activated:tst:1"/>
+        </criteria>
+        <criterion comment="check value of gpgcheck in /etc/yum.conf" test_ref="oval:ssg-test_yum_ensure_gpgcheck_globally_activated:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-file_ownership_var_log_audit:def:1" version="3">
+      <metadata>
+        <title>Verify /var/log/audit Ownership</title>
+        <affected family="unix">
+        </affected>
+        <description>Checks that all /var/log/audit files and directories are owned by the root user and group.</description>
+      <reference ref_id="file_ownership_var_log_audit" source="ssg"/></metadata>
+      <criteria operator="OR">
+        <criteria operator="AND" comment="directories are root owned">
+          <criterion test_ref="oval:ssg-test_ownership_var_log_audit_files:tst:1"/>
+          <criterion test_ref="oval:ssg-test_ownership_var_log_audit_directories:tst:1"/>
+        </criteria>
+        <criteria operator="AND" comment="log_group in auditd.conf is not root">
+          <extend_definition comment="log_group in auditd.conf is not root" definition_ref="oval:ssg-auditd_conf_log_group_not_root:def:1"/>
+          <criterion test_ref="oval:ssg-test_ownership_var_log_audit_files-non_root:tst:1"/>
+          <criterion test_ref="oval:ssg-test_ownership_var_log_audit_directories-non_root:tst:1"/>
+        </criteria>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-file_permissions_home_dirs:def:1" version="1">
+      <metadata>
+        <title>Proper Permissions User Home Directories</title>
+        <affected family="unix">
+        </affected>
+        <description>File permissions should be set correctly for the home directories for all user accounts.</description>
+      <reference ref_id="file_permissions_home_dirs" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="home directories" test_ref="oval:ssg-test_file_permissions_home_dirs:tst:1" negate="true"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-file_permissions_unauthorized_world_writable:def:1" version="1">
+      <metadata>
+        <title>Find Unauthorized World-Writable Files</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+          <platform>Red Hat Enterprise Linux 7</platform>
+          <platform>Red Hat Enterprise Linux 6</platform>
+        </affected>
+        <description>The world-write permission should be disabled for all files.</description>
+      <reference ref_id="file_permissions_unauthorized_world_writable" source="ssg"/></metadata>
+      <criteria>
+        <criterion test_ref="oval:ssg-test_file_permissions_unauthorized_world_write:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-install_antivirus:def:1" version="1">
+      <metadata>
+        <title>Package Antivirus Installed</title>
+        <affected family="unix">
+        </affected>
+        <description>Antivirus software should be installed.</description>
+      <reference ref_id="install_antivirus" source="ssg"/></metadata>
+      <criteria comment="Antivirus is not being used or conditions are met">
+        <extend_definition comment="McAfee A/V Installed" definition_ref="oval:ssg-install_mcafee_antivirus:def:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-install_mcafee_antivirus:def:1" version="1">
+      <metadata>
+        <title>Package McAfeeVSEForLinux Installed</title>
+        <affected family="unix">
+        </affected>
+        <description>McAfee Antivirus software should be installed.</description>
+      <reference ref_id="install_mcafee_antivirus" source="ssg"/></metadata>
+      <criteria comment="Antivirus is not being used or conditions are met" operator="AND">
+        <extend_definition comment="McAfee Runtime Libraries and Agent" definition_ref="oval:ssg-install_mcafee_cma_rt:def:1"/>
+        <criterion comment="Linuxshield AntiVirus package is installed" test_ref="oval:ssg-test_linuxshield_install_antivirus:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-install_mcafee_cma_rt:def:1" version="1">
+      <metadata>
+        <title>Install the McAfee Runtime Libraries and Linux Agent</title>
+        <affected family="unix">
+        </affected>
+        <description>Install the McAfee Runtime Libraries (MFErt) and Linux Agent (MFEcma).</description>
+      <reference ref_id="install_mcafee_cma_rt" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <criterion comment="McAfee runtime library package installed" test_ref="oval:ssg-test_mcafee_runtime_installed:tst:1"/>
+        <criterion comment="McAfee management agent package installed" test_ref="oval:ssg-test_mcafee_management_agent:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-install_mcafee_hbss:def:1" version="1">
+      <metadata>
+        <title>Install McAfee Host-Based Intrusion Detection Software (HBSS)</title>
+        <affected family="unix">
+        </affected>
+        <description>McAfee Host-Based Intrusion Detection Software (HBSS) software
+      should be installed.</description>
+      <reference ref_id="install_mcafee_hbss" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <extend_definition comment="McAfee HBSS" definition_ref="oval:ssg-install_mcafee_cma_rt:def:1"/>
+        <extend_definition comment="McAfee HBSS" definition_ref="oval:ssg-install_mcafee_hbss_accm:def:1"/>
+        <extend_definition comment="McAfee HBSS" definition_ref="oval:ssg-install_mcafee_hbss_hips:def:1"/>
+        <extend_definition comment="McAfee HBSS" definition_ref="oval:ssg-install_mcafee_hbss_pa:def:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-install_mcafee_hbss_accm:def:1" version="1">
+      <metadata>
+        <title>Install the Asset Configuration Compliance Module (ACCM)</title>
+        <affected family="unix">
+        </affected>
+        <description>Install the Asset Configuration Compliance Module (ACCM).</description>
+      <reference ref_id="install_mcafee_hbss_accm" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="McAfee ACCM is installed" test_ref="oval:ssg-test_mcafee_accm_exists:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-install_mcafee_hbss_hips:def:1" version="1">
+      <metadata>
+        <title>Install the Host Intrusion Prevention System (HIPS) Module</title>
+        <affected family="unix">
+        </affected>
+        <description>Install the McAfee Host Intrusion Prevention System (HIPS) Module if it is
+      absolutely necessary. If SELinux is enabled, do not install or enable this module.</description>
+      <reference ref_id="install_mcafee_hbss_hips" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="McAfee IPS  is installed" test_ref="oval:ssg-test_mcafee_hbss_hips_installed:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-install_mcafee_hbss_pa:def:1" version="1">
+      <metadata>
+        <title>Install the Policy Auditor (PA) Module</title>
+        <affected family="unix">
+        </affected>
+        <description>Install the Policy Auditor (PA) Module.</description>
+      <reference ref_id="install_mcafee_hbss_pa" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="McAfee Policy Auditor is installed" test_ref="oval:ssg-test_mcafee_auditengine_exists:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_OS_is_centos6:def:1" version="2">
+      <metadata>
+        <title>CentOS 6</title>
+        <affected family="unix">
+        </affected>
+        <reference ref_id="cpe:/o:centos:centos:6" source="CPE"/>
+        <description>The operating system installed on the system is
+      CentOS 6</description>
+      <reference ref_id="installed_OS_is_centos6" source="ssg"/></metadata>
+      <criteria>
+        <extend_definition comment="Installed OS is part of the Unix family" definition_ref="oval:ssg-installed_OS_is_part_of_Unix_family:def:1"/>
+        <criterion comment="CentOS6 is installed" test_ref="oval:ssg-test_centos6:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_OS_is_centos7:def:1" version="2">
+      <metadata>
+        <title>CentOS 7</title>
+        <affected family="unix">
+        </affected>
+        <reference ref_id="cpe:/o:centos:centos:7" source="CPE"/>
+        <description>The operating system installed on the system is
+      CentOS 7</description>
+      <reference ref_id="installed_OS_is_centos7" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <extend_definition comment="Installed OS is part of the Unix family" definition_ref="oval:ssg-installed_OS_is_part_of_Unix_family:def:1"/>
+        <criterion comment="CentOS7 is installed" test_ref="oval:ssg-test_centos7:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_OS_is_fedora:def:1" version="3">
+      <metadata>
+        <title>Installed operating system is Fedora</title>
+        <affected family="unix">
+        </affected>
+        <reference ref_id="cpe:/o:fedoraproject:fedora:22" source="CPE"/>
+        <reference ref_id="cpe:/o:fedoraproject:fedora:23" source="CPE"/>
+        <reference ref_id="cpe:/o:fedoraproject:fedora:24" source="CPE"/>
+        <reference ref_id="cpe:/o:fedoraproject:fedora:25" source="CPE"/>
+        <description>The operating system installed on the system is Fedora</description>
+      <reference ref_id="installed_OS_is_fedora" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <extend_definition comment="Installed OS is part of the Unix family" definition_ref="oval:ssg-installed_OS_is_part_of_Unix_family:def:1"/>
+        <criterion comment="fedora-release RPM package is installed" test_ref="oval:ssg-test_fedora_release_rpm:tst:1"/>
+        <criterion comment="CPE vendor is 'fedoraproject' and product is 'fedora'" test_ref="oval:ssg-test_fedora_vendor_product:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_OS_is_part_of_Unix_family:def:1" version="1">
+      <metadata>
+        <title>Installed operating system is part of the Unix family</title>
+        <affected family="unix">
+        </affected>
+        <description>The operating system installed on the system is part of the Unix OS family</description>
+      <reference ref_id="installed_OS_is_part_of_Unix_family" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="Installed operating system is part of the unix family" test_ref="oval:ssg-test_unix_family:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_OS_is_rhel6:def:1" version="2">
+      <metadata>
+        <title>Red Hat Enterprise Linux 6</title>
+        <affected family="unix">
+        </affected>
+        <reference ref_id="cpe:/o:redhat:enterprise_linux:6" source="CPE"/>
+        <description>The operating system installed on the system is
+      Red Hat Enterprise Linux 6</description>
+      <reference ref_id="installed_OS_is_rhel6" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <extend_definition comment="Installed OS is part of the Unix family" definition_ref="oval:ssg-installed_OS_is_part_of_Unix_family:def:1"/>
+        <criteria operator="OR">
+          <criterion comment="RHEL 6 Client is installed" test_ref="oval:ssg-test_rhel_client:tst:1"/>
+          <criterion comment="RHEL 6 Workstation is installed" test_ref="oval:ssg-test_rhel_workstation:tst:1"/>
+          <criterion comment="RHEL 6 Server is installed" test_ref="oval:ssg-test_rhel_server:tst:1"/>
+          <criterion comment="RHEL 6 Compute Node is installed" test_ref="oval:ssg-test_rhel_computenode:tst:1"/>
+        </criteria>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_OS_is_rhel7:def:1" version="1">
+      <metadata>
+        <title>Red Hat Enterprise Linux 7</title>
+        <affected family="unix">
+        </affected>
+        <reference ref_id="cpe:/o:redhat:enterprise_linux:7" source="CPE"/>
+        <description>The operating system installed on the system is
+      Red Hat Enterprise Linux 7</description>
+      <reference ref_id="installed_OS_is_rhel7" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="Installed operating system is part of the unix family" test_ref="oval:ssg-test_rhel7_unix_family:tst:1"/>
+        <criteria operator="OR">
+          <criterion comment="RHEL 7 Client is installed" test_ref="oval:ssg-test_rhel7_client:tst:1"/>
+          <criterion comment="RHEL 7 Workstation is installed" test_ref="oval:ssg-test_rhel7_workstation:tst:1"/>
+          <criterion comment="RHEL 7 Server is installed" test_ref="oval:ssg-test_rhel7_server:tst:1"/>
+          <criterion comment="RHEL 7 Compute Node is installed" test_ref="oval:ssg-test_rhel7_computenode:tst:1"/>
+        </criteria>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_OS_is_sl6:def:1" version="2">
+      <metadata>
+        <title>Scientific Linux 6</title>
+        <affected family="unix">
+        </affected>
+        <reference ref_id="cpe:/o:scientificlinux:scientificlinux:6" source="CPE"/>
+        <description>The operating system installed on the system is
+      Scientific Linux 6</description>
+      <reference ref_id="installed_OS_is_sl6" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <extend_definition comment="Installed OS is part of the Unix family" definition_ref="oval:ssg-installed_OS_is_part_of_Unix_family:def:1"/>
+        <criterion comment="Scientific Linux 6 is installed" test_ref="oval:ssg-test_sl6:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_OS_is_sl7:def:1" version="2">
+      <metadata>
+        <title>Scientific Linux 7</title>
+        <affected family="unix">
+        </affected>
+        <reference ref_id="cpe:/o:scientificlinux:scientificlinux:6" source="CPE"/>
+        <description>The operating system installed on the system is
+      Scientific Linux 7</description>
+      <reference ref_id="installed_OS_is_sl7" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <extend_definition comment="Installed OS is part of the Unix family" definition_ref="oval:ssg-installed_OS_is_part_of_Unix_family:def:1"/>
+        <criterion comment="Scientific Linux 7 is installed" test_ref="oval:ssg-test_sl7:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_OS_is_wrlinux:def:1" version="1">
+      <metadata>
+        <title>WRLinux</title>
+        <affected family="unix">
+        </affected>
+        <reference ref_id="cpe:/o:windriver:wrlinux" source="CPE"/>
+        <description>The operating system installed on the system is
+      Wind River Linux</description>
+      <reference ref_id="installed_OS_is_wrlinux" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="Installed operating system is part of the unix family" test_ref="oval:ssg-test_unix_wrlinux:tst:1"/>
+        <criterion comment="WRLinux is installed" test_ref="oval:ssg-test_wrlinux:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_env_is_a_container:def:1" version="2">
+      <metadata>
+        <title>Check if the scan target is a container</title>
+        <affected family="unix">
+        </affected>
+        <description>Check if file /.dockerenv exists, if it does then we consider to be a docker filesystem.</description>
+        <reference ref_id="cpe:/a:container" source="CPE"/>
+      <reference ref_id="installed_env_is_a_container" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="Check if /.dockerenv exists" test_ref="oval:ssg-installed_env_is_a_container:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="inventory" id="oval:ssg-installed_env_is_a_machine:def:1" version="2">
+      <metadata>
+        <title>Check if the scan target is a machine</title>
+        <affected family="unix">
+        </affected>
+        <description>Check if file /.dockerenv exists, if it doesn't then we consider to be host filesystem or virtual machine.</description>
+        <reference ref_id="cpe:/a:machine" source="CPE"/>
+      <reference ref_id="installed_env_is_a_machine" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="Check if /.dockerenv exists" test_ref="oval:ssg-installed_env_is_a_machine:tst:1" negate="true"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-no_direct_root_logins:def:1" version="1">
+      <metadata>
+        <title>Direct root Logins Not Allowed</title>
+        <affected family="unix">
+        </affected>
+        <description>Preventing direct root logins help ensure accountability for actions
+      taken on the system using the root account.</description>
+      <reference ref_id="no_direct_root_logins" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <criterion comment="serial ports /etc/securetty" test_ref="oval:ssg-test_no_direct_root_logins:tst:1"/>
+        <criterion comment="serial ports /etc/securetty" test_ref="oval:ssg-test_etc_securetty_exists:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-no_empty_passwords:def:1" version="1">
+      <metadata>
+        <title>No nullok Option in /etc/pam.d/system-auth</title>
+        <affected family="unix">
+        </affected>
+        <description>The file /etc/pam.d/system-auth should not contain the nullok option</description>
+      <reference ref_id="no_empty_passwords" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="make sure the nullok option is not used in /etc/pam.d/system-auth" test_ref="oval:ssg-test_no_empty_passwords:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-no_insecure_locks_exports:def:1" version="1">
+      <metadata>
+        <title>Ensure insecure_locks is disabled</title>
+        <affected family="unix">
+        </affected>
+        <description>Allowing insecure file locking could allow for sensitive 
+      data to be viewed or edited by an unauthorized user.</description>
+      <reference ref_id="no_insecure_locks_exports" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="Check for insecure NFS locks in /etc/exports" test_ref="oval:ssg-test_no_insecure_locks_exports:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-no_netrc_files:def:1" version="1">
+      <metadata>
+        <title>Verify No netrc Files Exist</title>
+        <affected family="unix">
+        </affected>
+        <description>The .netrc files contain login information used to auto-login into FTP servers and reside in the user's home directory. Any .netrc files should be removed.</description>
+      <reference ref_id="no_netrc_files" source="ssg"/></metadata>
+      <criteria>
+        <criterion test_ref="oval:ssg-test_no_netrc_files_home:tst:1" negate="true"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-no_shelllogin_for_systemaccounts:def:1" version="2">
+      <metadata>
+        <title>System Accounts Do Not Run a Shell</title>
+        <affected family="unix">
+        </affected>
+        <description>The root account is the only system account that should have
+      a login shell.</description>
+      <reference ref_id="no_shelllogin_for_systemaccounts" source="ssg"/></metadata>
+      <criteria operator="OR">
+        <!-- If SYS_UID_MIN and SYS_UID_MAX is not defined in /etc/login.defs
+           perform the check that all /etc/passwd entries having shell defined
+           have UIDs outside the default <0, UID_MIN -1> range.
+           If at least one UID with shell defined exists within that range,
+           the requirement isn't met -->
+        <criteria operator="AND">
+          <criterion comment="Test SYS_UID_MIN not defined in /etc/login.defs" test_ref="oval:ssg-test_sys_uid_min_not_defined:tst:1"/>
+          <criterion comment="Test SYS_UID_MAX not defined in /etc/login.defs" test_ref="oval:ssg-test_sys_uid_max_not_defined:tst:1"/>
+          <criterion comment="Test shell defined for UID from &lt;0, UID_MIN -1&gt;" test_ref="oval:ssg-test_shell_defined_default_uid_range:tst:1"/>
+        </criteria>
+        <!-- If both SYS_UID_MIN and SYS_UID_MAX are defined in /etc/login.defs
+           perform both checks:
+           * That all /etc/passwd entries having shell defined have UIDs outside
+           the range for reserved system accounts <0, SYS_UID_MIN> range,
+           * That all /etc/passwd entries having shell defined have UIDs outside
+           the range for dynamically allocated system accounts <SYS_UID_MIN, SYS_UID_MAX>
+           If at least one UID with shell defined exists within some of the two
+           ranges, the requirement isn't met -->
+        <criteria operator="AND">
+          <criterion comment="Test SYS_UID_MIN defined in /etc/login.defs" test_ref="oval:ssg-test_sys_uid_min_not_defined:tst:1" negate="true"/>
+          <criterion comment="Test SYS_UID_MAX defined in /etc/login.defs" test_ref="oval:ssg-test_sys_uid_max_not_defined:tst:1" negate="true"/>
+          <criterion comment="Test shell defined for reserved system UIDs" test_ref="oval:ssg-test_shell_defined_reserved_uid_range:tst:1"/>
+          <criterion comment="Test shell defined for dynamically allocated system UIDs" test_ref="oval:ssg-test_shell_defined_dynalloc_uid_range:tst:1"/>
+        </criteria>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-package_net-snmp_removed:def:1" version="1">
+      <metadata>
+        <title>Package net-snmp Removed</title>
+        <affected family="unix">
+        </affected>
+        <description>The RPM package net-snmp should be removed.</description>
+      <reference ref_id="package_net-snmp_removed" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="package net-snmp is removed" test_ref="oval:ssg-test_package_net-snmp_removed:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-package_prelink_removed:def:1" version="1">
+      <metadata>
+        <title>Package prelink Removed</title>
+        <affected family="unix">
+        </affected>
+        <description>The RPM package prelink should be removed.</description>
+      <reference ref_id="package_prelink_removed" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="package prelink is removed" test_ref="oval:ssg-test_package_prelink_removed:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-restrict_serial_port_logins:def:1" version="1">
+      <metadata>
+        <title>Restrict Serial Port Root Logins</title>
+        <affected family="unix">
+        </affected>
+        <description>Preventing direct root login to serial port interfaces helps
+      ensure accountability for actions taken on the system using the root
+      account.</description>
+      <reference ref_id="restrict_serial_port_logins" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="serial ports /etc/securetty" test_ref="oval:ssg-test_serial_ports_etc_securetty:tst:1" negate="true"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-root_path_no_dot:def:1" version="2">
+      <metadata>
+        <title>Ensure that No Dangerous Directories Exist in Root's Path</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+          <platform>Red Hat Enterprise Linux 7</platform>
+          <platform>Red Hat Enterprise Linux 6</platform>
+        </affected>
+        <description>The environment variable PATH should be set correctly for
+      the root user.</description>
+      <reference ref_id="root_path_no_dot" source="ssg"/></metadata>
+      <criteria comment="environment variable PATH contains dangerous path" operator="AND">
+        <criterion comment="environment variable PATH starts with : or ." test_ref="oval:ssg-test_env_var_begins:tst:1"/>
+        <criterion comment="environment variable PATH contains : twice in a row" test_ref="oval:ssg-test_env_var_contains_doublecolon:tst:1"/>
+        <criterion comment="environment variable PATH contains . twice in a row" test_ref="oval:ssg-test_env_var_contains_doubleperiod:tst:1"/>
+        <criterion comment="environment variable PATH ends with : or ." test_ref="oval:ssg-test_env_var_ends:tst:1"/>
+        <criterion comment="environment variable PATH doesn't begin with a /" test_ref="oval:ssg-test_env_var_begins_slash:tst:1"/>
+        <criterion comment="environment variable PATH doesn't contain relative paths" test_ref="oval:ssg-test_env_var_contains_relative_path:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-securetty_root_login_console_only:def:1" version="1">
+      <metadata>
+        <title>Restrict Virtual Console Root Logins</title>
+        <affected family="unix">
+        </affected>
+        <description>Preventing direct root login to virtual console devices
+      helps ensure accountability for actions taken on the system using the
+      root account.</description>
+      <reference ref_id="securetty_root_login_console_only" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="virtual consoles /etc/securetty" test_ref="oval:ssg-test_virtual_consoles_etc_securetty:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-selinux_confinement_of_daemons:def:1" version="1">
+      <metadata>
+        <title>Ensure No Daemons are Unconfined by SELinux</title>
+        <affected family="unix">
+          <platform>Red Hat Enterprise Linux 6</platform>
+          <platform>Red Hat Enterprise Linux 7</platform>
+          <platform>Wind River Linux 8</platform>
+        </affected>
+        <description>All pids in /proc should be assigned an SELinux security context other than 'initrc_t'.</description>
+      <reference ref_id="selinux_confinement_of_daemons" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="device_t in /dev" test_ref="oval:ssg-test_selinux_confinement_of_daemons:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-snmpd_not_default_password:def:1" version="2">
+      <metadata>
+        <title>SNMP default communities disabled</title>
+        <affected family="unix">
+        </affected>
+        <description>SNMP default communities must be removed.</description>
+      <reference ref_id="snmpd_not_default_password" source="ssg"/></metadata>
+      <criteria operator="OR">
+        <extend_definition comment="SMNP installed" definition_ref="oval:ssg-package_net-snmp_removed:def:1"/>
+        <criterion comment="SNMP communities" test_ref="oval:ssg-test_snmp_default_communities:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-snmpd_use_newer_protocol:def:1" version="2">
+      <metadata>
+        <title>SNMP use newer protocols</title>
+        <affected family="unix">
+        </affected>
+        <description>SNMP version 1 and 2c must not be enabled.</description>
+      <reference ref_id="snmpd_use_newer_protocol" source="ssg"/></metadata>
+      <criteria operator="OR">
+        <extend_definition comment="SMNP installed" definition_ref="oval:ssg-package_net-snmp_removed:def:1"/>
+        <criterion comment="SNMP protocols" test_ref="oval:ssg-test_snmp_versions:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-sshd_disable_empty_passwords:def:1" version="1">
+      <metadata>
+        <title>Disable Empty Passwords</title>
+        <affected family="unix">
+        </affected>
+        <description>Remote connections from accounts with empty passwords should
+      be disabled (and dependencies are met)</description>
+      <reference ref_id="sshd_disable_empty_passwords" source="ssg"/></metadata>
+      <criteria comment="SSH is not being used or conditions are met" operator="OR">
+        <extend_definition comment="sshd service is disabled" definition_ref="oval:ssg-service_sshd_disabled:def:1"/>
+        <criterion comment="Check PermitEmptyPasswords in /etc/ssh/sshd_config" negate="true" test_ref="oval:ssg-test_sshd_permitemptypasswords_no:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-sshd_disable_rhosts_rsa:def:1" version="1">
+      <metadata>
+        <title>Disable SSH Support for Rhosts RSA Authentication</title>
+        <affected family="unix">
+        </affected>
+        <description>SSH can allow authentication through the obsolete rsh command
+      through the use of the authenticating user's SSH keys. This should be disabled.</description>
+      <reference ref_id="sshd_disable_rhosts_rsa" source="ssg"/></metadata>
+      <criteria comment="SSH is not being used or conditions are met" operator="OR">
+        <extend_definition comment="sshd service is disabled" definition_ref="oval:ssg-service_sshd_disabled:def:1"/>
+        <criterion comment="Check RhostsRSAAuthentication in /etc/ssh/sshd_config" negate="true" test_ref="oval:ssg-test_sshd_disable_rhosts_rsa:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-sshd_disable_root_login:def:1" version="1">
+      <metadata>
+        <title>Disable root Login via SSH</title>
+        <affected family="unix">
+        </affected>
+        <description>Root login via SSH should be disabled (and dependencies are
+      met)</description>
+      <reference ref_id="sshd_disable_root_login" source="ssg"/></metadata>
+      <criteria comment="SSH is not being used or conditions are met" operator="OR">
+        <extend_definition comment="sshd service is disabled" definition_ref="oval:ssg-service_sshd_disabled:def:1"/>
+        <criterion comment="Check PermitRootLogin in /etc/ssh/sshd_config" negate="true" test_ref="oval:ssg-test_sshd_permitrootlogin_no:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-sshd_disable_user_known_hosts:def:1" version="1">
+      <metadata>
+        <title>Disable SSH Support for User Known Hosts</title>
+        <affected family="unix">
+        </affected>
+        <description>SSH can allow system users host-based authentication
+to connect to systems if a cache of the remote systems public keys are available.
+This should be disabled.</description>
+      <reference ref_id="sshd_disable_user_known_hosts" source="ssg"/></metadata>
+      <criteria comment="SSH is not being used or conditions are met" operator="OR">
+        <extend_definition comment="sshd service is disabled" definition_ref="oval:ssg-service_sshd_disabled:def:1"/>
+        <criterion comment="Check IgnoreUserKnownHosts in /etc/ssh/sshd_config" test_ref="oval:ssg-test_sshd_disable_user_known_hosts:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-sshd_set_idle_timeout:def:1" version="1">
+      <metadata>
+        <title>Set OpenSSH Idle Timeout Interval</title>
+        <affected family="unix">
+        </affected>
+        <description>The SSH idle timeout interval should be set to an
+      appropriate value.</description>
+      <reference ref_id="sshd_set_idle_timeout" source="ssg"/></metadata>
+      <criteria comment="SSH is not being used or conditions are met" operator="OR">
+        <extend_definition comment="sshd service is disabled" definition_ref="oval:ssg-service_sshd_disabled:def:1"/>
+        <criterion comment="Check ClientAliveInterval in /etc/ssh/sshd_config" test_ref="oval:ssg-test_sshd_idle_timeout:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-sshd_set_keepalive:def:1" version="1">
+      <metadata>
+        <title>Set ClientAliveCountMax for User Logins</title>
+        <affected family="unix">
+        </affected>
+        <description>The SSH ClientAliveCountMax should be set to an appropriate
+      value (and dependencies are met)</description>
+      <reference ref_id="sshd_set_keepalive" source="ssg"/></metadata>
+      <criteria comment="SSH is not being used or conditions are met" operator="OR">
+        <extend_definition comment="sshd service is disabled" definition_ref="oval:ssg-service_sshd_disabled:def:1"/>
+        <criterion comment="Check ClientAliveCountMax in /etc/ssh/sshd_config" test_ref="oval:ssg-test_sshd_clientalivecountmax:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-system_info_architecture_64bit:def:1" version="1">
+      <!-- Note that this does not meet requirements for class=inventory as
+         that only tests for patches per 5.10.1 Revision 1 -->
+      <metadata>
+        <title>Test for 64-bit Architecture</title>
+        <affected family="unix">
+        </affected>
+        <description>Generic test for 64-bit architectures to be used by other tests</description>
+      <reference ref_id="system_info_architecture_64bit" source="ssg"/></metadata>
+      <criteria operator="OR">
+        <extend_definition comment="Generic test for x86_64 architecture" definition_ref="oval:ssg-system_info_architecture_x86_64:def:1"/>
+        <extend_definition comment="Generic test for ppc64 architecture" definition_ref="oval:ssg-system_info_architecture_ppc_64:def:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-system_info_architecture_ppc_64:def:1" version="1">
+      <!-- Note that this does not meet requirements for class=inventory as
+         that only tests for patches per 5.10.1 Revision 1 -->
+      <metadata>
+        <title>Test for PPC and PPCLE Architecture</title>
+        <affected family="unix">
+        </affected>
+        <description>Generic test for PPC PPC64LE architecture to be used by other tests</description>
+      <reference ref_id="system_info_architecture_ppc_64" source="ssg"/></metadata>
+      <criteria operator="OR">
+        <criterion comment="Generic test for ppc64 architecture" test_ref="oval:ssg-test_system_info_architecture_ppc_64:tst:1"/>
+        <criterion comment="Generic test for ppcle64 architecture" test_ref="oval:ssg-test_system_info_architecture_ppcle_64:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-system_info_architecture_x86:def:1" version="1">
+      <!-- Note that this does not meet requirements for class=inventory as
+         that only tests for patches per 5.10.1 Revision 1 -->
+      <metadata>
+        <title>Test for x86 Architecture</title>
+        <affected family="unix">
+        </affected>
+        <description>Generic test for x86 architecture to be used by other tests</description>
+      <reference ref_id="system_info_architecture_x86" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="Generic test for x86 architecture" test_ref="oval:ssg-test_system_info_architecture_x86:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-system_info_architecture_x86_64:def:1" version="1">
+      <!-- Note that this does not meet requirements for class=inventory as
+         that only tests for patches per 5.10.1 Revision 1 -->
+      <metadata>
+        <title>Test for x86_64 Architecture</title>
+        <affected family="unix">
+        </affected>
+        <description>Generic test for x86_64 architecture to be used by other tests</description>
+      <reference ref_id="system_info_architecture_x86_64" source="ssg"/></metadata>
+      <criteria>
+        <criterion comment="Generic test for x86_64 architecture" test_ref="oval:ssg-test_system_info_architecture_x86_64:tst:1"/>
+      </criteria>
+    </definition>
+    <definition class="compliance" id="oval:ssg-var_accounts_user_umask_as_number:def:1" version="1">
+      <metadata>
+        <title>Value of 'var_accounts_user_umask' variable represented as octal number</title>
+        <affected family="unix">
+          <platform>Wind River Linux 8</platform>
+          <platform>Red Hat Enterprise Linux 7</platform>
+          <platform>Red Hat Enterprise Linux 6</platform>
+        </affected>
+        <description>Value of 'var_accounts_user_umask' variable represented as octal number</description>
+      <reference ref_id="var_accounts_user_umask_as_number" source="ssg"/></metadata>
+      <criteria operator="AND">
+        <criterion test_ref="oval:ssg-test_existence_of_var_accounts_user_umask_as_number_variable:tst:1"/>
+      </criteria>
+    </definition>
+  </definitions>
+  <tests>
+    <ind:textfilecontent54_test check="all" check_existence="all_exist" comment="check FAIL_DELAY in /etc/login.defs" id="oval:ssg-test_accounts_logon_fail_delay:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_accounts_logon_fail_delay:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_accounts_logon_fail_delay:ste:1"/>
+    </ind:textfilecontent54_test>
+    <unix:file_test check="all" check_existence="none_exist" comment="setgid files outside system RPMs" id="oval:ssg-check_setgid_files:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_file_permissions_unauthorized_sgid:obj:1"/>
+    </unix:file_test>
+    <unix:file_test check="all" check_existence="none_exist" comment="setuid files outside system RPMs" id="oval:ssg-check_setuid_files:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_file_permissions_unauthorized_suid:obj:1"/>
+    </unix:file_test>
+    <unix:file_test check="all" check_existence="none_exist" comment="look for sshd.service in /etc/systemd/system/multi-user.target.wants" id="oval:ssg-test_sshd_disabled_multi_user_target:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_sshd_disabled_multi_user_target:obj:1"/>
+    </unix:file_test>
+    <ind:variable_test id="oval:ssg-test_etc_passwd_no_duplicate_user_names:tst:1" check="all" check_existence="all_exist" comment="There should not exist duplicate user name entries in /etc/passwd" version="1">
+      <ind:object object_ref="oval:ssg-object_count_of_all_usernames_from_etc_passwd:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_etc_passwd_no_duplicate_user_names:ste:1"/>
+    </ind:variable_test>
+    <ind:textfilecontent54_test check="all" comment="the value maxlogins should be set appropriately in /etc/security/limits.conf" id="oval:ssg-test_maxlogins:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_etc_security_limits_conf_maxlogins:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_maxlogins:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="the value maxlogins should be set appropriately in /etc/security/limits.d/*.conf" id="oval:ssg-test_limitsd_maxlogins:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_etc_security_limitsd_conf_maxlogins:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_maxlogins:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="the value maxlogins should be set appropriately in /etc/security/limits.d/*.conf" id="oval:ssg-test_limitsd_maxlogins_exists:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_etc_security_limitsd_conf_maxlogins_exists:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:variable_test id="oval:ssg-test_pass_max_days:tst:1" check="all" comment="The value of PASS_MAX_DAYS should be set appropriately in /etc/login.defs" version="1">
+      <ind:object object_ref="oval:ssg-object_last_pass_max_days_instance_value:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_last_pass_max_days_instance_value:ste:1"/>
+    </ind:variable_test>
+    <ind:variable_test id="oval:ssg-test_pass_min_days:tst:1" check="all" comment="The value of PASS_MIN_DAYS should be set appropriately in /etc/login.defs" version="1">
+      <ind:object object_ref="oval:ssg-object_last_pass_min_days_instance_value:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_last_pass_min_days_instance_value:ste:1"/>
+    </ind:variable_test>
+    <ind:textfilecontent54_test check="all" check_existence="none_exist" comment="test that there are no accounts with UID 0 except root in the /etc/passwd file" id="oval:ssg-test_accounts_no_uid_except_root:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_accounts_no_uid_except_root:obj:1"/>
+    </ind:textfilecontent54_test>
+    <unix:password_test check="all" comment="password hashes are shadowed" id="oval:ssg-test_accounts_password_all_shadowed:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_accounts_password_all_shadowed:obj:1"/>
+      <unix:state state_ref="oval:ssg-state_accounts_password_all_shadowed:ste:1"/>
+    </unix:password_test>
+    <ind:variable_test id="oval:ssg-test_pass_min_len:tst:1" check="all" comment="The value of PASS_MIN_LEN should be set appropriately in /etc/login.defs" version="1">
+      <ind:object object_ref="oval:ssg-object_last_pass_min_len_instance_value:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_last_pass_min_len_instance_value:ste:1"/>
+    </ind:variable_test>
+    <ind:variable_test id="oval:ssg-test_pass_warn_age:tst:1" check="all" comment="The value of PASS_WARN_AGE should be set appropriately in /etc/login.defs" version="1">
+      <ind:object object_ref="oval:ssg-object_last_pass_warn_age_instance_value:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_last_pass_warn_age_instance_value:ste:1"/>
+    </ind:variable_test>
+    <ind:textfilecontent54_test id="oval:ssg-test_accounts_passwords_pam_faillock_preauth_silent_system-auth:tst:1" check="all" check_existence="all_exist" comment="Check pam_faillock.so preauth silent present in /etc/pam.d/system-auth" version="1">
+      <ind:object object_ref="oval:ssg-object_accounts_passwords_pam_faillock_preauth_silent_system-auth:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_var_accounts_passwords_pam_faillock_deny_value:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test id="oval:ssg-test_accounts_passwords_pam_faillock_authfail_deny_system-auth:tst:1" check="all" check_existence="all_exist" comment="Check maximum failed login attempts allowed in /etc/pam.d/system-auth (authfail)" version="1">
+      <ind:object object_ref="oval:ssg-object_accounts_passwords_pam_faillock_authfail_deny_system-auth:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_var_accounts_passwords_pam_faillock_deny_value:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test id="oval:ssg-test_accounts_passwords_pam_faillock_account_phase_system-auth:tst:1" check="all" check_existence="all_exist" comment="Check if pam_faillock_so is called in account phase of /etc/pam.d/system-auth" version="1">
+      <ind:object object_ref="oval:ssg-object_accounts_passwords_pam_faillock_account_phase_system-auth:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test id="oval:ssg-test_accounts_passwords_pam_faillock_preauth_silent_password-auth:tst:1" check="all" check_existence="all_exist" comment="Check pam_faillock.so preauth silent present in /etc/pam.d/password-auth" version="1">
+      <ind:object object_ref="oval:ssg-object_accounts_passwords_pam_faillock_preauth_silent_password-auth:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_var_accounts_passwords_pam_faillock_deny_value:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test id="oval:ssg-test_accounts_passwords_pam_faillock_authfail_deny_password-auth:tst:1" check="all" check_existence="all_exist" comment="Check maximum failed login attempts allowed in /etc/pam.d/password-auth (authfail)" version="1">
+      <ind:object object_ref="oval:ssg-object_accounts_passwords_pam_faillock_authfail_deny_password-auth:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_var_accounts_passwords_pam_faillock_deny_value:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test id="oval:ssg-test_accounts_passwords_pam_faillock_account_phase_password-auth:tst:1" check="all" check_existence="all_exist" comment="Check if pam_faillock_so is called in account phase of /etc/pam.d/password-auth" version="1">
+      <ind:object object_ref="oval:ssg-object_accounts_passwords_pam_faillock_account_phase_password-auth:obj:1"/>
+    </ind:textfilecontent54_test>
+    <unix:file_test check="all" check_existence="none_exist" comment="Check if there aren't directories in root's path having write permission set for group or other" id="oval:ssg-test_accounts_root_path_dirs_no_group_other_write:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_accounts_root_path_dirs_no_group_other_write:obj:1"/>
+    </unix:file_test>
+    <ind:variable_test id="oval:ssg-tst_accounts_umask_etc_bashrc:tst:1" version="1" check="all" comment="Test the retrieved /etc/bashrc umask value(s) match the var_accounts_user_umask requirement">
+      <ind:object object_ref="oval:ssg-obj_accounts_umask_etc_bashrc:obj:1"/>
+      <ind:state state_ref="oval:ssg-ste_accounts_umask_etc_bashrc:ste:1"/>
+    </ind:variable_test>
+    <ind:variable_test id="oval:ssg-tst_accounts_umask_etc_csh_cshrc:tst:1" version="1" check="all" comment="Test the retrieved /etc/csh.cshrc umask value(s) match the var_accounts_user_umask requirement">
+      <ind:object object_ref="oval:ssg-obj_accounts_umask_etc_csh_cshrc:obj:1"/>
+      <ind:state state_ref="oval:ssg-ste_accounts_umask_etc_csh_cshrc:ste:1"/>
+    </ind:variable_test>
+    <ind:variable_test id="oval:ssg-tst_accounts_umask_etc_login_defs:tst:1" version="1" check="all" comment="Test the retrieved /etc/login.defs umask value(s) match the var_accounts_user_umask requirement">
+      <ind:object object_ref="oval:ssg-obj_accounts_umask_etc_login_defs:obj:1"/>
+      <ind:state state_ref="oval:ssg-ste_accounts_umask_etc_login_defs:ste:1"/>
+    </ind:variable_test>
+    <ind:variable_test id="oval:ssg-tst_accounts_umask_etc_profile:tst:1" version="1" check="all" comment="Test the retrieved /etc/profile umask value(s) match the var_accounts_user_umask requirement">
+      <ind:object object_ref="oval:ssg-obj_accounts_umask_etc_profile:obj:1"/>
+      <ind:state state_ref="oval:ssg-ste_accounts_umask_etc_profile:ste:1"/>
+    </ind:variable_test>
+    <ind:textfilecontent54_test check="all" comment="audispd syslog plugin activated" id="oval:ssg-test_auditd_audispd_syslog_plugin_activated:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_auditd_audispd_syslog_plugin_activated:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test id="oval:ssg-test_auditd_conf_log_group_not_root:tst:1" check="all" check_existence="none_exist" comment="log_group = root" version="1">
+      <ind:object object_ref="oval:ssg-object_auditd_conf_log_group_root:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="email account for actions" id="oval:ssg-test_auditd_data_retention_action_mail_acct:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_auditd_data_retention_action_mail_acct:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_auditd_data_retention_action_mail_acct:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="space left action" id="oval:ssg-test_auditd_data_retention_admin_space_left_action:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_auditd_data_retention_admin_space_left_action:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_auditd_data_retention_admin_space_left_action:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="max log file size" id="oval:ssg-test_auditd_data_retention_max_log_file:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_auditd_data_retention_max_log_file:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_auditd_data_retention_max_log_file:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="admin space left action " id="oval:ssg-test_auditd_data_retention_max_log_file_action:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_auditd_data_retention_max_log_file_action:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_auditd_data_retention_max_log_file_action:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="admin space left action " id="oval:ssg-test_auditd_data_retention_num_logs:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_auditd_data_retention_num_logs:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_auditd_data_retention_num_logs:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" comment="space left action" id="oval:ssg-test_auditd_data_retention_space_left_action:tst:1" version="2">
+      <ind:object object_ref="oval:ssg-object_auditd_data_retention_space_left_action:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_auditd_data_retention_space_left_action:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="all_exist" comment="check value of gpgcheck in /etc/yum.conf" id="oval:ssg-test_yum_ensure_gpgcheck_globally_activated:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_yum_ensure_gpgcheck_globally_activated:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="all_exist" comment="check value of gpgcheck in /etc/dnf/dnf.conf" id="oval:ssg-test_dnf_ensure_gpgcheck_globally_activated:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_dnf_ensure_gpgcheck_globally_activated:obj:1"/>
+    </ind:textfilecontent54_test>
+    <unix:file_test check="all" check_existence="none_exist" comment="/var/log/audit directories uid root gid root" id="oval:ssg-test_ownership_var_log_audit_directories:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_ownership_var_log_audit_directories:obj:1"/>
+    </unix:file_test>
+    <unix:file_test check="all" check_existence="none_exist" comment="/var/log/audit files uid root gid root" id="oval:ssg-test_ownership_var_log_audit_files:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_ownership_var_log_audit_files:obj:1"/>
+    </unix:file_test>
+    <unix:file_test check="all" check_existence="all_exist" comment="/var/log/audit directories uid root gid root" id="oval:ssg-test_ownership_var_log_audit_directories-non_root:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_ownership_var_log_audit_directories-non_root:obj:1"/>
+    </unix:file_test>
+    <unix:file_test check="all" check_existence="all_exist" comment="/var/log/audit files uid root gid root" id="oval:ssg-test_ownership_var_log_audit_files-non_root:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_ownership_var_log_audit_files-non_root:obj:1"/>
+    </unix:file_test>
+    <unix:file_test check="all" check_existence="at_least_one_exists" comment="home directories" id="oval:ssg-test_file_permissions_home_dirs:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_file_permissions_home_dirs:obj:1"/>
+      <unix:state state_ref="oval:ssg-state_home_dirs_wrong_perm:ste:1"/>
+    </unix:file_test>
+    <unix:file_test check="all" check_existence="none_exist" comment="world writable files" id="oval:ssg-test_file_permissions_unauthorized_world_write:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_file_permissions_unauthorized_world_write:obj:1"/>
+    </unix:file_test>
+    <linux:rpminfo_test check="all" check_existence="all_exist" id="oval:ssg-test_linuxshield_install_antivirus:tst:1" version="1" comment="AntiVirus package is installed">
+      <linux:object object_ref="oval:ssg-obj_linuxshield_install_antivirus:obj:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="all_exist" id="oval:ssg-test_mcafee_runtime_installed:tst:1" version="1" comment="Runtime Libraries package is installed">
+      <linux:object object_ref="oval:ssg-obj_mcafee_runtime_installed:obj:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="all_exist" id="oval:ssg-test_mcafee_management_agent:tst:1" version="1" comment="Agent package is installed">
+      <linux:object object_ref="oval:ssg-obj_mcafee_management_agent:obj:1"/>
+    </linux:rpminfo_test>
+    <unix:file_test check="all" check_existence="all_exist" comment="McAfee ACCM installed" id="oval:ssg-test_mcafee_accm_exists:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_mcafee_accm_exists:obj:1"/>
+    </unix:file_test>
+    <linux:rpminfo_test check="all" check_existence="all_exist" id="oval:ssg-test_mcafee_hbss_hips_installed:tst:1" version="1" comment="McAfee IPS is installed">
+      <linux:object object_ref="oval:ssg-obj_mcafee_hbss_hips_installed:obj:1"/>
+    </linux:rpminfo_test>
+    <unix:file_test check="all" check_existence="all_exist" comment="McAfee Policy Auditor installed" id="oval:ssg-test_mcafee_auditengine_exists:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_mcafee_auditengine_exists:obj:1"/>
+    </unix:file_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="centos-release is version 6" id="oval:ssg-test_centos6:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_centos6:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_centos6:ste:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="centos-release is version 7" id="oval:ssg-test_centos7:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_centos7:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_centos7:ste:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="only_one_exists" comment="fedora-release RPM package is installed" id="oval:ssg-test_fedora_release_rpm:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-object_fedora_release_rpm:obj:1"/>
+    </linux:rpminfo_test>
+    <ind:textfilecontent54_test check="all" comment="CPE vendor is 'fedoraproject' and 'product' is fedora" id="oval:ssg-test_fedora_vendor_product:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_fedora_vendor_product:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:family_test id="oval:ssg-test_unix_family:tst:1" check="all" check_existence="at_least_one_exists" comment="Test installed OS is part of the unix family" version="1">
+      <ind:object object_ref="oval:ssg-object_unix_family:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_unix_family:ste:1"/>
+    </ind:family_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="redhat-release-client is version 6" id="oval:ssg-test_rhel_client:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_rhel_client:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_rhel_client:ste:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="redhat-release-workstation is version 6" id="oval:ssg-test_rhel_workstation:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_rhel_workstation:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_rhel_workstation:ste:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="redhat-release-server is version 6" id="oval:ssg-test_rhel_server:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_rhel_server:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_rhel_server:ste:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="redhat-release-computenode is version 6" id="oval:ssg-test_rhel_computenode:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_rhel_computenode:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_rhel_computenode:ste:1"/>
+    </linux:rpminfo_test>
+    <ind:family_test check="all" check_existence="at_least_one_exists" comment="installed OS part of unix family" id="oval:ssg-test_rhel7_unix_family:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-obj_rhel7_unix_family:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_rhel7_unix_family:ste:1"/>
+    </ind:family_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="redhat-release-client is version 7" id="oval:ssg-test_rhel7_client:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_rhel7_client:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_rhel7_client:ste:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="redhat-release-workstation is version 7" id="oval:ssg-test_rhel7_workstation:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_rhel7_workstation:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_rhel7_workstation:ste:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="redhat-release-server is version 7" id="oval:ssg-test_rhel7_server:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_rhel7_server:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_rhel7_server:ste:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="redhat-release-computenode is version 7" id="oval:ssg-test_rhel7_computenode:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_rhel7_computenode:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_rhel7_computenode:ste:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="sl-release is version 6" id="oval:ssg-test_sl6:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_sl6:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_sl6:ste:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="sl-release is version 7" id="oval:ssg-test_sl7:tst:1" version="1">
+      <linux:object object_ref="oval:ssg-obj_sl7:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_sl7:ste:1"/>
+    </linux:rpminfo_test>
+    <ind:family_test check="all" check_existence="at_least_one_exists" comment="installed OS part of unix family" id="oval:ssg-test_unix_wrlinux:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-obj_unix_wrlinux:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_unix_wrlinux:ste:1"/>
+    </ind:family_test>
+    <unix:file_test check_existence="at_least_one_exists" version="1" id="oval:ssg-test_wrlinux:tst:1" check="all" comment="Test presence of /etc/wrlinux-release.">
+      <unix:object object_ref="oval:ssg-obj_test_wrlinux:obj:1"/>
+    </unix:file_test>
+    <unix:file_test check="all" check_existence="all_exist" comment="Check if /.dockerenv exists" id="oval:ssg-installed_env_is_a_container:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-installed_env_is_a_container:obj:1"/>
+    </unix:file_test>
+    <unix:file_test check="all" check_existence="all_exist" comment="Check if /.dockerenv exists" id="oval:ssg-installed_env_is_a_machine:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-installed_env_is_a_machine:obj:1"/>
+    </unix:file_test>
+    <ind:textfilecontent54_test check="all" check_existence="all_exist" comment="/etc/securetty file exists" id="oval:ssg-test_etc_securetty_exists:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_etc_securetty_exists:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="all_exist" comment="no entries in /etc/securetty" id="oval:ssg-test_no_direct_root_logins:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_no_direct_root_logins:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="none_exist" comment="make sure nullok is not used in /etc/pam.d/system-auth" id="oval:ssg-test_no_empty_passwords:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_no_empty_passwords:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="none_exist" comment="Tests the value of the insecure locks in /etc/exports" id="oval:ssg-test_no_insecure_locks_exports:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-obj_no_insecure_locks_exports:obj:1"/>
+    </ind:textfilecontent54_test>
+    <unix:file_test check="all" check_existence="at_least_one_exists" comment="look for .netrc in /home" id="oval:ssg-test_no_netrc_files_home:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_no_netrc_files_home:obj:1"/>
+    </unix:file_test>
+    <ind:variable_test id="oval:ssg-test_shell_defined_default_uid_range:tst:1" check="all" check_existence="all_exist" comment="&lt;0, UID_MIN - 1&gt; system UIDs having shell set" version="1">
+      <ind:object object_ref="oval:ssg-object_shell_defined_default_uid_range:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_shell_defined_default_uid_range:ste:1"/>
+    </ind:variable_test>
+    <ind:textfilecontent54_test id="oval:ssg-test_sys_uid_min_not_defined:tst:1" comment="SYS_UID_MIN not defined in /etc/login.defs" check="all" check_existence="none_exist" version="1">
+      <ind:object object_ref="oval:ssg-object_last_sys_uid_min_from_etc_login_defs:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test id="oval:ssg-test_sys_uid_max_not_defined:tst:1" comment="SYS_UID_MAX not defined in /etc/login.defs" check="all" check_existence="none_exist" version="1">
+      <ind:object object_ref="oval:ssg-object_last_sys_uid_max_from_etc_login_defs:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:variable_test id="oval:ssg-test_shell_defined_reserved_uid_range:tst:1" check="all" check_existence="all_exist" comment="&lt;0, SYS_UID_MIN&gt; system UIDs having shell set" version="1">
+      <ind:object object_ref="oval:ssg-object_shell_defined_reserved_uid_range:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_shell_defined_reserved_uid_range:ste:1"/>
+    </ind:variable_test>
+    <ind:variable_test id="oval:ssg-test_shell_defined_dynalloc_uid_range:tst:1" check="all" check_existence="all_exist" comment="&lt;SYS_UID_MIN, SYS_UID_MAX&gt; system UIDS having shell set" version="1">
+      <ind:object object_ref="oval:ssg-object_shell_defined_dynalloc_uid_range:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_shell_defined_dynalloc_uid_range:ste:1"/>
+    </ind:variable_test>
+    <linux:rpminfo_test check="all" check_existence="none_exist" id="oval:ssg-test_package_net-snmp_removed:tst:1" version="1" comment="package net-snmp is removed">
+      <linux:object object_ref="oval:ssg-obj_package_net-snmp_removed:obj:1"/>
+    </linux:rpminfo_test>
+    <linux:rpminfo_test check="all" check_existence="none_exist" id="oval:ssg-test_package_prelink_removed:tst:1" version="1" comment="package prelink is removed">
+      <linux:object object_ref="oval:ssg-obj_package_prelink_removed:obj:1"/>
+    </linux:rpminfo_test>
+    <ind:textfilecontent54_test check="all" check_existence="all_exist" comment="serial ports /etc/securetty" id="oval:ssg-test_serial_ports_etc_securetty:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_serial_ports_etc_securetty:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:environmentvariable58_test check="none satisfy" comment="environment variable PATH starts with : or ." id="oval:ssg-test_env_var_begins:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_root_path_no_dot:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_begins_colon_period:ste:1"/>
+    </ind:environmentvariable58_test>
+    <ind:environmentvariable58_test check="none satisfy" comment="environment variable PATH doesn't contain : twice in a row" id="oval:ssg-test_env_var_contains_doublecolon:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_root_path_no_dot:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_contains_double_colon:ste:1"/>
+    </ind:environmentvariable58_test>
+    <ind:environmentvariable58_test check="none satisfy" comment="environment variable PATH doesn't contain . twice in a row" id="oval:ssg-test_env_var_contains_doubleperiod:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_root_path_no_dot:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_contains_double_period:ste:1"/>
+    </ind:environmentvariable58_test>
+    <ind:environmentvariable58_test check="none satisfy" comment="environment variable PATH ends with : or ." id="oval:ssg-test_env_var_ends:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_root_path_no_dot:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_ends_colon_period:ste:1"/>
+    </ind:environmentvariable58_test>
+    <ind:environmentvariable58_test check="none satisfy" comment="environment variable PATH starts with an absolute path /" id="oval:ssg-test_env_var_begins_slash:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_root_path_no_dot:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_begins_slash:ste:1"/>
+    </ind:environmentvariable58_test>
+    <ind:environmentvariable58_test check="none satisfy" comment="environment variable PATH contains relative paths" id="oval:ssg-test_env_var_contains_relative_path:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_root_path_no_dot:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_contains_relative_path:ste:1"/>
+    </ind:environmentvariable58_test>
+    <ind:textfilecontent54_test check="all" check_existence="none_exist" comment="virtual consoles /etc/securetty" id="oval:ssg-test_virtual_consoles_etc_securetty:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_virtual_consoles_etc_securetty:obj:1"/>
+    </ind:textfilecontent54_test>
+    <linux:selinuxsecuritycontext_test check="none satisfy" check_existence="any_exist" comment="device_t in /dev" id="oval:ssg-test_selinux_confinement_of_daemons:tst:1" version="2">
+      <linux:object object_ref="oval:ssg-object_selinux_confinement_of_daemons:obj:1"/>
+      <linux:state state_ref="oval:ssg-state_selinux_confinement_of_daemons:ste:1"/>
+    </linux:selinuxsecuritycontext_test>
+    <ind:textfilecontent54_test check="all" check_existence="none_exist" comment="Check snmpd configuration" id="oval:ssg-test_snmp_default_communities:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_snmp_default_communities:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="none_exist" comment="Check snmpd configuration" id="oval:ssg-test_snmp_versions:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_snmp_versions:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="none_exist" comment="Tests the value of the PermitEmptyPasswords[\s]*(&lt;:nocomment:&gt;*) setting in the /etc/ssh/sshd_config file" id="oval:ssg-test_sshd_permitemptypasswords_no:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-obj_sshd_permitemptypasswords_no:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="none_exist" comment="Tests the value of the RhostsRSAAuthentication[\s]*(&lt;:nocomment:&gt;*) setting in the /etc/ssh/sshd_config file" id="oval:ssg-test_sshd_disable_rhosts_rsa:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-obj_sshd_disable_rhosts_rsa:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="none_exist" comment="Tests the value of the PermitRootLogin[\s]*(&lt;:nocomment:&gt;*) setting in the /etc/ssh/sshd_config file" id="oval:ssg-test_sshd_permitrootlogin_no:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-obj_sshd_permitrootlogin_no:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="all_exist" comment="Tests the value of the IgnoreUserKnownHosts[\s]*(&lt;:nocomment:&gt;*) setting in the /etc/ssh/sshd_config file" id="oval:ssg-test_sshd_disable_user_known_hosts:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-obj_sshd_disable_user_known_hosts:obj:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="all_exist" comment="timeout is configured" id="oval:ssg-test_sshd_idle_timeout:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-object_sshd_idle_timeout:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_timeout_value_upper_bound:ste:1"/>
+      <ind:state state_ref="oval:ssg-state_timeout_value_lower_bound:ste:1"/>
+    </ind:textfilecontent54_test>
+    <ind:textfilecontent54_test check="all" check_existence="all_exist" comment="Tests the value of the ClientAliveCountMax setting in the /etc/ssh/sshd_config file" id="oval:ssg-test_sshd_clientalivecountmax:tst:1" version="1">
+      <ind:object object_ref="oval:ssg-obj_sshd_clientalivecountmax:obj:1"/>
+      <ind:state state_ref="oval:ssg-state_sshd_clientalivecountmax:ste:1"/>
+    </ind:textfilecontent54_test>
+    <unix:uname_test check="all" comment="64 bit architecture" id="oval:ssg-test_system_info_architecture_ppc_64:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_system_info_architecture_ppc_64:obj:1"/>
+      <unix:state state_ref="oval:ssg-state_system_info_architecture_ppc_64:ste:1"/>
+    </unix:uname_test>
+    <unix:uname_test check="all" comment="64 bit architecture" id="oval:ssg-test_system_info_architecture_ppcle_64:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_system_info_architecture_ppcle_64:obj:1"/>
+      <unix:state state_ref="oval:ssg-state_system_info_architecture_ppcle_64:ste:1"/>
+    </unix:uname_test>
+    <unix:uname_test check="all" comment="32 bit architecture" id="oval:ssg-test_system_info_architecture_x86:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_system_info_architecture_x86:obj:1"/>
+      <unix:state state_ref="oval:ssg-state_system_info_architecture_x86:ste:1"/>
+    </unix:uname_test>
+    <unix:uname_test check="all" comment="64 bit architecture" id="oval:ssg-test_system_info_architecture_x86_64:tst:1" version="1">
+      <unix:object object_ref="oval:ssg-object_system_info_architecture_x86_64:obj:1"/>
+      <unix:state state_ref="oval:ssg-state_system_info_architecture_x86_64:ste:1"/>
+    </unix:uname_test>
+    <ind:variable_test id="oval:ssg-test_existence_of_var_accounts_user_umask_as_number_variable:tst:1" comment="Verify the existence of var_accounts_user_umask_as_number variable" check="all" check_existence="at_least_one_exists" version="1">
+      <ind:object object_ref="oval:ssg-object_var_accounts_user_umask_umask_as_number:obj:1"/>
+    </ind:variable_test>
+  </tests>
+  <objects>
+    <ind:textfilecontent54_object id="oval:ssg-object_accounts_logon_fail_delay:obj:1" comment="FAIL_DELAY value from /etc/login.defs" version="1">
+      <ind:filepath>/etc/login.defs</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)FAIL_DELAY(?-i)[\s]+([^#\s]*)</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <unix:file_object comment="files with sgid set" id="oval:ssg-object_file_permissions_unauthorized_sgid:obj:1" version="1">
+      <unix:behaviors recurse="directories" recurse_direction="down" max_depth="-1" recurse_file_system="local"/>
+      <unix:path operation="equals">/</unix:path>
+      <unix:filename operation="pattern match">^.*$</unix:filename>
+      <filter action="include">oval:ssg-state_file_permissions_unauthorized_sgid:ste:1</filter>
+      <filter action="exclude">oval:ssg-state_sgid_whitelist:ste:1</filter>
+    </unix:file_object>
+    <unix:file_object comment="files with suid set" id="oval:ssg-object_file_permissions_unauthorized_suid:obj:1" version="1">
+      <unix:behaviors recurse="directories" recurse_direction="down" max_depth="-1" recurse_file_system="local"/>
+      <unix:path operation="equals">/</unix:path>
+      <unix:filename operation="pattern match">^.*$</unix:filename>
+      <filter action="include">oval:ssg-state_file_permissions_unauthorized_suid:ste:1</filter>
+      <filter action="exclude">oval:ssg-state_suid_whitelist:ste:1</filter>
+    </unix:file_object>
+    <unix:file_object comment="look for sshd.service in /etc/systemd/system/multi-user.target.wants" id="oval:ssg-object_sshd_disabled_multi_user_target:obj:1" version="1">
+      <unix:filepath>/etc/systemd/system/multi-user.target.wants/sshd.service</unix:filepath>
+      <filter action="include">oval:ssg-state_symlink:ste:1</filter>
+    </unix:file_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_etc_passwd_content:obj:1" version="1">
+      <ind:filepath>/etc/passwd</ind:filepath>
+      <!-- User names from /etc/passwd (1-th column) captured as subexpression of this object -->
+      <ind:pattern operation="pattern match">^([^:]+):.*$</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:variable_object id="oval:ssg-object_count_of_all_usernames_from_etc_passwd:obj:1" version="1">
+      <ind:var_ref>oval:ssg-variable_count_of_all_usernames_from_etc_passwd:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_etc_security_limits_conf_maxlogins:obj:1" version="1">
+      <ind:filepath>/etc/security/limits.conf</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*\*[\s]+(?:(?:hard)|(?:-))[\s]+maxlogins[\s]+(\d+)\s*$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_etc_security_limitsd_conf_maxlogins:obj:1" version="1">
+      <ind:path>/etc/security/limits.d</ind:path>
+      <ind:filename operation="pattern match">^.*\.conf$</ind:filename>
+      <ind:pattern operation="pattern match">^[\s]*\*[\s]+(?:(?:hard)|(?:-))[\s]+maxlogins[\s]+(\d+)\s*$</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_etc_security_limitsd_conf_maxlogins_exists:obj:1" version="1">
+      <ind:path>/etc/security/limits.d</ind:path>
+      <ind:filename operation="pattern match">^.*\.conf$</ind:filename>
+      <ind:pattern operation="pattern match">^[\s]*\*[\s]+(?:(?:hard)|(?:-))[\s]+maxlogins</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_last_pass_max_days_from_etc_login_defs:obj:1" version="1">
+      <!-- Read whole /etc/login.defs as single line so we can retrieve last PASS_MAX_DAYS directive occurrence -->
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/login.defs</ind:filepath>
+      <!-- Retrieve last (uncommented) occurrence of PASS_MAX_DAYS directive -->
+      <ind:pattern operation="pattern match">.*\n[^#]*(PASS_MAX_DAYS\s+\d+)\s*\n</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:variable_object id="oval:ssg-object_last_pass_max_days_instance_value:obj:1" version="1">
+      <ind:var_ref>oval:ssg-variable_last_pass_max_days_instance_value:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_last_pass_min_days_from_etc_login_defs:obj:1" version="1">
+      <!-- Read whole /etc/login.defs as single line so we can retrieve last PASS_MIN_DAYS directive occurrence -->
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/login.defs</ind:filepath>
+      <!-- Retrieve last (uncommented) occurrence of PASS_MIN_DAYS directive -->
+      <ind:pattern operation="pattern match">.*\n[^#]*(PASS_MIN_DAYS\s+\d+)\s*\n</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:variable_object id="oval:ssg-object_last_pass_min_days_instance_value:obj:1" version="1">
+      <ind:var_ref>oval:ssg-variable_last_pass_min_days_instance_value:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_accounts_no_uid_except_root:obj:1" version="1">
+      <ind:filepath>/etc/passwd</ind:filepath>
+      <ind:pattern operation="pattern match">^(?!root:)[^:]*:[^:]*:0</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <unix:password_object id="oval:ssg-object_accounts_password_all_shadowed:obj:1" version="1">
+      <unix:username operation="pattern match">.*</unix:username>
+    </unix:password_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_last_pass_min_len_from_etc_login_defs:obj:1" version="1">
+      <!-- Read whole /etc/login.defs as single line so we can retrieve last PASS_MIN_LEN directive occurrence -->
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/login.defs</ind:filepath>
+      <!-- Retrieve last (uncommented) occurrence of PASS_MIN_LEN directive -->
+      <ind:pattern operation="pattern match">.*\n[^#]*(PASS_MIN_LEN\s+\d+)\s*\n</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:variable_object id="oval:ssg-object_last_pass_min_len_instance_value:obj:1" version="1">
+      <ind:var_ref>oval:ssg-variable_last_pass_min_len_instance_value:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_last_pass_warn_age_from_etc_login_defs:obj:1" version="1">
+      <!-- Read whole /etc/login.defs as single line so we can retrieve last PASS_WARN_AGE directive occurrence -->
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/login.defs</ind:filepath>
+      <!-- Retrieve last (uncommented) occurrence of PASS_WARN_AGE directive -->
+      <ind:pattern operation="pattern match">.*\n[^#]*(PASS_WARN_AGE\s+\d+)\s*\n</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:variable_object id="oval:ssg-object_last_pass_warn_age_instance_value:obj:1" version="1">
+      <ind:var_ref>oval:ssg-variable_last_pass_warn_age_instance_value:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_accounts_passwords_pam_faillock_preauth_silent_system-auth:obj:1" version="1">
+      <!-- Read whole /etc/pam.d/system-auth content as single line so we can verify existing order of PAM modules -->
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/pam.d/system-auth</ind:filepath>
+      <!-- Since order of PAM modules matters ensure pam_faillock.so preauth silent in auth section is listed before
+         pam_unix.so module in auth section -->
+      <ind:pattern operation="pattern match">[\n][\s]*auth[\s]+required[\s]+pam_faillock\.so[\s]+preauth[\s]+silent[\s]+[^\n]*deny=([0-9]+)[\s]*(?s).*[\n][\s]*auth[\s]+(?:(?:sufficient)|(?:\[.*default=die.*\]))[\s]+pam_unix\.so[^\n]*[\n]</ind:pattern>
+      <!-- Check only the first instance -->
+      <ind:instance datatype="int" operation="equals">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_accounts_passwords_pam_faillock_authfail_deny_system-auth:obj:1" version="1">
+      <!-- Read whole /etc/pam.d/system-auth content as single line so we can verify existing order of PAM modules -->
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/pam.d/system-auth</ind:filepath>
+      <!-- Since order of PAM modules matters ensure pam_faillock.so in auth section is listed right after pam_unix.so auth row -->
+      <ind:pattern operation="pattern match">[\n][\s]*auth[\s]+(?:(?:sufficient)|(?:\[.*default=die.*\]))[\s]+pam_unix\.so[^\n]+(?s).*[\n][\s]*auth[\s]+\[default=die\][\s]+pam_faillock\.so[\s]+authfail[\s]+[^\n]*deny=([0-9]+)[^\n]*[\n]</ind:pattern>
+      <!-- Check only the first instance -->
+      <ind:instance datatype="int" operation="equals">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_accounts_passwords_pam_faillock_account_phase_system-auth:obj:1" version="1">
+      <!-- Read whole /etc/pam.d/system-auth content as single line so we can verify existing order of PAM modules -->
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/pam.d/system-auth</ind:filepath>
+      <!-- Since order of PAM modules matters ensure pam_faillock.so in account section is listed right before pam_unix.so account row -->
+      <ind:pattern operation="pattern match">[\n][\s]*account[\s]+required[\s]+pam_faillock\.so[^\n]*[\n][\s]*account[\s]+required[\s]+pam_unix\.so[^\n]*[\n]</ind:pattern>
+      <!-- Check only the first instance -->
+      <ind:instance datatype="int" operation="equals">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_accounts_passwords_pam_faillock_preauth_silent_password-auth:obj:1" version="1">
+      <!-- Read whole /etc/pam.d/password-auth content as single line so we can verify existing order of PAM modules -->
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/pam.d/password-auth</ind:filepath>
+      <!-- Since order of PAM modules matters ensure pam_faillock.so preauth silent in auth section is listed before
+         pam_unix.so module in auth section -->
+      <ind:pattern operation="pattern match">[\n][\s]*auth[\s]+required[\s]+pam_faillock\.so[\s]+preauth[\s]+silent[\s]+[^\n]*deny=([0-9]+)[\s]*(?s).*[\n][\s]*auth[\s]+(?:(?:sufficient)|(?:\[.*default=die.*\]))[\s]+pam_unix\.so[^\n]*[\n]</ind:pattern>
+      <!-- Check only the first instance -->
+      <ind:instance datatype="int" operation="equals">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_accounts_passwords_pam_faillock_authfail_deny_password-auth:obj:1" version="1">
+      <!-- Read whole /etc/pam.d/system-auth content as single line so we can verify existing order of PAM modules -->
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/pam.d/password-auth</ind:filepath>
+      <!-- Since order of PAM modules matters ensure pam_faillock.so in auth section is listed right after pam_unix.so auth row -->
+      <ind:pattern operation="pattern match">[\n][\s]*auth[\s]+(?:(?:sufficient)|(?:\[.*default=die.*\]))[\s]+pam_unix\.so[^\n]+(?s).*[\n][\s]*auth[\s]+\[default=die\][\s]+pam_faillock\.so[\s]+authfail[\s]+[^\n]*deny=([0-9]+)[^\n]*[\n]</ind:pattern>
+      <!-- Check only the first instance -->
+      <ind:instance datatype="int" operation="equals">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_accounts_passwords_pam_faillock_account_phase_password-auth:obj:1" version="1">
+      <!-- Read whole /etc/pam.d/system-auth content as single line so we can verify existing order of PAM modules -->
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/pam.d/password-auth</ind:filepath>
+      <!-- Since order of PAM modules matters ensure pam_faillock.so in account section is listed right before pam_unix.so account row -->
+      <ind:pattern operation="pattern match">[\n][\s]*account[\s]+required[\s]+pam_faillock\.so[^\n]*[\n][\s]*account[\s]+required[\s]+pam_unix\.so[^\n]*[\n]</ind:pattern>
+      <!-- Check only the first instance -->
+      <ind:instance datatype="int" operation="equals">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:environmentvariable58_object id="oval:ssg-object_accounts_root_path_dirs_no_write_pathenv:obj:1" version="1">
+      <ind:pid xsi:nil="true" datatype="int"/>
+      <ind:name>PATH</ind:name>
+    </ind:environmentvariable58_object>
+    <unix:file_object comment="root's path directories with wrong group / other write permissions" id="oval:ssg-object_accounts_root_path_dirs_no_group_other_write:obj:1" version="1">
+      <unix:path var_ref="oval:ssg-var_accounts_root_path_dirs_no_write:var:1" var_check="at least one"/>
+      <unix:filename xsi:nil="true"/>
+      <filter action="include">oval:ssg-state_accounts_root_path_dirs_wrong_perms:ste:1</filter>
+      <filter action="exclude">oval:ssg-state_accounts_root_path_dirs_symlink:ste:1</filter>
+    </unix:file_object>
+    <ind:textfilecontent54_object id="oval:ssg-obj_umask_from_etc_bashrc:obj:1" comment="Umask value from /etc/bashrc" version="1">
+      <ind:filepath>/etc/bashrc</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)UMASK(?-i)[\s]+([^#\s]*)</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:variable_object id="oval:ssg-obj_accounts_umask_etc_bashrc:obj:1" version="1">
+      <ind:var_ref>oval:ssg-var_etc_bashrc_umask_as_number:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:textfilecontent54_object id="oval:ssg-obj_umask_from_etc_csh_cshrc:obj:1" comment="Umask value from /etc/csh.cshrc" version="1">
+      <ind:filepath>/etc/csh.cshrc</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)UMASK(?-i)[\s]+([^#\s]*)</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:variable_object id="oval:ssg-obj_accounts_umask_etc_csh_cshrc:obj:1" version="1">
+      <ind:var_ref>oval:ssg-var_etc_csh_cshrc_umask_as_number:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:textfilecontent54_object id="oval:ssg-obj_umask_from_etc_login_defs:obj:1" comment="Umask value from /etc/login.defs" version="1">
+      <ind:filepath>/etc/login.defs</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)UMASK(?-i)[\s]+([^#\s]*)</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:variable_object id="oval:ssg-obj_accounts_umask_etc_login_defs:obj:1" version="1">
+      <ind:var_ref>oval:ssg-var_etc_login_defs_umask_as_number:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:textfilecontent54_object id="oval:ssg-obj_umask_from_etc_profile:obj:1" comment="Umask value from /etc/profile" version="1">
+      <ind:filepath>/etc/profile</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)UMASK(?-i)[\s]+([^#\s]*)</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:variable_object id="oval:ssg-obj_accounts_umask_etc_profile:obj:1" version="1">
+      <ind:var_ref>oval:ssg-var_etc_profile_umask_as_number:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_auditd_audispd_syslog_plugin_activated:obj:1" version="1">
+      <ind:filepath>/etc/audisp/plugins.d/syslog.conf</ind:filepath>
+      <!-- Allow only space (exactly) as delimiter: https://fedorahosted.org/audit/browser/trunk/src/auditd-config.c#L426 -->
+      <!-- Require at least one space before and after the equal sign -->
+      <ind:pattern operation="pattern match">^[ ]*active[ ]+=[ ]+yes[ ]*$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_auditd_conf_log_group_root:obj:1" comment="log_group = root" version="1">
+      <ind:filepath operation="equals">/etc/audit/auditd.conf</ind:filepath>
+      <ind:pattern operation="pattern match">^[ ]*log_group[ ]+=[ ]+root[ ]*$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_auditd_data_retention_action_mail_acct:obj:1" version="2">
+      <ind:filepath>/etc/audit/auditd.conf</ind:filepath>
+      <!-- Allow only space (exactly) as delimiter: https://fedorahosted.org/audit/browser/trunk/src/auditd-config.c#L426 -->
+      <!-- Require at least one space before and after the equal sign -->
+      <ind:pattern operation="pattern match">^[ ]*action_mail_acct[ ]+=[ ]+(\S+)[ ]*$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_auditd_data_retention_admin_space_left_action:obj:1" version="2">
+      <ind:filepath>/etc/audit/auditd.conf</ind:filepath>
+      <!-- Allow only space (exactly) as delimiter: https://fedorahosted.org/audit/browser/trunk/src/auditd-config.c#L426 -->
+      <!-- Require at least one space before and after the equal sign -->
+      <ind:pattern operation="pattern match">^[ ]*admin_space_left_action[ ]+=[ ]+(\S+)[ ]*$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_auditd_data_retention_max_log_file:obj:1" version="2">
+      <ind:filepath>/etc/audit/auditd.conf</ind:filepath>
+      <!-- Allow only space (exactly) as delimiter: https://fedorahosted.org/audit/browser/trunk/src/auditd-config.c#L426 -->
+      <!-- Require at least one space before and after the equal sign -->
+      <ind:pattern operation="pattern match">^[ ]*max_log_file[ ]+=[ ]+(\d+)[ ]*$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_auditd_data_retention_max_log_file_action:obj:1" version="2">
+      <ind:filepath>/etc/audit/auditd.conf</ind:filepath>
+      <!-- Allow only space (exactly) as delimiter: https://fedorahosted.org/audit/browser/trunk/src/auditd-config.c#L426 -->
+      <!-- Require at least one space before and after the equal sign -->
+      <ind:pattern operation="pattern match">^[ ]*max_log_file_action[ ]+=[ ]+(\S+)[ ]*$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_auditd_data_retention_num_logs:obj:1" version="2">
+      <ind:filepath>/etc/audit/auditd.conf</ind:filepath>
+      <!-- Allow only space (exactly) as delimiter: https://fedorahosted.org/audit/browser/trunk/src/auditd-config.c#L426 -->
+      <!-- Require at least one space before and after the equal sign -->
+      <ind:pattern operation="pattern match">^[ ]*num_logs[ ]+=[ ]+(\d+)[ ]*$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_auditd_data_retention_space_left_action:obj:1" version="2">
+      <ind:filepath>/etc/audit/auditd.conf</ind:filepath>
+      <!-- Allow only space (exactly) as delimiter: https://fedorahosted.org/audit/browser/trunk/src/auditd-config.c#L426 -->
+      <!-- Require at least one space before and after the equal sign -->
+      <ind:pattern operation="pattern match">^[ ]*space_left_action[ ]+=[ ]+(\S+)[ ]*$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_yum_ensure_gpgcheck_globally_activated:obj:1" comment="gpgcheck set in /etc/yum.conf" version="1">
+      <ind:filepath>/etc/yum.conf</ind:filepath>
+      <ind:pattern operation="pattern match">^\s*gpgcheck\s*=\s*1\s*$</ind:pattern>
+      <ind:instance datatype="int" operation="equals">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_dnf_ensure_gpgcheck_globally_activated:obj:1" comment="gpgcheck set in /etc/dnf/dnf.conf" version="1">
+      <ind:filepath>/etc/dnf/dnf.conf</ind:filepath>
+      <ind:pattern operation="pattern match">^\s*gpgcheck\s*=\s*1\s*$</ind:pattern>
+      <ind:instance datatype="int" operation="equals">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <unix:file_object comment="/var/log/audit directories" id="oval:ssg-object_ownership_var_log_audit_directories:obj:1" version="1">
+      <unix:behaviors recurse="directories" recurse_direction="down" max_depth="-1" recurse_file_system="all"/>
+      <unix:path operation="equals">/var/log/audit</unix:path>
+      <unix:filename xsi:nil="true"/>
+      <filter action="include">oval:ssg-state_owner_not_root_root_var_log_audit:ste:1</filter>
+    </unix:file_object>
+    <unix:file_object comment="/var/log/audit files" id="oval:ssg-object_ownership_var_log_audit_files:obj:1" version="1">
+      <unix:behaviors recurse="directories" recurse_direction="down" max_depth="-1" recurse_file_system="all"/>
+      <unix:path operation="equals">/var/log/audit</unix:path>
+      <unix:filename operation="pattern match">^.*$</unix:filename>
+      <filter action="include">oval:ssg-state_owner_not_root_root_var_log_audit:ste:1</filter>
+    </unix:file_object>
+    <unix:file_object comment="/var/log/audit directories" id="oval:ssg-object_ownership_var_log_audit_directories-non_root:obj:1" version="1">
+      <unix:behaviors recurse="directories" recurse_direction="down" max_depth="-1" recurse_file_system="all"/>
+      <unix:path operation="equals">/var/log/audit</unix:path>
+      <unix:filename xsi:nil="true"/>
+      <filter action="include">oval:ssg-state_owner_not_root_var_log_audit-non_root:ste:1</filter>
+    </unix:file_object>
+    <unix:file_object comment="/var/log/audit files" id="oval:ssg-object_ownership_var_log_audit_files-non_root:obj:1" version="1">
+      <unix:behaviors recurse="directories" recurse_direction="down" max_depth="-1" recurse_file_system="all"/>
+      <unix:path operation="equals">/var/log/audit</unix:path>
+      <unix:filename operation="pattern match">^.*$</unix:filename>
+      <filter action="include">oval:ssg-state_owner_not_root_var_log_audit-non_root:ste:1</filter>
+    </unix:file_object>
+    <unix:file_object comment="home directories" id="oval:ssg-object_file_permissions_home_dirs:obj:1" version="2">
+      <unix:behaviors recurse="directories" recurse_direction="down" max_depth="1" recurse_file_system="all"/>
+      <unix:path operation="equals">/home</unix:path>
+      <unix:filename xsi:nil="true"/>
+      <filter action="exclude">oval:ssg-state_home_dirs_home_itself:ste:1</filter>
+      <filter action="include">oval:ssg-state_home_dirs_wrong_perm:ste:1</filter>
+    </unix:file_object>
+    <unix:file_object comment="world writable" id="oval:ssg-object_file_permissions_unauthorized_world_write:obj:1" version="1">
+      <unix:behaviors recurse="directories" recurse_direction="down" max_depth="-1" recurse_file_system="local"/>
+      <unix:path operation="equals">/</unix:path>
+      <unix:filename operation="pattern match">^.*$</unix:filename>
+      <filter action="include">oval:ssg-state_file_permissions_unauthorized_world_write:ste:1</filter>
+      <!-- don't search /proc, /sys, and some special files from /selinux -->
+      <filter action="exclude">oval:ssg-state_file_permissions_unauthorized_world_write_exclude_special_selinux_files:ste:1</filter>
+      <filter action="exclude">oval:ssg-state_file_permissions_unauthorized_world_write_exclude_proc:ste:1</filter>
+      <filter action="exclude">oval:ssg-state_file_permissions_unauthorized_world_write_exclude_sys:ste:1</filter>
+    </unix:file_object>
+    <linux:rpminfo_object id="oval:ssg-obj_linuxshield_install_antivirus:obj:1" version="1">
+      <linux:name>McAfeeVSEForLinux</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_mcafee_runtime_installed:obj:1" version="1">
+      <linux:name>MFErt</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_mcafee_management_agent:obj:1" version="1">
+      <linux:name>MFEcma</linux:name>
+    </linux:rpminfo_object>
+    <unix:file_object id="oval:ssg-object_mcafee_accm_exists:obj:1" version="1">
+      <unix:path>/opt/McAfee/accm/bin</unix:path>
+      <unix:filename>accm</unix:filename>
+    </unix:file_object>
+    <linux:rpminfo_object id="oval:ssg-obj_mcafee_hbss_hips_installed:obj:1" version="1">
+      <linux:name>MFEhiplsm</linux:name>
+    </linux:rpminfo_object>
+    <unix:file_object id="oval:ssg-object_mcafee_auditengine_exists:obj:1" version="1">
+      <unix:path>/opt/McAfee/auditengine/bin</unix:path>
+      <unix:filename>auditmanager</unix:filename>
+    </unix:file_object>
+    <linux:rpminfo_object id="oval:ssg-obj_centos6:obj:1" version="1">
+      <linux:name>centos-release</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_centos7:obj:1" version="1">
+      <linux:name>centos-release</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-object_fedora_release_rpm:obj:1" version="1">
+      <linux:name>fedora-release</linux:name>
+    </linux:rpminfo_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_fedora_vendor_product:obj:1" version="1">
+      <ind:filepath>/etc/system-release-cpe</ind:filepath>
+      <ind:pattern operation="pattern match">^cpe:\/o:fedoraproject:fedora:[\d]+$</ind:pattern>
+      <ind:instance datatype="int" operation="equals">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:family_object id="oval:ssg-object_unix_family:obj:1" version="1"/>
+    <linux:rpminfo_object id="oval:ssg-obj_rhel_client:obj:1" version="1">
+      <linux:name>redhat-release-client</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_rhel_workstation:obj:1" version="1">
+      <linux:name>redhat-release-workstation</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_rhel_server:obj:1" version="1">
+      <linux:name>redhat-release-server</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_rhel_computenode:obj:1" version="1">
+      <linux:name>redhat-release-computenode</linux:name>
+    </linux:rpminfo_object>
+    <ind:family_object id="oval:ssg-obj_rhel7_unix_family:obj:1" version="1"/>
+    <linux:rpminfo_object id="oval:ssg-obj_rhel7_client:obj:1" version="1">
+      <linux:name>redhat-release-client</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_rhel7_workstation:obj:1" version="1">
+      <linux:name>redhat-release-workstation</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_rhel7_server:obj:1" version="1">
+      <linux:name>redhat-release-server</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_rhel7_computenode:obj:1" version="1">
+      <linux:name>redhat-release-computenode</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_sl6:obj:1" version="1">
+      <linux:name>sl-release</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_sl7:obj:1" version="1">
+      <linux:name>sl-release</linux:name>
+    </linux:rpminfo_object>
+    <ind:family_object id="oval:ssg-obj_unix_wrlinux:obj:1" version="1"/>
+    <unix:file_object version="1" id="oval:ssg-obj_test_wrlinux:obj:1">
+      <unix:filepath>/etc/wrlinux-release</unix:filepath>
+    </unix:file_object>
+    <unix:file_object comment="Check file /.dockerenv" id="oval:ssg-installed_env_is_a_container:obj:1" version="1">
+      <unix:filepath datatype="string">/.dockerenv</unix:filepath>
+    </unix:file_object>
+    <unix:file_object comment="Check file /.dockerenv" id="oval:ssg-installed_env_is_a_machine:obj:1" version="1">
+      <unix:filepath datatype="string">/.dockerenv</unix:filepath>
+    </unix:file_object>
+    <ind:textfilecontent54_object comment="/etc/securetty file exists" id="oval:ssg-object_etc_securetty_exists:obj:1" version="1">
+      <ind:filepath>/etc/securetty</ind:filepath>
+      <ind:pattern operation="pattern match">^.*$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object comment="no entries /etc/securetty" id="oval:ssg-object_no_direct_root_logins:obj:1" version="1">
+      <ind:filepath>/etc/securetty</ind:filepath>
+      <ind:pattern operation="pattern match">^$</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_no_empty_passwords:obj:1" version="1">
+      <ind:filepath>/etc/pam.d/system-auth</ind:filepath>
+      <ind:pattern operation="pattern match">\s*nullok\s*</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-obj_no_insecure_locks_exports:obj:1" version="2">
+      <ind:filepath>/etc/exports</ind:filepath>
+      <ind:pattern operation="pattern match">^(.*?(\binsecure_locks\b)[^$]*)$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <unix:file_object comment="look for .netrc in /home" id="oval:ssg-object_no_netrc_files_home:obj:1" version="1">
+      <unix:behaviors recurse="directories" recurse_direction="down" max_depth="1" recurse_file_system="all"/>
+      <unix:path operation="equals">/home</unix:path>
+      <unix:filename operation="pattern match">^\.netrc$</unix:filename>
+    </unix:file_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_last_uid_min_from_etc_login_defs:obj:1" version="1">
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/login.defs</ind:filepath>
+      <!-- Last (uncommented) instance od UID_MIN directive -->
+      <ind:pattern operation="pattern match">.*\n(?!#|SYS_)(UID_MIN[\s]+[\d]+)\s*\n</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_last_sys_uid_min_from_etc_login_defs:obj:1" version="1">
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/login.defs</ind:filepath>
+      <!-- Last (uncommented) instance of SYS_UID_MIN directive -->
+      <ind:pattern operation="pattern match">.*\n[^#]*(SYS_UID_MIN[\s]+[\d]+)\s*\n</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_last_sys_uid_max_from_etc_login_defs:obj:1" version="1">
+      <ind:behaviors singleline="true"/>
+      <ind:filepath>/etc/login.defs</ind:filepath>
+      <!-- Last (uncommented) instance of SYS_UID_MAX directive -->
+      <ind:pattern operation="pattern match">.*\n[^#]*(SYS_UID_MAX[\s]+[\d]+)\s*\n</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_etc_passwd_entries:obj:1" version="1">
+      <ind:filepath>/etc/passwd</ind:filepath>
+      <ind:pattern operation="pattern match">^(?!root).*:x:([\d]+):[\d]+:[^:]*:[^:]*:(?!\/sbin\/nologin|\/bin\/sync|\/sbin\/shutdown|\/sbin\/halt).*$</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:variable_object id="oval:ssg-object_shell_defined_default_uid_range:obj:1" version="1">
+      <ind:var_ref>oval:ssg-variable_default_range_quad_expr:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:variable_object id="oval:ssg-object_shell_defined_reserved_uid_range:obj:1" version="1">
+      <ind:var_ref>oval:ssg-variable_reserved_range_quad_expr:var:1</ind:var_ref>
+    </ind:variable_object>
+    <ind:variable_object id="oval:ssg-object_shell_defined_dynalloc_uid_range:obj:1" version="1">
+      <ind:var_ref>oval:ssg-variable_dynalloc_range_quad_expr:var:1</ind:var_ref>
+    </ind:variable_object>
+    <linux:rpminfo_object id="oval:ssg-obj_package_net-snmp_removed:obj:1" version="1">
+      <linux:name>net-snmp</linux:name>
+    </linux:rpminfo_object>
+    <linux:rpminfo_object id="oval:ssg-obj_package_prelink_removed:obj:1" version="1">
+      <linux:name>prelink</linux:name>
+    </linux:rpminfo_object>
+    <ind:textfilecontent54_object comment="serial ports /etc/securetty" id="oval:ssg-object_serial_ports_etc_securetty:obj:1" version="1">
+      <ind:filepath>/etc/securetty</ind:filepath>
+      <ind:pattern operation="pattern match">^ttyS[0-9]+$</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:environmentvariable58_object id="oval:ssg-object_root_path_no_dot:obj:1" version="1">
+      <ind:pid xsi:nil="true" datatype="int"/>
+      <ind:name>PATH</ind:name>
+    </ind:environmentvariable58_object>
+    <ind:textfilecontent54_object comment="virtual consoles /etc/securetty" id="oval:ssg-object_virtual_consoles_etc_securetty:obj:1" version="1">
+      <ind:filepath>/etc/securetty</ind:filepath>
+      <ind:pattern operation="pattern match">^vc/[0-9]+$</ind:pattern>
+      <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <linux:selinuxsecuritycontext_object comment="none satisfy initrc_t in /proc" id="oval:ssg-object_selinux_confinement_of_daemons:obj:1" version="1">
+      <linux:behaviors max_depth="1" recurse_direction="down"/>
+      <linux:path>/proc</linux:path>
+      <linux:filename operation="pattern match">^.*$</linux:filename>
+      <filter action="include">oval:ssg-state_selinux_confinement_of_daemons:ste:1</filter>
+    </linux:selinuxsecuritycontext_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_snmp_default_communities:obj:1" version="1">
+      <ind:filepath>/etc/snmp/snmpd.conf</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(com2se|rocommunity|rwcommunity|createUser).*(public|private)</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_snmp_versions:obj:1" version="1">
+      <ind:filepath>/etc/snmp/snmpd.conf</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(com2se|rocommunity|rwcommunity)</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-obj_sshd_permitemptypasswords_no:obj:1" version="2">
+      <ind:filepath>/etc/ssh/sshd_config</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)PermitEmptyPasswords(?-i)[\s]+no[\s]*(?:|(?:#.*))?$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-obj_sshd_disable_rhosts_rsa:obj:1" version="2">
+      <ind:filepath>/etc/ssh/sshd_config</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)RhostsRSAAuthentication(?-i)[\s]+no[\s]*(?:|(?:#.*))?$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-obj_sshd_permitrootlogin_no:obj:1" version="2">
+      <ind:filepath>/etc/ssh/sshd_config</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)PermitRootLogin(?-i)[\s]+no[\s]*(?:|(?:#.*))?$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-obj_sshd_disable_user_known_hosts:obj:1" version="2">
+      <ind:filepath>/etc/ssh/sshd_config</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)IgnoreUserKnownHosts(?-i)[\s]+yes[\s]*(?:|(?:#.*))?$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-object_sshd_idle_timeout:obj:1" version="2">
+      <ind:filepath>/etc/ssh/sshd_config</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)ClientAliveInterval[\s]+(\d+)[\s]*(?:|(?:#.*))?$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <ind:textfilecontent54_object id="oval:ssg-obj_sshd_clientalivecountmax:obj:1" version="2">
+      <ind:filepath>/etc/ssh/sshd_config</ind:filepath>
+      <ind:pattern operation="pattern match">^[\s]*(?i)ClientAliveCountMax[\s]+([\d]+)[\s]*(?:|(?:#.*))?$</ind:pattern>
+      <ind:instance datatype="int">1</ind:instance>
+    </ind:textfilecontent54_object>
+    <unix:uname_object comment="64 bit architecture" id="oval:ssg-object_system_info_architecture_ppc_64:obj:1" version="1"/>
+    <unix:uname_object comment="64 bit architecture" id="oval:ssg-object_system_info_architecture_ppcle_64:obj:1" version="1"/>
+    <unix:uname_object comment="32 bit architecture" id="oval:ssg-object_system_info_architecture_x86:obj:1" version="1"/>
+    <unix:uname_object comment="64 bit architecture" id="oval:ssg-object_system_info_architecture_x86_64:obj:1" version="1"/>
+    <ind:variable_object id="oval:ssg-object_var_accounts_user_umask_umask_as_number:obj:1" version="1">
+      <ind:var_ref>oval:ssg-var_accounts_user_umask_umask_as_number:var:1</ind:var_ref>
+    </ind:variable_object>
+  </objects>
+  <states>
+    <ind:textfilecontent54_state id="oval:ssg-state_accounts_logon_fail_delay:ste:1" version="1">
+      <ind:subexpression operation="greater than or equal" var_ref="oval:ssg-var_accounts_fail_delay:var:1" datatype="int"/>
+    </ind:textfilecontent54_state>
+    <unix:file_state id="oval:ssg-state_file_permissions_unauthorized_sgid:ste:1" version="1">
+      <unix:sgid datatype="boolean">true</unix:sgid>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_sgid_whitelist:ste:1" version="1">
+      <unix:filepath var_ref="oval:ssg-var_sgid_whitelist:var:1" var_check="at least one"/>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_file_permissions_unauthorized_suid:ste:1" version="1">
+      <unix:suid datatype="boolean">true</unix:suid>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_suid_whitelist:ste:1" version="1">
+      <unix:filepath var_ref="oval:ssg-var_suid_whitelist:var:1" var_check="at least one"/>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_symlink:ste:1" version="1">
+      <unix:type operation="equals">symbolic link</unix:type>
+    </unix:file_state>
+    <ind:variable_state id="oval:ssg-state_etc_passwd_no_duplicate_user_names:ste:1" version="1">
+      <ind:value var_ref="oval:ssg-variable_count_of_unique_usernames_from_etc_passwd:var:1" datatype="int" operation="equals" var_check="at least one"/>
+    </ind:variable_state>
+    <ind:textfilecontent54_state id="oval:ssg-state_maxlogins:ste:1" version="1">
+      <ind:subexpression operation="less than or equal" var_ref="oval:ssg-var_accounts_max_concurrent_login_sessions:var:1" datatype="int"/>
+    </ind:textfilecontent54_state>
+    <ind:variable_state id="oval:ssg-state_last_pass_max_days_instance_value:ste:1" version="1">
+      <ind:value operation="less than or equal" var_ref="oval:ssg-var_accounts_maximum_age_login_defs:var:1" datatype="int" var_check="at least one"/>
+    </ind:variable_state>
+    <ind:variable_state id="oval:ssg-state_last_pass_min_days_instance_value:ste:1" version="1">
+      <ind:value operation="greater than or equal" var_ref="oval:ssg-var_accounts_minimum_age_login_defs:var:1" datatype="int" var_check="at least one"/>
+    </ind:variable_state>
+    <unix:password_state id="oval:ssg-state_accounts_password_all_shadowed:ste:1" version="1">
+      <unix:password>x</unix:password>
+    </unix:password_state>
+    <ind:variable_state id="oval:ssg-state_last_pass_min_len_instance_value:ste:1" version="1">
+      <ind:value operation="greater than or equal" var_ref="oval:ssg-var_accounts_password_minlen_login_defs:var:1" datatype="int" var_check="at least one"/>
+    </ind:variable_state>
+    <ind:variable_state id="oval:ssg-state_last_pass_warn_age_instance_value:ste:1" version="1">
+      <ind:value operation="greater than or equal" var_ref="oval:ssg-var_accounts_password_warn_age_login_defs:var:1" datatype="int" var_check="at least one"/>
+    </ind:variable_state>
+    <ind:textfilecontent54_state id="oval:ssg-state_var_accounts_passwords_pam_faillock_deny_value:ste:1" version="1">
+      <ind:subexpression datatype="int" operation="less than or equal" var_ref="oval:ssg-var_accounts_passwords_pam_faillock_deny:var:1"/>
+    </ind:textfilecontent54_state>
+    <unix:file_state comment="group or other has write privilege" id="oval:ssg-state_accounts_root_path_dirs_wrong_perms:ste:1" version="1" operator="OR">
+      <unix:gwrite datatype="boolean">true</unix:gwrite>
+      <unix:owrite datatype="boolean">true</unix:owrite>
+    </unix:file_state>
+    <unix:file_state comment="symbolic link" id="oval:ssg-state_accounts_root_path_dirs_symlink:ste:1" version="1">
+      <unix:type operation="equals">symbolic link</unix:type>
+    </unix:file_state>
+    <ind:variable_state id="oval:ssg-ste_accounts_umask_etc_bashrc:ste:1" version="1">
+      <ind:value datatype="int" operation="bitwise and" var_ref="oval:ssg-var_accounts_user_umask_umask_as_number:var:1"/>
+    </ind:variable_state>
+    <ind:variable_state id="oval:ssg-ste_accounts_umask_etc_csh_cshrc:ste:1" version="1">
+      <ind:value datatype="int" operation="bitwise and" var_ref="oval:ssg-var_accounts_user_umask_umask_as_number:var:1"/>
+    </ind:variable_state>
+    <ind:variable_state id="oval:ssg-ste_accounts_umask_etc_login_defs:ste:1" version="1">
+      <ind:value datatype="int" operation="bitwise and" var_ref="oval:ssg-var_accounts_user_umask_umask_as_number:var:1"/>
+    </ind:variable_state>
+    <ind:variable_state id="oval:ssg-ste_accounts_umask_etc_profile:ste:1" version="1">
+      <ind:value datatype="int" operation="bitwise and" var_ref="oval:ssg-var_accounts_user_umask_umask_as_number:var:1"/>
+    </ind:variable_state>
+    <ind:textfilecontent54_state id="oval:ssg-state_auditd_data_retention_action_mail_acct:ste:1" version="1">
+      <ind:subexpression operation="equals" var_ref="oval:ssg-var_auditd_action_mail_acct:var:1"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="oval:ssg-state_auditd_data_retention_admin_space_left_action:ste:1" version="1">
+      <ind:subexpression operation="case insensitive equals" var_ref="oval:ssg-var_auditd_admin_space_left_action:var:1"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="oval:ssg-state_auditd_data_retention_max_log_file:ste:1" version="1">
+      <ind:subexpression operation="greater than or equal" var_ref="oval:ssg-var_auditd_max_log_file:var:1" datatype="int"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="oval:ssg-state_auditd_data_retention_max_log_file_action:ste:1" version="1">
+      <ind:subexpression operation="case insensitive equals" var_ref="oval:ssg-var_auditd_max_log_file_action:var:1"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="oval:ssg-state_auditd_data_retention_num_logs:ste:1" version="1">
+      <ind:subexpression operation="greater than or equal" var_ref="oval:ssg-var_auditd_num_logs:var:1" datatype="int"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="oval:ssg-state_auditd_data_retention_space_left_action:ste:1" version="2">
+      <ind:subexpression operation="case insensitive equals" var_ref="oval:ssg-var_auditd_space_left_action:var:1"/>
+    </ind:textfilecontent54_state>
+    <unix:file_state id="oval:ssg-state_owner_not_root_root_var_log_audit:ste:1" version="1" operator="OR">
+      <unix:group_id datatype="int" operation="not equal">0</unix:group_id>
+      <unix:user_id datatype="int" operation="not equal">0</unix:user_id>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_owner_not_root_var_log_audit-non_root:ste:1" version="1" operator="OR">
+      <unix:group_id datatype="int" operation="not equal">0</unix:group_id>
+      <unix:user_id datatype="int" operation="equals">0</unix:user_id>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_home_dirs_home_itself:ste:1" version="1">
+      <!-- Exclude /home directory itself from the check. Check /home/* directories only. -->
+      <unix:path operation="equals">/home</unix:path>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_home_dirs_wrong_perm:ste:1" version="1" operator="OR">
+      <unix:suid datatype="boolean">true</unix:suid>
+      <unix:sgid datatype="boolean">true</unix:sgid>
+      <unix:sticky datatype="boolean">true</unix:sticky>
+      <unix:gwrite datatype="boolean">true</unix:gwrite>
+      <unix:oread datatype="boolean">true</unix:oread>
+      <unix:owrite datatype="boolean">true</unix:owrite>
+      <unix:oexec datatype="boolean">true</unix:oexec>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_file_permissions_unauthorized_world_write:ste:1" version="1">
+      <unix:type operation="equals">regular</unix:type>
+      <unix:owrite datatype="boolean">true</unix:owrite>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_file_permissions_unauthorized_world_write_exclude_special_selinux_files:ste:1" version="1">
+      <unix:filepath operation="pattern match">^/selinux/(?:(?:member)|(?:user)|(?:relabel)|(?:create)|(?:access)|(?:context))$</unix:filepath>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_file_permissions_unauthorized_world_write_exclude_proc:ste:1" version="1">
+      <unix:filepath operation="pattern match">^/proc/.*$</unix:filepath>
+    </unix:file_state>
+    <unix:file_state id="oval:ssg-state_file_permissions_unauthorized_world_write_exclude_sys:ste:1" version="1">
+      <unix:filepath operation="pattern match">^/sys/.*$</unix:filepath>
+    </unix:file_state>
+    <linux:rpminfo_state id="oval:ssg-state_centos6:ste:1" version="1">
+      <linux:version operation="pattern match">^6.*$</linux:version>
+    </linux:rpminfo_state>
+    <linux:rpminfo_state id="oval:ssg-state_centos7:ste:1" version="1">
+      <linux:version operation="pattern match">^7.*$</linux:version>
+    </linux:rpminfo_state>
+    <ind:family_state id="oval:ssg-state_unix_family:ste:1" version="1">
+      <ind:family>unix</ind:family>
+    </ind:family_state>
+    <linux:rpminfo_state id="oval:ssg-state_rhel_client:ste:1" version="1">
+      <linux:version operation="pattern match">^6.*$</linux:version>
+    </linux:rpminfo_state>
+    <linux:rpminfo_state id="oval:ssg-state_rhel_workstation:ste:1" version="1">
+      <linux:version operation="pattern match">^6.*$</linux:version>
+    </linux:rpminfo_state>
+    <linux:rpminfo_state id="oval:ssg-state_rhel_server:ste:1" version="1">
+      <linux:version operation="pattern match">^6.*$</linux:version>
+    </linux:rpminfo_state>
+    <linux:rpminfo_state id="oval:ssg-state_rhel_computenode:ste:1" version="1">
+      <linux:version operation="pattern match">^6.*$</linux:version>
+    </linux:rpminfo_state>
+    <ind:family_state id="oval:ssg-state_rhel7_unix_family:ste:1" version="1">
+      <ind:family>unix</ind:family>
+    </ind:family_state>
+    <linux:rpminfo_state id="oval:ssg-state_rhel7_client:ste:1" version="1">
+      <linux:version operation="pattern match">^7.*$</linux:version>
+    </linux:rpminfo_state>
+    <linux:rpminfo_state id="oval:ssg-state_rhel7_workstation:ste:1" version="1">
+      <linux:version operation="pattern match">^7.*$</linux:version>
+    </linux:rpminfo_state>
+    <linux:rpminfo_state id="oval:ssg-state_rhel7_server:ste:1" version="1">
+      <linux:version operation="pattern match">^7.*$</linux:version>
+    </linux:rpminfo_state>
+    <linux:rpminfo_state id="oval:ssg-state_rhel7_computenode:ste:1" version="1">
+      <linux:version operation="pattern match">^7.*$</linux:version>
+    </linux:rpminfo_state>
+    <linux:rpminfo_state id="oval:ssg-state_sl6:ste:1" version="1">
+      <linux:version operation="pattern match">^6.*$</linux:version>
+    </linux:rpminfo_state>
+    <linux:rpminfo_state id="oval:ssg-state_sl7:ste:1" version="1">
+      <linux:version operation="pattern match">^7.*$</linux:version>
+    </linux:rpminfo_state>
+    <ind:family_state id="oval:ssg-state_unix_wrlinux:ste:1" version="1">
+      <ind:family>unix</ind:family>
+    </ind:family_state>
+    <ind:variable_state id="oval:ssg-state_shell_defined_default_uid_range:ste:1" version="1">
+      <ind:value datatype="int" operation="greater than">0</ind:value>
+    </ind:variable_state>
+    <ind:variable_state id="oval:ssg-state_shell_defined_reserved_uid_range:ste:1" version="1">
+      <ind:value datatype="int" operation="greater than">0</ind:value>
+    </ind:variable_state>
+    <ind:variable_state id="oval:ssg-state_shell_defined_dynalloc_uid_range:ste:1" version="1">
+      <ind:value datatype="int" operation="greater than">0</ind:value>
+    </ind:variable_state>
+    <ind:environmentvariable58_state comment="starts with colon or period" id="oval:ssg-state_begins_colon_period:ste:1" version="1">
+      <ind:value operation="pattern match">^[:\.]</ind:value>
+    </ind:environmentvariable58_state>
+    <ind:environmentvariable58_state comment="colon twice in a row" id="oval:ssg-state_contains_double_colon:ste:1" version="1">
+      <ind:value operation="pattern match">::</ind:value>
+    </ind:environmentvariable58_state>
+    <ind:environmentvariable58_state comment="period twice in a row" id="oval:ssg-state_contains_double_period:ste:1" version="1">
+      <ind:value operation="pattern match">\.\.</ind:value>
+    </ind:environmentvariable58_state>
+    <ind:environmentvariable58_state comment="ends with colon or period" id="oval:ssg-state_ends_colon_period:ste:1" version="1">
+      <ind:value operation="pattern match">[:\.]$</ind:value>
+    </ind:environmentvariable58_state>
+    <ind:environmentvariable58_state comment="begins with a slash" id="oval:ssg-state_begins_slash:ste:1" version="1">
+      <ind:value operation="pattern match">^[^/]</ind:value>
+    </ind:environmentvariable58_state>
+    <ind:environmentvariable58_state comment="elements begin with a slash" id="oval:ssg-state_contains_relative_path:ste:1" version="1">
+      <ind:value operation="pattern match">[^\\]:[^/]</ind:value>
+    </ind:environmentvariable58_state>
+    <linux:selinuxsecuritycontext_state comment="do it" id="oval:ssg-state_selinux_confinement_of_daemons:ste:1" version="1">
+      <linux:type datatype="string" operation="equals">initrc_t</linux:type>
+    </linux:selinuxsecuritycontext_state>
+    <ind:textfilecontent54_state comment="upper bound of ClientAliveInterval in seconds" id="oval:ssg-state_timeout_value_upper_bound:ste:1" version="1">
+      <ind:subexpression datatype="int" operation="less than or equal" var_check="all" var_ref="oval:ssg-sshd_idle_timeout_value:var:1"/>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state comment="lower bound of ClientAliveInterval in seconds" id="oval:ssg-state_timeout_value_lower_bound:ste:1" version="1">
+      <ind:subexpression datatype="int" operation="greater than">0</ind:subexpression>
+    </ind:textfilecontent54_state>
+    <ind:textfilecontent54_state id="oval:ssg-state_sshd_clientalivecountmax:ste:1" version="1">
+      <ind:subexpression datatype="int" operation="equals">0</ind:subexpression>
+    </ind:textfilecontent54_state>
+    <unix:uname_state comment="64 bit architecture" id="oval:ssg-state_system_info_architecture_ppc_64:ste:1" version="1">
+      <unix:processor_type operation="equals">ppc64</unix:processor_type>
+    </unix:uname_state>
+    <unix:uname_state comment="64 bit architecture" id="oval:ssg-state_system_info_architecture_ppcle_64:ste:1" version="1">
+      <unix:processor_type operation="equals">ppc64le</unix:processor_type>
+    </unix:uname_state>
+    <unix:uname_state comment="32 bit architecture" id="oval:ssg-state_system_info_architecture_x86:ste:1" version="1">
+      <unix:processor_type operation="equals">i686</unix:processor_type>
+    </unix:uname_state>
+    <unix:uname_state comment="64 bit architecture" id="oval:ssg-state_system_info_architecture_x86_64:ste:1" version="1">
+      <unix:processor_type operation="equals">x86_64</unix:processor_type>
+    </unix:uname_state>
+  </states>
+  <variables>
+    <external_variable id="oval:ssg-var_accounts_fail_delay:var:1" datatype="int" version="1" comment="Expected fail_delay"/>
+    <constant_variable id="oval:ssg-var_sgid_whitelist:var:1" version="1" datatype="string" comment="sgid whitelist">
+      <value>/usr/bin/crontab</value>
+      <value>/usr/sbin/postdrop</value>
+      <value>/usr/sbin/postqueue</value>
+    </constant_variable>
+    <constant_variable id="oval:ssg-var_suid_whitelist:var:1" version="1" datatype="string" comment="suid whitelist">
+      <value>/bin/su.shadow</value>
+      <value>/bin/su.util-linux</value>
+      <value>/usr/bin/chage</value>
+      <value>/usr/bin/chfn.shadow</value>
+      <value>/usr/bin/chsh.shadow</value>
+      <value>/usr/bin/expiry</value>
+      <value>/usr/bin/gpasswd</value>
+      <value>/usr/bin/newgidmap</value>
+      <value>/usr/bin/newgrp.shadow</value>
+      <value>/usr/bin/newuidmap</value>
+      <value>/usr/bin/passwd.shadow</value>
+      <value>/usr/bin/sudo</value>
+      <value>/usr/lib64/dbus/dbus-daemon-launch-helper</value>
+      <value>/usr/sbin/unix_chkpwd</value>
+      <value>/usr/sbin/vlock-main</value>
+    </constant_variable>
+    <local_variable id="oval:ssg-variable_count_of_all_usernames_from_etc_passwd:var:1" datatype="int" version="1" comment="Count of all username rows retrieved from /etc/passwd (including duplicates if any)">
+      <count>
+        <object_component item_field="subexpression" object_ref="oval:ssg-object_etc_passwd_content:obj:1"/>
+      </count>
+    </local_variable>
+    <local_variable id="oval:ssg-variable_count_of_unique_usernames_from_etc_passwd:var:1" datatype="int" version="1" comment="Count of unique username rows retrieved from /etc/passwd">
+      <count>
+        <unique>
+          <object_component item_field="subexpression" object_ref="oval:ssg-object_etc_passwd_content:obj:1"/>
+        </unique>
+      </count>
+    </local_variable>
+    <external_variable comment="maximum number of concurrent logins per user" datatype="int" id="oval:ssg-var_accounts_max_concurrent_login_sessions:var:1" version="1"/>
+    <local_variable id="oval:ssg-variable_last_pass_max_days_instance_value:var:1" datatype="int" comment="The value of last PASS_MAX_DAYS directive in /etc/login.defs" version="1">
+      <regex_capture pattern="PASS_MAX_DAYS\s+(\d+)">
+        <object_component item_field="subexpression" object_ref="oval:ssg-object_last_pass_max_days_from_etc_login_defs:obj:1"/>
+      </regex_capture>
+    </local_variable>
+    <external_variable comment="Maximum password age" datatype="int" id="oval:ssg-var_accounts_maximum_age_login_defs:var:1" version="1"/>
+    <local_variable id="oval:ssg-variable_last_pass_min_days_instance_value:var:1" datatype="int" comment="The value of last PASS_MIN_DAYS directive in /etc/login.defs" version="1">
+      <regex_capture pattern="PASS_MIN_DAYS\s+(\d+)">
+        <object_component item_field="subexpression" object_ref="oval:ssg-object_last_pass_min_days_from_etc_login_defs:obj:1"/>
+      </regex_capture>
+    </local_variable>
+    <external_variable comment="Minimum password age in days" datatype="int" id="oval:ssg-var_accounts_minimum_age_login_defs:var:1" version="1"/>
+    <local_variable id="oval:ssg-variable_last_pass_min_len_instance_value:var:1" datatype="int" comment="The value of last PASS_MIN_LEN directive in /etc/login.defs" version="1">
+      <regex_capture pattern="PASS_MIN_LEN\s+(\d+)">
+        <object_component item_field="subexpression" object_ref="oval:ssg-object_last_pass_min_len_from_etc_login_defs:obj:1"/>
+      </regex_capture>
+    </local_variable>
+    <external_variable comment="Password minimum length" datatype="int" id="oval:ssg-var_accounts_password_minlen_login_defs:var:1" version="1"/>
+    <local_variable id="oval:ssg-variable_last_pass_warn_age_instance_value:var:1" datatype="int" comment="The value of last PASS_WARN_AGE directive in /etc/login.defs" version="1">
+      <regex_capture pattern="PASS_WARN_AGE\s+(\d+)">
+        <object_component item_field="subexpression" object_ref="oval:ssg-object_last_pass_warn_age_from_etc_login_defs:obj:1"/>
+      </regex_capture>
+    </local_variable>
+    <external_variable comment="password expiration warning age in days" datatype="int" id="oval:ssg-var_accounts_password_warn_age_login_defs:var:1" version="1"/>
+    <external_variable id="oval:ssg-var_accounts_passwords_pam_faillock_deny:var:1" datatype="int" comment="number of failed login attempts allowed" version="1"/>
+    <local_variable comment="Split the PATH on the : delimiter" datatype="string" id="oval:ssg-var_accounts_root_path_dirs_no_write:var:1" version="1">
+      <split delimiter=":">
+        <object_component item_field="value" object_ref="oval:ssg-object_accounts_root_path_dirs_no_write_pathenv:obj:1"/>
+      </split>
+    </local_variable>
+    <local_variable id="oval:ssg-var_first_digit_of_umask_from_etc_bashrc:var:1" comment="First octal digit of umask from /etc/bashrc" datatype="int" version="1">
+      <substring substring_start="1" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_bashrc:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_second_digit_of_umask_from_etc_bashrc:var:1" comment="Second octal digit of umask from /etc/bashrc" datatype="int" version="1">
+      <substring substring_start="2" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_bashrc:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_third_digit_of_umask_from_etc_bashrc:var:1" comment="Third octal digit of umask from /etc/bashrc" datatype="int" version="1">
+      <substring substring_start="3" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_bashrc:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_etc_bashrc_umask_as_number:var:1" comment="/etc/bashrc umask converted from string to a number" datatype="int" version="1">
+      <arithmetic arithmetic_operation="add">
+        <arithmetic arithmetic_operation="multiply">
+          <literal_component datatype="int">64</literal_component>
+          <variable_component var_ref="oval:ssg-var_first_digit_of_umask_from_etc_bashrc:var:1"/>
+        </arithmetic>
+        <arithmetic arithmetic_operation="multiply">
+          <literal_component datatype="int">8</literal_component>
+          <variable_component var_ref="oval:ssg-var_second_digit_of_umask_from_etc_bashrc:var:1"/>
+        </arithmetic>
+        <variable_component var_ref="oval:ssg-var_third_digit_of_umask_from_etc_bashrc:var:1"/>
+      </arithmetic>
+    </local_variable>
+    <external_variable id="oval:ssg-var_accounts_user_umask_umask_as_number:var:1" comment="Required umask converted from string to octal number" datatype="int" version="1"/>
+    <local_variable id="oval:ssg-var_first_digit_of_umask_from_etc_csh_cshrc:var:1" comment="First octal digit of umask from /etc/csh.cshrc" datatype="int" version="1">
+      <substring substring_start="1" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_csh_cshrc:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_second_digit_of_umask_from_etc_csh_cshrc:var:1" comment="Second octal digit of umask from /etc/csh.cshrc" datatype="int" version="1">
+      <substring substring_start="2" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_csh_cshrc:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_third_digit_of_umask_from_etc_csh_cshrc:var:1" comment="Third octal digit of umask from /etc/csh.cshrc" datatype="int" version="1">
+      <substring substring_start="3" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_csh_cshrc:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_etc_csh_cshrc_umask_as_number:var:1" comment="/etc/csh.cshrc umask converted from string to a number" datatype="int" version="1">
+      <arithmetic arithmetic_operation="add">
+        <arithmetic arithmetic_operation="multiply">
+          <literal_component datatype="int">64</literal_component>
+          <variable_component var_ref="oval:ssg-var_first_digit_of_umask_from_etc_csh_cshrc:var:1"/>
+        </arithmetic>
+        <arithmetic arithmetic_operation="multiply">
+          <literal_component datatype="int">8</literal_component>
+          <variable_component var_ref="oval:ssg-var_second_digit_of_umask_from_etc_csh_cshrc:var:1"/>
+        </arithmetic>
+        <variable_component var_ref="oval:ssg-var_third_digit_of_umask_from_etc_csh_cshrc:var:1"/>
+      </arithmetic>
+    </local_variable>
+    <local_variable id="oval:ssg-var_first_digit_of_umask_from_etc_login_defs:var:1" comment="First octal digit of umask from /etc/login.defs" datatype="int" version="1">
+      <substring substring_start="1" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_login_defs:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_second_digit_of_umask_from_etc_login_defs:var:1" comment="Second octal digit of umask from /etc/login.defs" datatype="int" version="1">
+      <substring substring_start="2" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_login_defs:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_third_digit_of_umask_from_etc_login_defs:var:1" comment="Third octal digit of umask from /etc/login.defs" datatype="int" version="1">
+      <substring substring_start="3" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_login_defs:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_etc_login_defs_umask_as_number:var:1" comment="/etc/login.defs umask converted from string to a number" datatype="int" version="1">
+      <arithmetic arithmetic_operation="add">
+        <arithmetic arithmetic_operation="multiply">
+          <literal_component datatype="int">64</literal_component>
+          <variable_component var_ref="oval:ssg-var_first_digit_of_umask_from_etc_login_defs:var:1"/>
+        </arithmetic>
+        <arithmetic arithmetic_operation="multiply">
+          <literal_component datatype="int">8</literal_component>
+          <variable_component var_ref="oval:ssg-var_second_digit_of_umask_from_etc_login_defs:var:1"/>
+        </arithmetic>
+        <variable_component var_ref="oval:ssg-var_third_digit_of_umask_from_etc_login_defs:var:1"/>
+      </arithmetic>
+    </local_variable>
+    <local_variable id="oval:ssg-var_first_digit_of_umask_from_etc_profile:var:1" comment="First octal digit of umask from /etc/profile" datatype="int" version="1">
+      <substring substring_start="1" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_profile:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_second_digit_of_umask_from_etc_profile:var:1" comment="Second octal digit of umask from /etc/profile" datatype="int" version="1">
+      <substring substring_start="2" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_profile:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_third_digit_of_umask_from_etc_profile:var:1" comment="Third octal digit of umask from /etc/profile" datatype="int" version="1">
+      <substring substring_start="3" substring_length="1">
+        <object_component item_field="subexpression" object_ref="oval:ssg-obj_umask_from_etc_profile:obj:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_etc_profile_umask_as_number:var:1" comment="/etc/profile umask converted from string to a number" datatype="int" version="1">
+      <arithmetic arithmetic_operation="add">
+        <arithmetic arithmetic_operation="multiply">
+          <literal_component datatype="int">64</literal_component>
+          <variable_component var_ref="oval:ssg-var_first_digit_of_umask_from_etc_profile:var:1"/>
+        </arithmetic>
+        <arithmetic arithmetic_operation="multiply">
+          <literal_component datatype="int">8</literal_component>
+          <variable_component var_ref="oval:ssg-var_second_digit_of_umask_from_etc_profile:var:1"/>
+        </arithmetic>
+        <variable_component var_ref="oval:ssg-var_third_digit_of_umask_from_etc_profile:var:1"/>
+      </arithmetic>
+    </local_variable>
+    <external_variable comment="audit action_mail_acct setting" datatype="string" id="oval:ssg-var_auditd_action_mail_acct:var:1" version="1"/>
+    <external_variable comment="audit admin_space_left_action setting" datatype="string" id="oval:ssg-var_auditd_admin_space_left_action:var:1" version="1"/>
+    <external_variable comment="audit max_log_file settting" datatype="int" id="oval:ssg-var_auditd_max_log_file:var:1" version="1"/>
+    <external_variable comment="audit max_log_file_action setting" datatype="string" id="oval:ssg-var_auditd_max_log_file_action:var:1" version="1"/>
+    <external_variable comment="audit num_logs settting" datatype="int" id="oval:ssg-var_auditd_num_logs:var:1" version="1"/>
+    <external_variable comment="audit space_left_action setting" datatype="string" id="oval:ssg-var_auditd_space_left_action:var:1" version="2"/>
+    <local_variable id="oval:ssg-variable_sys_uids_etc_passwd:var:1" datatype="int" comment="UIDs retrieved from /etc/passwd" version="1">
+      <object_component item_field="subexpression" object_ref="oval:ssg-object_etc_passwd_entries:obj:1"/>
+    </local_variable>
+    <local_variable id="oval:ssg-variable_uid_min_value:var:1" datatype="int" comment="Value of last UID_MIN from /etc/login.defs" version="1">
+      <regex_capture pattern="UID_MIN[\s]+(\d+)">
+        <object_component item_field="subexpression" object_ref="oval:ssg-object_last_uid_min_from_etc_login_defs:obj:1"/>
+      </regex_capture>
+    </local_variable>
+    <local_variable id="oval:ssg-variable_default_range_quad_expr:var:1" datatype="int" comment="Construct (x - 0) * (x - (UID_MIN - 1)) expression" version="1">
+      <!-- Construct the final multiplication -->
+      <arithmetic arithmetic_operation="multiply">
+        <!-- Get "x", thus retrieved /etc/passwd UIDs as int -->
+        <!-- (x - 0) = x => use just "x" value -->
+        <variable_component var_ref="oval:ssg-variable_sys_uids_etc_passwd:var:1"/>
+        <!-- Get (x - (UID_MIN -1)) result -->
+        <arithmetic arithmetic_operation="add">
+          <variable_component var_ref="oval:ssg-variable_sys_uids_etc_passwd:var:1"/>
+          <!-- Get -1 * (UID_MIN - 1) result -->
+          <arithmetic arithmetic_operation="multiply">
+            <literal_component datatype="int">-1</literal_component>
+            <!-- Get (UID_MIN -1) result -->
+            <arithmetic arithmetic_operation="add">
+              <!-- Get "x", thus retrieved /etc/passwd UIDs as int -->
+              <variable_component var_ref="oval:ssg-variable_uid_min_value:var:1"/>
+              <literal_component datatype="int">-1</literal_component>
+            </arithmetic>
+          </arithmetic>
+        </arithmetic>
+      </arithmetic>
+    </local_variable>
+    <local_variable id="oval:ssg-variable_sys_uid_min_value:var:1" datatype="int" comment="Value of last SYS_UID_MIN from /etc/login.defs" version="1">
+      <regex_capture pattern="SYS_UID_MIN[\s]+(\d+)">
+        <object_component item_field="subexpression" object_ref="oval:ssg-object_last_sys_uid_min_from_etc_login_defs:obj:1"/>
+      </regex_capture>
+    </local_variable>
+    <local_variable id="oval:ssg-variable_sys_uid_max_value:var:1" datatype="int" comment="Value of last SYS_UID_MAX from /etc/login.defs" version="1">
+      <regex_capture pattern="SYS_UID_MAX[\s]+(\d+)">
+        <object_component item_field="subexpression" object_ref="oval:ssg-object_last_sys_uid_max_from_etc_login_defs:obj:1"/>
+      </regex_capture>
+    </local_variable>
+    <local_variable id="oval:ssg-variable_reserved_range_quad_expr:var:1" datatype="int" comment="Construct (x - 0) * (x - SYS_UID_MIN) expression" version="1">
+      <!-- Construct the final multiplication -->
+      <arithmetic arithmetic_operation="multiply">
+        <!-- Get "x", thus retrieved /etc/passwd UIDs as int -->
+        <!-- (x - 0) = x => use just "x" value -->
+        <variable_component var_ref="oval:ssg-variable_sys_uids_etc_passwd:var:1"/>
+        <!-- Construct (x - SYS_UID_MIN) expression -->
+        <arithmetic arithmetic_operation="add">
+          <!-- Get "x", thus retrieved /etc/passwd UIDs as int -->
+          <variable_component var_ref="oval:ssg-variable_sys_uids_etc_passwd:var:1"/>
+          <!-- Get negative value of SYS_UID_MIN -->
+          <arithmetic arithmetic_operation="multiply">
+            <literal_component datatype="int">-1</literal_component>
+            <variable_component var_ref="oval:ssg-variable_sys_uid_min_value:var:1"/>
+          </arithmetic>
+        </arithmetic>
+      </arithmetic>
+    </local_variable>
+    <local_variable id="oval:ssg-variable_dynalloc_range_quad_expr:var:1" datatype="int" comment="Construct (x - SYS_UID_MIN) * (x - SYS_UID_MAX) expression" version="1">
+      <!-- Construct the final multiplication -->
+      <arithmetic arithmetic_operation="multiply">
+        <!-- Construct (x - SYS_UID_MIN) expression -->
+        <arithmetic arithmetic_operation="add">
+          <!-- Get "x", thus retrieved /etc/passwd UIDs as int -->
+          <variable_component var_ref="oval:ssg-variable_sys_uids_etc_passwd:var:1"/>
+          <!-- Get negative value of SYS_UID_MIN -->
+          <arithmetic arithmetic_operation="multiply">
+            <literal_component datatype="int">-1</literal_component>
+            <variable_component var_ref="oval:ssg-variable_sys_uid_min_value:var:1"/>
+          </arithmetic>
+        </arithmetic>
+        <!-- Construct (x - SYS_UID_MAX) expression -->
+        <arithmetic arithmetic_operation="add">
+          <!-- Get "x", thus retrieved /etc/passwd UIDs as int -->
+          <variable_component var_ref="oval:ssg-variable_sys_uids_etc_passwd:var:1"/>
+          <!-- Get negative value of SYS_UID_MAX -->
+          <arithmetic arithmetic_operation="multiply">
+            <literal_component datatype="int">-1</literal_component>
+            <variable_component var_ref="oval:ssg-variable_sys_uid_max_value:var:1"/>
+          </arithmetic>
+        </arithmetic>
+      </arithmetic>
+    </local_variable>
+    <external_variable comment="timeout value" datatype="int" id="oval:ssg-sshd_idle_timeout_value:var:1" version="1"/>
+    <external_variable id="oval:ssg-var_accounts_user_umask:var:1" datatype="string" version="1" comment="Value of var_accounts_user_umask (the required umask) as string"/>
+    <local_variable id="oval:ssg-var_first_digit_of_umask_from_var_accounts_user_umask:var:1" comment="First octal digit of umask from var_accounts_user_umask" datatype="int" version="1">
+      <substring substring_start="1" substring_length="1">
+        <variable_component var_ref="oval:ssg-var_accounts_user_umask:var:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_second_digit_of_umask_from_var_accounts_user_umask:var:1" comment="Second octal digit of umask from var_accounts_user_umask" datatype="int" version="1">
+      <substring substring_start="2" substring_length="1">
+        <variable_component var_ref="oval:ssg-var_accounts_user_umask:var:1"/>
+      </substring>
+    </local_variable>
+    <local_variable id="oval:ssg-var_third_digit_of_umask_from_var_accounts_user_umask:var:1" comment="Third octal digit of umask from var_accounts_user_umask" datatype="int" version="1">
+      <substring substring_start="3" substring_length="1">
+        <variable_component var_ref="oval:ssg-var_accounts_user_umask:var:1"/>
+      </substring>
+    </local_variable>
+  </variables>
+</oval_definitions>
